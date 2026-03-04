@@ -3,11 +3,11 @@ import { Play, Eye, Heart, Copy, Wand2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-const gradients = [
-  'bg-card-gradient-1',
-  'bg-card-gradient-2',
-  'bg-card-gradient-3',
-  'bg-card-gradient-4',
+const gradientStyles = [
+  'linear-gradient(135deg, #1a0000 0%, #8B0000 50%, #1a1a1a 100%)',
+  'linear-gradient(135deg, #0a0a1a 0%, #1a0a2a 50%, #2a0a0a 100%)',
+  'linear-gradient(135deg, #0d0d0d 0%, #2a0000 60%, #111 100%)',
+  'linear-gradient(135deg, #1a1a0a 0%, #3a1a00 50%, #0a0a0a 100%)',
 ];
 
 export default function MediaCard({ 
@@ -37,10 +37,10 @@ export default function MediaCard({
       onClick={onClick}
     >
       {/* Thumbnail */}
-      <div className={cn(
-        "aspect-[4/5] w-full",
-        gradients[gradientIndex % gradients.length]
-      )}>
+      <div 
+        className="aspect-[4/5] w-full"
+        style={{ background: gradientStyles[gradientIndex % gradientStyles.length] }}
+      >
         {type === 'video' && (
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-14 h-14 rounded-full bg-black/50 flex items-center justify-center backdrop-blur-sm border border-white/20">
