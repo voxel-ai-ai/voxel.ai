@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Plus, Zap, ChevronRight, Minus, AtSign, PenLine } from 'lucide-react';
 import ModelDropdown from './ModelDropdown';
 

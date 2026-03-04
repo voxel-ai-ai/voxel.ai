@@ -1,27 +1,40 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
-import ModelSelector from '@/components/common/ModelSelector';
-import GenerationCanvas from '@/components/common/GenerationCanvas';
-import PromptBar from '@/components/common/PromptBar';
+import ImagePromptBar from '@/components/image/ImagePromptBar';
 import TemplateModal from '@/components/common/TemplateModal';
-import { imageModels, imageTemplates } from '@/components/data/siteData';
+import { imageTemplates } from '@/components/data/siteData';
+import { Download, Heart, RefreshCw, Maximize2, History, Globe } from 'lucide-react';
 import { toast } from 'sonner';
 
-const categories = ['All', 'Portrait', 'Cinematic', 'Product Ad', 'Fashion', 'Architecture', 'Art'];
+const IMAGE_MODELS = [
+  { id: 'nano-pro', name: 'Nano Banana Pro', subtitle: 'Create stunning, high-aesthetic images in seconds' },
+  { id: 'soul-2', name: 'Soul 2.0', subtitle: 'Fashion-forward portraits with cultural fluency' },
+  { id: 'seedream-4', name: 'Seedream 4.5', subtitle: 'Next-gen 4K images with photorealistic detail' },
+  { id: 'seedream-5-lite', name: 'Seedream 5.0 Lite', subtitle: 'Intelligent visual reasoning, unlimited access' },
+  { id: 'gpt-image', name: 'GPT Image 1.5', subtitle: 'True-color precision rendering by OpenAI' },
+  { id: 'flux', name: 'Flux Kontext', subtitle: 'Stylistic diversity and aesthetic variations' },
+  { id: 'nano-2', name: 'Nano Banana 2', subtitle: 'Pro quality at Flash speed' },
+  { id: 'nano', name: 'Nano Banana', subtitle: 'Create stunning, high-aesthetic images in seconds' },
+  { id: 'soul', name: 'Soul', subtitle: 'Create stunning, high-aesthetic images in seconds' },
+  { id: 'face-swap', name: 'Face Swap', subtitle: 'Seamless face swapping with perfect blending' },
+];
+
+const RESULT_GRADIENTS = [
+  'linear-gradient(135deg, #1a0000 0%, #8B0000 50%, #1a1a1a 100%)',
+  'linear-gradient(135deg, #0a0a1a 0%, #1a0a2a 50%, #2a0a0a 100%)',
+  'linear-gradient(135deg, #0d0d0d 0%, #2a0000 60%, #111 100%)',
+  'linear-gradient(135deg, #1a1a0a 0%, #3a1a00 50%, #0a0a0a 100%)',
+];
 
 export default function Image() {
-  const navigate = useNavigate();
-  const [selectedModel, setSelectedModel] = useState(imageModels[0]);
+  const [selectedModel, setSelectedModel] = useState(IMAGE_MODELS[0]);
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [result, setResult] = useState(null);
+  const [results, setResults] = useState(null); // null = empty, array = done
+  const [imageCount, setImageCount] = useState(1);
+  const [expandedImage, setExpandedImage] = useState(null);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
-  const [activeCategory, setActiveCategory] = useState('All');
-
-  const filteredTemplates = activeCategory === 'All' 
-    ? imageTemplates 
-    : imageTemplates.filter(t => t.category === activeCategory);
 
   const handleGenerate = () => {
     if (!prompt.trim()) {
@@ -29,133 +42,256 @@ export default function Image() {
       return;
     }
     setIsGenerating(true);
-    setResult(null);
-    
-    // Simulate generation
+    setResults(null);
     setTimeout(() => {
       setIsGenerating(false);
-      setResult({ id: 1, prompt });
-      toast.success('Image generated successfully!');
+      setResults(Array.from({ length: imageCount }, (_, i) => ({ id: i, gradient: RESULT_GRADIENTS[i % 4] })));
+      toast.success('Image generated!');
     }, 3000);
+  };
+
+  const handleModelChange = (model) => {
+    setSelectedModel(model);
   };
 
   const handleRecreate = (template) => {
     setPrompt(template.prompt);
-    setSelectedModel(imageModels.find(m => m.name === template.model) || imageModels[0]);
     setSelectedTemplate(null);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <div className="min-h-screen py-8 px-4">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="font-heading text-4xl sm:text-5xl tracking-wider text-white mb-2">
-            IMAGE GENERATION
-          </h1>
-          <p className="text-foreground-secondary">
-            Create stunning AI-powered images with our advanced models
-          </p>
-        </div>
+    <div className="min-h-screen" style={{ background: '#0A0A0A' }}>
+      {/* Secondary nav tabs */}
+      <div className="flex items-center gap-2 px-6 py-2.5" style={{ borderBottom: '1px solid #1A1A1A' }}>
+        <button
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] transition-colors"
+          style={{ color: '#888', border: '1px solid #2A2A2A', background: 'transparent' }}
+          onMouseEnter={e => e.currentTarget.style.color = '#ccc'}
+          onMouseLeave={e => e.currentTarget.style.color = '#888'}
+        >
+          <History className="w-3.5 h-3.5" />
+          History
+        </button>
+        <button
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] transition-colors"
+          style={{ color: '#888', border: '1px solid #2A2A2A', background: 'transparent' }}
+          onMouseEnter={e => e.currentTarget.style.color = '#ccc'}
+          onMouseLeave={e => e.currentTarget.style.color = '#888'}
+        >
+          <Globe className="w-3.5 h-3.5" />
+          Community
+        </button>
+      </div>
 
-        {/* Model Selector */}
-        <div className="mb-6">
-          <ModelSelector 
-            models={imageModels} 
-            selectedModel={selectedModel} 
-            onSelect={setSelectedModel} 
-          />
-        </div>
+      {/* Main Content Area */}
+      <div className="flex flex-col items-center justify-center" style={{ minHeight: 'calc(100vh - 140px)', paddingBottom: 140 }}>
 
-        {/* Generation Canvas */}
-        <GenerationCanvas 
-          type="image"
-          isGenerating={isGenerating}
-          result={result}
-          className="mb-6"
-        />
+        {/* === EMPTY STATE === */}
+        {!isGenerating && !results && (
+          <div className="flex flex-col items-center text-center px-4 animate-fade-in-up">
+            {/* 3D Image Icon with sparkles */}
+            <div className="relative mb-8" style={{ width: 110, height: 110 }}>
+              {/* Sparkles */}
+              <span className="absolute animate-glow-pulse" style={{ top: -8, right: -4, fontSize: 18, color: '#E01E1E', animationDelay: '0s' }}>✦</span>
+              <span className="absolute animate-glow-pulse" style={{ top: 20, right: -18, fontSize: 11, color: '#ff5555', animationDelay: '0.7s' }}>✦</span>
+              <span className="absolute animate-glow-pulse" style={{ bottom: 0, left: -10, fontSize: 14, color: '#8B0000', animationDelay: '1.4s' }}>✦</span>
 
-        {/* Prompt Bar */}
-        <PromptBar
-          prompt={prompt}
-          onPromptChange={setPrompt}
-          onGenerate={handleGenerate}
-          isGenerating={isGenerating}
-          model={selectedModel}
-          type="image"
-          className="mb-16"
-        />
+              {/* Icon */}
+              <svg width="110" height="110" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="imgGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#8B0000" />
+                    <stop offset="100%" stopColor="#E01E1E" />
+                  </linearGradient>
+                  <linearGradient id="imgGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#5a0000" />
+                    <stop offset="100%" stopColor="#8B0000" />
+                  </linearGradient>
+                  <linearGradient id="imgGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#3a0000" />
+                    <stop offset="100%" stopColor="#5a0000" />
+                  </linearGradient>
+                </defs>
+                {/* 3D box front face */}
+                <rect x="18" y="30" width="60" height="52" rx="8" fill="url(#imgGrad1)" />
+                {/* top face */}
+                <path d="M18 30 L38 14 L98 14 L78 30 Z" fill="url(#imgGrad2)" />
+                {/* right face */}
+                <path d="M78 30 L98 14 L98 66 L78 82 Z" fill="url(#imgGrad3)" />
+                {/* Mountain / image icon */}
+                <circle cx="38" cy="50" r="7" fill="rgba(255,255,255,0.25)" />
+                <path d="M22 74 L36 56 L50 68 L62 54 L76 74 Z" fill="rgba(255,255,255,0.18)" />
+              </svg>
+            </div>
 
-        {/* Templates Section */}
-        <div className="mt-16">
-          <div className="text-center mb-8">
-            <h2 className="font-heading text-3xl tracking-wider text-white mb-2">
-              Browse Image Templates
-            </h2>
-            <p className="text-foreground-muted">
-              Click to See Prompt & Recreate
+            {/* Model name - huge */}
+            <h1
+              className="font-display uppercase text-white mb-3 leading-none"
+              style={{ fontSize: 'clamp(52px, 8vw, 96px)', lineHeight: 1 }}
+            >
+              {selectedModel.name}
+            </h1>
+
+            {/* Subtitle */}
+            <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 15, color: '#666' }}>
+              {selectedModel.subtitle}
             </p>
           </div>
+        )}
 
-          {/* Category Filter */}
-          <div className="flex flex-wrap justify-center gap-2 mb-8">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                  activeCategory === cat
-                    ? 'bg-primary text-white'
-                    : 'bg-background-secondary text-foreground-secondary border border-border hover:border-primary/50'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
+        {/* === GENERATING STATE === */}
+        {isGenerating && (
+          <div className="flex flex-col items-center text-center px-4">
+            {/* Pulsing icon */}
+            <div className="relative mb-8 animate-pulse" style={{ width: 100, height: 100 }}>
+              <svg width="100" height="100" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="imgGrad1b" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#8B0000" />
+                    <stop offset="100%" stopColor="#E01E1E" />
+                  </linearGradient>
+                  <linearGradient id="imgGrad2b" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#5a0000" />
+                    <stop offset="100%" stopColor="#8B0000" />
+                  </linearGradient>
+                  <linearGradient id="imgGrad3b" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#3a0000" />
+                    <stop offset="100%" stopColor="#5a0000" />
+                  </linearGradient>
+                </defs>
+                <rect x="18" y="30" width="60" height="52" rx="8" fill="url(#imgGrad1b)" />
+                <path d="M18 30 L38 14 L98 14 L78 30 Z" fill="url(#imgGrad2b)" />
+                <path d="M78 30 L98 14 L98 66 L78 82 Z" fill="url(#imgGrad3b)" />
+                <circle cx="38" cy="50" r="7" fill="rgba(255,255,255,0.25)" />
+                <path d="M22 74 L36 56 L50 68 L62 54 L76 74 Z" fill="rgba(255,255,255,0.18)" />
+              </svg>
+            </div>
+            <h1 className="font-display uppercase text-white mb-3 leading-none" style={{ fontSize: 'clamp(52px, 8vw, 96px)', lineHeight: 1 }}>
+              {selectedModel.name}
+            </h1>
+            <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 15, color: '#666' }}>
+              Generating your image...
+            </p>
 
-          {/* Templates Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {filteredTemplates.map((template, index) => {
-              const gradients = [
-                'linear-gradient(135deg, #1a0000 0%, #8B0000 50%, #1a1a1a 100%)',
-                'linear-gradient(135deg, #0a0a1a 0%, #1a0a2a 50%, #2a0a0a 100%)',
-                'linear-gradient(135deg, #0d0d0d 0%, #2a0000 60%, #111 100%)',
-                'linear-gradient(135deg, #1a1a0a 0%, #3a1a00 50%, #0a0a0a 100%)',
-              ];
-              return (
+            {/* Progress bar at bottom of page */}
+            <div
+              className="fixed bottom-0 left-0 right-0 overflow-hidden"
+              style={{ height: 2, zIndex: 60 }}
+            >
               <div
-                key={template.id}
-                onClick={() => setSelectedTemplate(template)}
-                className="group relative rounded-xl overflow-hidden cursor-pointer border border-border hover:border-primary/50 hover:-translate-y-1 transition-all duration-300"
-                style={{ background: gradients[index % 4] }}
-              >
-                <div className="aspect-[4/5]" />
-                
-                {/* Tags */}
-                <div className="absolute top-3 left-3 flex flex-wrap gap-2">
-                  <span className="px-2 py-1 text-xs font-semibold bg-primary text-white rounded-full">
-                    {template.model}
-                  </span>
-                  <span className="px-2 py-1 text-xs font-medium bg-black/60 text-white rounded-full backdrop-blur-sm">
-                    {template.category}
-                  </span>
-                </div>
+                className="h-full"
+                style={{
+                  background: '#E01E1E',
+                  width: '100%',
+                  animation: 'progress-sweep 3s linear forwards',
+                }}
+              />
+            </div>
+            <style>{`
+              @keyframes progress-sweep {
+                from { transform: scaleX(0); transform-origin: left; }
+                to { transform: scaleX(1); transform-origin: left; }
+              }
+            `}</style>
+          </div>
+        )}
 
-                {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                  <h3 className="text-white font-semibold text-lg">{template.title}</h3>
-                  <p className="text-foreground-secondary text-sm mt-1 line-clamp-2">
-                    Click to view prompt
-                  </p>
+        {/* === RESULTS STATE === */}
+        {!isGenerating && results && (
+          <div className="w-full flex flex-col items-center px-6" style={{ paddingTop: 40 }}>
+            {results.length === 1 ? (
+              /* Single image */
+              <div
+                className="relative rounded-2xl overflow-hidden cursor-pointer"
+                style={{
+                  width: 'min(480px, 80vw)',
+                  aspectRatio: '4/5',
+                  background: results[0].gradient,
+                  animation: 'fadeInScale 0.5s ease forwards',
+                }}
+                onClick={() => setExpandedImage(results[0])}
+              >
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: 14 }}>Generated Image</span>
                 </div>
               </div>
-              );
-            })}
+            ) : (
+              /* 2×2 grid */
+              <div className="grid grid-cols-2 gap-4" style={{ width: 'min(640px, 90vw)' }}>
+                {results.map((r) => (
+                  <div
+                    key={r.id}
+                    className="relative rounded-xl overflow-hidden cursor-pointer hover:-translate-y-1 transition-transform"
+                    style={{
+                      aspectRatio: '4/5',
+                      background: r.gradient,
+                      animation: `fadeInScale 0.5s ease ${r.id * 0.1}s forwards`,
+                      opacity: 0,
+                    }}
+                    onClick={() => setExpandedImage(r)}
+                  >
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: 12 }}>Image {r.id + 1}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Action row */}
+            <div className="flex items-center gap-3 mt-6">
+              {[
+                { icon: Download, label: 'Download' },
+                { icon: Heart, label: 'Save' },
+                { icon: RefreshCw, label: 'Variations' },
+                { icon: Maximize2, label: 'Upscale 4K' },
+              ].map(({ icon: Icon, label }) => (
+                <button
+                  key={label}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition-colors"
+                  style={{ background: '#1A1A1A', border: '1px solid #2A2A2A', color: '#aaa' }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = '#444'; e.currentTarget.style.color = '#fff'; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#2A2A2A'; e.currentTarget.style.color = '#aaa'; }}
+                >
+                  <Icon className="w-4 h-4" />
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
+
+      {/* Fixed Prompt Bar */}
+      <ImagePromptBar
+        prompt={prompt}
+        onPromptChange={setPrompt}
+        onGenerate={handleGenerate}
+        isGenerating={isGenerating}
+        selectedModel={selectedModel}
+        onModelChange={handleModelChange}
+        imageCount={imageCount}
+        onCountChange={setImageCount}
+      />
+
+      {/* Expanded image lightbox */}
+      {expandedImage && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center"
+          style={{ background: 'rgba(0,0,0,0.95)' }}
+          onClick={() => setExpandedImage(null)}
+        >
+          <div
+            className="rounded-2xl overflow-hidden"
+            style={{
+              width: 'min(600px, 90vw)',
+              aspectRatio: '4/5',
+              background: expandedImage.gradient,
+            }}
+            onClick={e => e.stopPropagation()}
+          />
+        </div>
+      )}
 
       {/* Template Modal */}
       {selectedTemplate && (
@@ -166,6 +302,13 @@ export default function Image() {
           onRecreate={handleRecreate}
         />
       )}
+
+      <style>{`
+        @keyframes fadeInScale {
+          from { opacity: 0; transform: scale(0.96); }
+          to { opacity: 1; transform: scale(1); }
+        }
+      `}</style>
     </div>
   );
 }
