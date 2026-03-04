@@ -21,7 +21,15 @@ export default function AudioTemplatesSection() {
             className="group bg-background-secondary rounded-xl border border-border p-4 hover:border-primary/50 transition-all cursor-pointer"
           >
             {/* Waveform Preview */}
-            <div className={`h-20 rounded-lg mb-4 flex items-center justify-center gap-0.5 bg-card-gradient-${(index % 4) + 1}`}>
+            <div 
+              className="h-20 rounded-lg mb-4 flex items-center justify-center gap-0.5"
+              style={{ background: [
+                'linear-gradient(135deg, #1a0000 0%, #8B0000 50%, #1a1a1a 100%)',
+                'linear-gradient(135deg, #0a0a1a 0%, #1a0a2a 50%, #2a0a0a 100%)',
+                'linear-gradient(135deg, #0d0d0d 0%, #2a0000 60%, #111 100%)',
+                'linear-gradient(135deg, #1a1a0a 0%, #3a1a00 50%, #0a0a0a 100%)',
+              ][index % 4] }}
+            >
               {[...Array(30)].map((_, i) => (
                 <div
                   key={i}

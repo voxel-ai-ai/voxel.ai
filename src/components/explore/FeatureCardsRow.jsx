@@ -2,11 +2,11 @@ import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { featureCards } from '@/components/data/siteData';
 
-const gradients = [
-  'bg-card-gradient-1',
-  'bg-card-gradient-2',
-  'bg-card-gradient-3',
-  'bg-card-gradient-4',
+const gradientStyles = [
+  'linear-gradient(135deg, #1a0000 0%, #8B0000 50%, #1a1a1a 100%)',
+  'linear-gradient(135deg, #0a0a1a 0%, #1a0a2a 50%, #2a0a0a 100%)',
+  'linear-gradient(135deg, #0d0d0d 0%, #2a0000 60%, #111 100%)',
+  'linear-gradient(135deg, #1a1a0a 0%, #3a1a00 50%, #0a0a0a 100%)',
 ];
 
 export default function FeatureCardsRow() {
@@ -20,7 +20,7 @@ export default function FeatureCardsRow() {
               className="group flex-shrink-0 w-72 rounded-xl border border-border bg-background-secondary overflow-hidden hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
             >
               {/* Image Placeholder */}
-              <div className={`h-40 ${gradients[index % 4]} relative`}>
+              <div className="h-40 relative" style={{ background: gradientStyles[index % 4] }}>
                 <span className="absolute top-3 left-3 px-2 py-1 text-xs font-bold bg-primary text-white rounded">
                   {card.tag}
                 </span>
