@@ -19,6 +19,7 @@ export default function MediaCard({
   views,
   likes,
   prompt,
+  imageUrl,
   onClick,
   gradientIndex = 0,
   className,
@@ -38,9 +39,12 @@ export default function MediaCard({
     >
       {/* Thumbnail */}
       <div 
-        className="aspect-[4/5] w-full"
+        className="aspect-[4/5] w-full relative"
         style={{ background: gradientStyles[gradientIndex % gradientStyles.length] }}
       >
+        {imageUrl && (
+          <img src={imageUrl} alt={title || model} className="absolute inset-0 w-full h-full object-cover" />
+        )}
         {type === 'video' && (
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-14 h-14 rounded-full bg-black/50 flex items-center justify-center backdrop-blur-sm border border-white/20">
