@@ -117,11 +117,19 @@ export default function Image() {
 
           {/* Templates Grid */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {filteredTemplates.map((template, index) => (
+            {filteredTemplates.map((template, index) => {
+              const gradients = [
+                'linear-gradient(135deg, #1a0000 0%, #8B0000 50%, #1a1a1a 100%)',
+                'linear-gradient(135deg, #0a0a1a 0%, #1a0a2a 50%, #2a0a0a 100%)',
+                'linear-gradient(135deg, #0d0d0d 0%, #2a0000 60%, #111 100%)',
+                'linear-gradient(135deg, #1a1a0a 0%, #3a1a00 50%, #0a0a0a 100%)',
+              ];
+              return (
               <div
                 key={template.id}
                 onClick={() => setSelectedTemplate(template)}
-                className={`group relative rounded-xl overflow-hidden cursor-pointer border border-border hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 bg-card-gradient-${(index % 4) + 1}`}
+                className="group relative rounded-xl overflow-hidden cursor-pointer border border-border hover:border-primary/50 hover:-translate-y-1 transition-all duration-300"
+                style={{ background: gradients[index % 4] }}
               >
                 <div className="aspect-[4/5]" />
                 
@@ -143,7 +151,8 @@ export default function Image() {
                   </p>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

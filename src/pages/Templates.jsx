@@ -79,11 +79,19 @@ export default function Templates() {
 
             {/* Grid */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {filteredImages.map((template, index) => (
+              {filteredImages.map((template, index) => {
+                const gradients = [
+                  'linear-gradient(135deg, #1a0000 0%, #8B0000 50%, #1a1a1a 100%)',
+                  'linear-gradient(135deg, #0a0a1a 0%, #1a0a2a 50%, #2a0a0a 100%)',
+                  'linear-gradient(135deg, #0d0d0d 0%, #2a0000 60%, #111 100%)',
+                  'linear-gradient(135deg, #1a1a0a 0%, #3a1a00 50%, #0a0a0a 100%)',
+                ];
+                return (
                 <div
                   key={template.id}
                   onClick={() => setSelectedTemplate({ ...template, type: 'image' })}
-                  className={`group relative rounded-xl overflow-hidden cursor-pointer border border-border hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 bg-card-gradient-${(index % 4) + 1}`}
+                  className="group relative rounded-xl overflow-hidden cursor-pointer border border-border hover:border-primary/50 hover:-translate-y-1 transition-all duration-300"
+                  style={{ background: gradients[index % 4] }}
                 >
                   <div className="aspect-[4/5]" />
                   
@@ -101,7 +109,8 @@ export default function Templates() {
                     <p className="text-foreground-secondary text-sm mt-1">Click to view prompt</p>
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
           </TabsContent>
 
@@ -126,11 +135,19 @@ export default function Templates() {
 
             {/* Grid */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {filteredVideos.map((template, index) => (
+              {filteredVideos.map((template, index) => {
+                const gradients = [
+                  'linear-gradient(135deg, #1a0000 0%, #8B0000 50%, #1a1a1a 100%)',
+                  'linear-gradient(135deg, #0a0a1a 0%, #1a0a2a 50%, #2a0a0a 100%)',
+                  'linear-gradient(135deg, #0d0d0d 0%, #2a0000 60%, #111 100%)',
+                  'linear-gradient(135deg, #1a1a0a 0%, #3a1a00 50%, #0a0a0a 100%)',
+                ];
+                return (
                 <div
                   key={template.id}
                   onClick={() => setSelectedTemplate({ ...template, type: 'video' })}
-                  className={`group relative rounded-xl overflow-hidden cursor-pointer border border-border hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 bg-card-gradient-${(index % 4) + 1}`}
+                  className="group relative rounded-xl overflow-hidden cursor-pointer border border-border hover:border-primary/50 hover:-translate-y-1 transition-all duration-300"
+                  style={{ background: gradients[index % 4] }}
                 >
                   <div className="aspect-video flex items-center justify-center">
                     <div className="w-14 h-14 rounded-full bg-black/50 flex items-center justify-center backdrop-blur-sm">
@@ -152,7 +169,8 @@ export default function Templates() {
                     <p className="text-foreground-secondary text-sm">{template.category}</p>
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
           </TabsContent>
 
