@@ -48,11 +48,17 @@
  * The mainPage value must match a key in the PAGES object exactly.
  */
 import Explore from './pages/Explore';
+import Image from './pages/Image';
+import Video from './pages/Video';
+import Edit from './pages/Edit';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "Explore": Explore,
+    "Image": Image,
+    "Video": Video,
+    "Edit": Edit,
 }
 
 export const pagesConfig = {
