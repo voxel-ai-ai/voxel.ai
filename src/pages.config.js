@@ -52,6 +52,10 @@ import Image from './pages/Image';
 import Video from './pages/Video';
 import Edit from './pages/Edit';
 import Audio from './pages/Audio';
+import Apps from './pages/Apps';
+import Community from './pages/Community';
+import Pricing from './pages/Pricing';
+import Templates from './pages/Templates';
 import __Layout from './Layout.jsx';
 
 
@@ -61,6 +65,10 @@ export const PAGES = {
     "Video": Video,
     "Edit": Edit,
     "Audio": Audio,
+    "Apps": Apps,
+    "Community": Community,
+    "Pricing": Pricing,
+    "Templates": Templates,
 }
 
 export const pagesConfig = {
