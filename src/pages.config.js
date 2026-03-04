@@ -51,6 +51,7 @@ import Explore from './pages/Explore';
 import Image from './pages/Image';
 import Video from './pages/Video';
 import Edit from './pages/Edit';
+import Audio from './pages/Audio';
 import __Layout from './Layout.jsx';
 
 
@@ -59,6 +60,7 @@ export const PAGES = {
     "Image": Image,
     "Video": Video,
     "Edit": Edit,
+    "Audio": Audio,
 }
 
 export const pagesConfig = {
