@@ -229,14 +229,18 @@ export const soundEffects = [
 
 // Community Feed Data
 export const communityFeed = [
-  { id: 1, type: 'image', creator: 'alexcreates', views: '12.4K', likes: '2.1K', model: 'Nano Banana Pro' },
-  { id: 2, type: 'video', creator: 'filmstudio', views: '8.2K', likes: '1.5K', model: 'Kling 2.6' },
-  { id: 3, type: 'image', creator: 'artmaster', views: '5.7K', likes: '890', model: 'Seedream 4.5' },
-  { id: 4, type: 'video', creator: 'motionlab', views: '15.3K', likes: '3.2K', model: 'Sora 2' },
-  { id: 5, type: 'image', creator: 'designpro', views: '9.1K', likes: '1.8K', model: 'Soul 2.0' },
-  { id: 6, type: 'image', creator: 'pixelartist', views: '7.5K', likes: '1.2K', model: 'Nano Banana Pro' },
-  { id: 7, type: 'video', creator: 'cinematic_', views: '22.1K', likes: '4.5K', model: 'Veo 3.1' },
-  { id: 8, type: 'image', creator: 'creative_mind', views: '3.4K', likes: '567', model: 'Seedream 5.0 Lite' },
+  { 
+    id: 1, type: 'image', creator: 'alexcreates', views: '12.4K', likes: '2.1K', model: 'Nano Banana Pro',
+    imageUrl: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/da5cf77de_hf_20260222_124200_44de52ac-0250-45a2-9a84-cc87bdf8524d.jpg',
+    prompt: 'A covered Mercedes-AMG GT revealed under a dramatic single spotlight in a dark smoky studio, white satin cloth draped over the vehicle, cinematic god rays cutting through the fog, wet reflective concrete floor, ultra-cinematic 4K render, dark and moody atmosphere'
+  },
+  { id: 2, type: 'video', creator: 'filmstudio', views: '8.2K', likes: '1.5K', model: 'Kling 2.6', prompt: 'Cinematic action sequence, hero in black coat runs toward camera in slow motion, debris and fire around them, crash zoom, dramatic score feel, photorealistic 4K' },
+  { id: 3, type: 'image', creator: 'artmaster', views: '5.7K', likes: '890', model: 'Seedream 4.5', prompt: 'Abstract 3D render of floating geometric shapes, deep red and black palette, metallic surfaces, caustic lighting, photorealistic render, 8K resolution' },
+  { id: 4, type: 'video', creator: 'motionlab', views: '15.3K', likes: '3.2K', model: 'Sora 2', prompt: 'Film noir scene, man in trenchcoat stands under streetlight in rain, shadows and light beams, black and white with red accent, static locked-off shot, 4K' },
+  { id: 5, type: 'image', creator: 'designpro', views: '9.1K', likes: '1.8K', model: 'Soul 2.0', prompt: 'Ultra close-up beauty shot, face with flawless skin, bold red lip, dramatic eye shadow, dark background, studio beauty lighting, Vogue quality, 4K' },
+  { id: 6, type: 'image', creator: 'pixelartist', views: '7.5K', likes: '1.2K', model: 'Nano Banana Pro', prompt: 'A high-fashion editorial portrait of a woman in a dramatic dark studio, red silk dress, moody directional lighting, shallow depth of field, 4K photorealistic, film grain' },
+  { id: 7, type: 'video', creator: 'cinematic_', views: '22.1K', likes: '4.5K', model: 'Veo 3.1', prompt: 'Futuristic skyscraper interior atrium, massive glass ceiling, red neon light strips, people as silhouettes below, ultra-wide angle, architectural photography, 4K' },
+  { id: 8, type: 'image', creator: 'creative_mind', views: '3.4K', likes: '567', model: 'Seedream 5.0 Lite', prompt: 'A cinematic wide-angle shot of a neon-lit Tokyo street at 2AM, rain reflections on asphalt, lone figure walking, volumetric fog, blade runner aesthetic, ultra-detailed 4K' },
 ];
 
 // Feature Cards
