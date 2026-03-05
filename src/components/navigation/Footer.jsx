@@ -41,6 +41,8 @@ const socialLinks = [
 
 export default function Footer() {
   return (
+    <>
+    <ChatWidget />
     <footer className="bg-background border-t border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12">
