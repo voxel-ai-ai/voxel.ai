@@ -68,35 +68,11 @@ export default function MediaCard({
         )}
       </div>
 
-      {/* Hover Overlay */}
+      {/* Hover Overlay - subtle dim */}
       <div className={cn(
-        "absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent",
-        "flex flex-col justify-end p-4 transition-opacity duration-300",
+        "absolute inset-0 bg-black/20 transition-opacity duration-300 pointer-events-none",
         isHovered ? "opacity-100" : "opacity-0"
-      )}>
-        <div className="space-y-3">
-          {title && (
-            <h3 className="text-white font-semibold text-lg">{title}</h3>
-          )}
-          <div className="flex items-center gap-2">
-            <Button 
-              variant="outline" 
-              size="sm"
-              className="flex-1 border-white/30 text-white hover:bg-white/10"
-            >
-              <Eye className="w-4 h-4 mr-1" />
-              View Prompt
-            </Button>
-            <Button 
-              size="sm"
-              className="flex-1 bg-primary hover:bg-primary-hover text-white"
-            >
-              <Wand2 className="w-4 h-4 mr-1" />
-              Recreate
-            </Button>
-          </div>
-        </div>
-      </div>
+      )} />
 
       {/* Bottom Info + Try Now Button */}
       <div className="px-3 py-3 flex flex-col gap-2" style={{ background: '#111' }}>
