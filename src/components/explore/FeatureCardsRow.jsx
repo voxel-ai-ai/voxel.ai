@@ -23,15 +23,18 @@ function ImageCarousel() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrent(prev => (prev + 1) % NANO_BANANA_IMAGES.length);
-    }, 700);
+    }, 800);
     return () => clearInterval(timer);
   }, []);
 
   const prev = (e) => {
+    e.preventDefault();
     e.stopPropagation();
     setCurrent(prev => (prev - 1 + NANO_BANANA_IMAGES.length) % NANO_BANANA_IMAGES.length);
   };
+
   const next = (e) => {
+    e.preventDefault();
     e.stopPropagation();
     setCurrent(prev => (prev + 1) % NANO_BANANA_IMAGES.length);
   };
@@ -43,11 +46,10 @@ function ImageCarousel() {
           key={i}
           src={src}
           alt={`Nano Banana Pro sample ${i + 1}`}
-          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-200"
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
           style={{ opacity: i === current ? 1 : 0 }}
         />
       ))}
-      {/* Arrows */}
       <button
         onClick={prev}
         className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/60 flex items-center justify-center opacity-0 group-hover/carousel:opacity-100 transition-opacity"
@@ -60,12 +62,11 @@ function ImageCarousel() {
       >
         <ChevronRight className="w-4 h-4 text-white" />
       </button>
-      {/* Dots */}
       <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
         {NANO_BANANA_IMAGES.map((_, i) => (
           <button
             key={i}
-            onClick={e => { e.stopPropagation(); setCurrent(i); }}
+            onClick={e => { e.preventDefault(); e.stopPropagation(); setCurrent(i); }}
             className="w-1.5 h-1.5 rounded-full transition-all"
             style={{ background: i === current ? '#E01E1E' : 'rgba(255,255,255,0.4)' }}
           />
@@ -80,17 +81,12 @@ export default function FeatureCardsRow() {
     <section className="py-16 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-4">
-          {featureCards.map((card, index) => {
-            const isNano = card.title === 'Nano Banana Pro';
-            const Wrapper = isNano ? Link : 'div';
-            const wrapperProps = isNano ? { to: createPageUrl('Image') } : {};
-            return (
-            <Wrapper
+          {featureCards.map((card, index) => (
+            <Link
               key={card.id}
-              {...wrapperProps}
-              className="group flex-shrink-0 w-72 rounded-xl border border-border bg-background-secondary overflow-hidden hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 cursor-pointer block"
+              to={card.title === 'Nano Banana Pro' ? createPageUrl('Image') : '#'}
+              className="group flex-shrink-0 w-72 rounded-xl border border-border bg-background-secondary overflow-hidden hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
             >
-              {/* Image area */}
               <div className="relative">
                 {card.title === 'Nano Banana Pro' ? (
                   <ImageCarousel />
@@ -101,8 +97,6 @@ export default function FeatureCardsRow() {
                   {card.tag}
                 </span>
               </div>
-              
-              {/* Content */}
               <div className="p-4">
                 <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-primary transition-colors">
                   {card.title}
@@ -114,9 +108,8 @@ export default function FeatureCardsRow() {
                   Try Now <ArrowRight className="ml-1 w-4 h-4" />
                 </div>
               </div>
-            </Wrapper>
-            );
-          })}
+            </Link>
+          ))}
         </div>
       </div>
     </section>
