@@ -23,7 +23,7 @@ function ImageCarousel() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrent(prev => (prev + 1) % NANO_BANANA_IMAGES.length);
-    }, 700);
+    }, 800);
     return () => clearInterval(timer);
   }, []);
 
@@ -81,8 +81,9 @@ export default function FeatureCardsRow() {
       <div className="max-w-7xl mx-auto">
         <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-4">
           {featureCards.map((card, index) => (
-            <div 
+            <Link
               key={card.id}
+              to={card.title === 'Nano Banana Pro' ? createPageUrl('Image') : '#'}
               className="group flex-shrink-0 w-72 rounded-xl border border-border bg-background-secondary overflow-hidden hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
             >
               {/* Image area */}
