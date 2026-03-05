@@ -76,19 +76,17 @@ function ImageCarousel() {
 }
 
 export default function FeatureCardsRow() {
+  const navigate = useNavigate();
+
   return (
     <section className="py-16 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-4">
-          {featureCards.map((card, index) => {
-            const isNano = card.title === 'Nano Banana Pro';
-            const Wrapper = isNano ? Link : 'div';
-            const wrapperProps = isNano ? { to: createPageUrl('Image') } : {};
-            return (
-            <Wrapper
+          {featureCards.map((card, index) => (
+            <div
               key={card.id}
-              {...wrapperProps}
-              className="group flex-shrink-0 w-72 rounded-xl border border-border bg-background-secondary overflow-hidden hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 cursor-pointer block"
+              onClick={() => card.title === 'Nano Banana Pro' && navigate(createPageUrl('Image'))}
+              className="group flex-shrink-0 w-72 rounded-xl border border-border bg-background-secondary overflow-hidden hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
             >
               {/* Image area */}
               <div className="relative">
@@ -101,7 +99,7 @@ export default function FeatureCardsRow() {
                   {card.tag}
                 </span>
               </div>
-              
+
               {/* Content */}
               <div className="p-4">
                 <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-primary transition-colors">
@@ -114,9 +112,8 @@ export default function FeatureCardsRow() {
                   Try Now <ArrowRight className="ml-1 w-4 h-4" />
                 </div>
               </div>
-            </Wrapper>
-            );
-          })}
+            </div>
+          ))}
         </div>
       </div>
     </section>
