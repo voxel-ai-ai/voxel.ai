@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Play, Eye, Heart, Copy, Wand2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Play, Eye, Heart, Wand2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const gradientStyles = [
