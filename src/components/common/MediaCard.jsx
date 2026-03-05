@@ -29,13 +29,13 @@ export default function MediaCard({
   return (
     <div 
       className={cn(
-        "group relative rounded-xl overflow-hidden cursor-pointer transition-all duration-300",
+        "group relative rounded-xl overflow-hidden cursor-pointer transition-all duration-300 flex flex-col",
         "hover:-translate-y-1 hover:border-glow-red",
         className
       )}
+      style={{ background: '#111', border: '1px solid #2A2A2A' }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={onClick}
     >
       {/* Thumbnail */}
       <div 
