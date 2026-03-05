@@ -241,6 +241,36 @@ export const communityFeed = [
   { id: 6, type: 'image', creator: 'pixelartist', views: '7.5K', likes: '1.2K', model: 'Nano Banana Pro', prompt: 'A high-fashion editorial portrait of a woman in a dramatic dark studio, red silk dress, moody directional lighting, shallow depth of field, 4K photorealistic, film grain' },
   { id: 7, type: 'video', creator: 'cinematic_', views: '22.1K', likes: '4.5K', model: 'Veo 3.1', prompt: 'Futuristic skyscraper interior atrium, massive glass ceiling, red neon light strips, people as silhouettes below, ultra-wide angle, architectural photography, 4K' },
   { id: 8, type: 'image', creator: 'creative_mind', views: '3.4K', likes: '567', model: 'Seedream 5.0 Lite', prompt: 'A cinematic wide-angle shot of a neon-lit Tokyo street at 2AM, rain reflections on asphalt, lone figure walking, volumetric fog, blade runner aesthetic, ultra-detailed 4K' },
+  { 
+    id: 9, type: 'image', creator: 'darkvision', views: '18.7K', likes: '3.9K', model: 'Nano Banana Pro',
+    imageUrl: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/c186ac8af_1c9f0e5b-96cc-416e-b5a9-a94efbeede19.png',
+    prompt: 'Extreme close-up cinematic portrait of a dark fantasy villain, white long hair, glowing reptilian yellow eyes, purple vein face markings, unsettling grin, ultra-detailed skin texture, dramatic shallow depth of field, photorealistic 4K render'
+  },
+  { 
+    id: 10, type: 'image', creator: 'santaclaus_ai', views: '24.1K', likes: '5.2K', model: 'Nano Banana Pro',
+    imageUrl: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/d28584312_6e354a1a-fa83-4c61-a033-e9755dd40b6a.png',
+    prompt: 'Cinematic action scene, badass Santa Claus in red suit wearing sunglasses carrying a child, running from burning apartment building, debris and fire everywhere, dramatic low angle shot, golden hour fire glow, photorealistic 4K'
+  },
+  { 
+    id: 11, type: 'image', creator: 'cinescene_', views: '11.3K', likes: '2.4K', model: 'Nano Banana Pro',
+    imageUrl: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/bcd4a5cc2_54eeba81-1a47-406c-9f86-f4205743fcf3.png',
+    prompt: 'Cinematic scene of Santa Claus in a convenience store holding a candy cane like a weapon, confronting a frightened store clerk, realistic lighting, moody film noir atmosphere, photorealistic 4K'
+  },
+  { 
+    id: 12, type: 'image', creator: 'postapoc_art', views: '16.8K', likes: '3.1K', model: 'Nano Banana Pro',
+    imageUrl: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/444ab3cfd_45012a5c-99eb-4200-82a6-51d24fbeb439.png',
+    prompt: 'Close-up cinematic portrait of a post-apocalyptic survivor, dirty face, kanji tattoo on forehead, intense stare, dusty desert sandstorm background, gritty realistic skin, backpack, ultra-detailed 4K photorealistic'
+  },
+  { 
+    id: 13, type: 'image', creator: 'epicframe_', views: '31.5K', likes: '6.8K', model: 'Nano Banana Pro',
+    imageUrl: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/46b95dc4f_392575fd-e811-45cd-8dc2-c35667345096.png',
+    prompt: 'Epic cinematic action shot, Santa Claus in red suit sprinting through a massive urban building explosion, fire and debris flying everywhere, dramatic wide angle low camera, intense orange fire light, rubble, photorealistic 4K blockbuster quality'
+  },
+  { 
+    id: 14, type: 'image', creator: 'grittyrealism', views: '9.6K', likes: '1.9K', model: 'Nano Banana Pro',
+    imageUrl: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/e293152ad_b33cd0c0-0766-4f5f-a344-c2e6084e6bd8.png',
+    prompt: 'Cinematic close-up portrait of a battle-worn Santa Claus on a busy city street, weathered skin with ash and soot marks, green eyes, disheveled white beard, looking dazed, winter daylight, ultra-realistic 4K'
+  },
 ];
 
 // Feature Cards
