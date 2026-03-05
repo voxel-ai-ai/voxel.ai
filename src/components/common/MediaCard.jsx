@@ -42,7 +42,7 @@ export default function MediaCard({
         style={{ background: gradientStyles[gradientIndex % gradientStyles.length] }}
       >
         {imageUrl && (
-          <img src={imageUrl} alt={title || model} className="absolute inset-0 w-full h-full object-cover" />
+          <img src={imageUrl} alt={title || model} className="absolute inset-0 w-full h-full object-contain" />
         )}
         {type === 'video' && (
           <div className="absolute inset-0 flex items-center justify-center">
