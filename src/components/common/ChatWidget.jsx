@@ -5,8 +5,17 @@ const initialMessages = [
   { role: 'assistant', text: 'Hi! 👋 How can we help you today?' }
 ];
 
+export function openChat() {
+  window.__voxelChatOpen?.();
+}
+
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    window.__voxelChatOpen = () => setOpen(true);
+    return () => { delete window.__voxelChatOpen; };
+  }, []);
   const [messages, setMessages] = useState(initialMessages);
   const [input, setInput] = useState('');
   const bottomRef = useRef(null);
