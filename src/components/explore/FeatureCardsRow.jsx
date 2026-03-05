@@ -1,5 +1,5 @@
-import React from 'react';
-import { ArrowRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { featureCards } from '@/components/data/siteData';
 
 const gradientStyles = [
@@ -8,6 +8,70 @@ const gradientStyles = [
   'linear-gradient(135deg, #0d0d0d 0%, #2a0000 60%, #111 100%)',
   'linear-gradient(135deg, #1a1a0a 0%, #3a1a00 50%, #0a0a0a 100%)',
 ];
+
+const NANO_BANANA_IMAGES = [
+  'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/3f5150d23_hf_20260305_215156_32b827a7-a96e-49fa-a8b5-5f3469e742f6.png',
+  'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/dbb89c959_hf_20260305_223734_38d5166b-2396-4e82-95e8-1b12124d37a4.png',
+  'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/80b8b24e2_hf_20260305_223817_243ab818-26fc-4bcb-bd1e-1a8d4996b1e5.png',
+];
+
+function ImageCarousel() {
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrent(prev => (prev + 1) % NANO_BANANA_IMAGES.length);
+    }, 2500);
+    return () => clearInterval(timer);
+  }, []);
+
+  const prev = (e) => {
+    e.stopPropagation();
+    setCurrent(prev => (prev - 1 + NANO_BANANA_IMAGES.length) % NANO_BANANA_IMAGES.length);
+  };
+  const next = (e) => {
+    e.stopPropagation();
+    setCurrent(prev => (prev + 1) % NANO_BANANA_IMAGES.length);
+  };
+
+  return (
+    <div className="relative h-40 overflow-hidden group/carousel">
+      {NANO_BANANA_IMAGES.map((src, i) => (
+        <img
+          key={i}
+          src={src}
+          alt={`Nano Banana Pro sample ${i + 1}`}
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
+          style={{ opacity: i === current ? 1 : 0 }}
+        />
+      ))}
+      {/* Arrows */}
+      <button
+        onClick={prev}
+        className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/60 flex items-center justify-center opacity-0 group-hover/carousel:opacity-100 transition-opacity"
+      >
+        <ChevronLeft className="w-4 h-4 text-white" />
+      </button>
+      <button
+        onClick={next}
+        className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-black/60 flex items-center justify-center opacity-0 group-hover/carousel:opacity-100 transition-opacity"
+      >
+        <ChevronRight className="w-4 h-4 text-white" />
+      </button>
+      {/* Dots */}
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+        {NANO_BANANA_IMAGES.map((_, i) => (
+          <button
+            key={i}
+            onClick={e => { e.stopPropagation(); setCurrent(i); }}
+            className="w-1.5 h-1.5 rounded-full transition-all"
+            style={{ background: i === current ? '#E01E1E' : 'rgba(255,255,255,0.4)' }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function FeatureCardsRow() {
   return (
@@ -19,9 +83,14 @@ export default function FeatureCardsRow() {
               key={card.id}
               className="group flex-shrink-0 w-72 rounded-xl border border-border bg-background-secondary overflow-hidden hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
             >
-              {/* Image Placeholder */}
-              <div className="h-40 relative" style={{ background: gradientStyles[index % 4] }}>
-                <span className="absolute top-3 left-3 px-2 py-1 text-xs font-bold bg-primary text-white rounded">
+              {/* Image area */}
+              <div className="relative">
+                {card.title === 'Nano Banana Pro' ? (
+                  <ImageCarousel />
+                ) : (
+                  <div className="h-40 relative" style={{ background: gradientStyles[index % 4] }} />
+                )}
+                <span className="absolute top-3 left-3 px-2 py-1 text-xs font-bold bg-primary text-white rounded z-10">
                   {card.tag}
                 </span>
               </div>
