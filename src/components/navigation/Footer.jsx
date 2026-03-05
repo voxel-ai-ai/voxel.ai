@@ -107,12 +107,21 @@ export default function Footer() {
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
                 <li key={link.name}>
-                  <Link
-                    to={link.path}
-                    className="text-sm text-foreground-muted hover:text-white transition-colors"
-                  >
-                    {link.name}
-                  </Link>
+                  {link.name === 'Q&A' ? (
+                    <button
+                      onClick={() => window.__voxelChatOpen?.()}
+                      className="text-sm text-foreground-muted hover:text-white transition-colors text-left"
+                    >
+                      Q&A
+                    </button>
+                  ) : (
+                    <Link
+                      to={link.path}
+                      className="text-sm text-foreground-muted hover:text-white transition-colors"
+                    >
+                      {link.name}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
