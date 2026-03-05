@@ -3,17 +3,22 @@ import Navbar from './components/navigation/Navbar';
 import Footer from './components/navigation/Footer';
 import { Toaster } from '@/components/ui/sonner';
 import { Plus } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
-export default function Layout({ children }) {
+const MINIMAL_FOOTER_PAGES = ['/image', '/video', '/audio', '/edit', '/apps'];
+
+export default function Layout({ children, currentPageName }) {
+  const location = useLocation();
+  const isMinimal = MINIMAL_FOOTER_PAGES.includes(location.pathname.toLowerCase());
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Navbar />
       <main className="pt-16">
         {children}
       </main>
-      <Footer />
+      <Footer minimal={isMinimal} />
       <Toaster position="bottom-right" />
       
       {/* Mobile Floating Create Button */}
