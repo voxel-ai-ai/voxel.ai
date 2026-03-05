@@ -44,7 +44,7 @@ function ImageCarousel() {
           key={i}
           src={src}
           alt={`Nano Banana Pro sample ${i + 1}`}
-          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-200"
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-100"
           style={{ opacity: i === current ? 1 : 0 }}
         />
       ))}
