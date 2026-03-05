@@ -27,6 +27,7 @@ const footerLinks = {
     { name: 'Careers', path: '#' },
     { name: 'Press Kit', path: '#' },
     { name: 'Contact', path: '#' },
+    { name: 'Q&A', path: '#' },
   ],
 };
 
