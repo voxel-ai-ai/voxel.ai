@@ -131,7 +131,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-sm text-foreground-muted">
-            © 2026 VOXEL AI™. All rights reserved.
+            &copy; 2026 VOXEL AI&trade;. All rights reserved.
           </p>
           <div className="flex items-center gap-6 text-sm text-foreground-muted">
             <a href="#" className="hover:text-white transition-colors">Privacy</a>
