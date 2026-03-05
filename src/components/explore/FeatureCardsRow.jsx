@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { featureCards } from '@/components/data/siteData';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 
 const gradientStyles = [
   'linear-gradient(135deg, #1a0000 0%, #8B0000 50%, #1a1a1a 100%)',
