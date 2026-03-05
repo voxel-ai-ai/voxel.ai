@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import VoxelLogo from '../VoxelLogo';
 import { Twitter, Instagram, Youtube, Linkedin, Github } from 'lucide-react';
+import ChatWidget from '../common/ChatWidget';
 
 const footerLinks = {
   product: [
