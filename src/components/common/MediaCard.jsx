@@ -39,7 +39,7 @@ export default function MediaCard({
       {/* Thumbnail */}
       <div 
         className="aspect-[4/5] w-full relative"
-        style={{ background: gradientStyles[gradientIndex % gradientStyles.length] }}
+        style={{ background: imageUrl ? '#000' : gradientStyles[gradientIndex % gradientStyles.length] }}
       >
         {imageUrl && (
           <img src={imageUrl} alt={title || model} className="absolute inset-0 w-full h-full object-contain" />
