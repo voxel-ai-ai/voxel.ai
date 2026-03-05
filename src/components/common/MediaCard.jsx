@@ -98,28 +98,38 @@ export default function MediaCard({
         </div>
       </div>
 
-      {/* Bottom Info */}
-      {(creator || views || likes) && (
-        <div className="absolute bottom-0 left-0 right-0 px-4 py-3 bg-gradient-to-t from-black to-transparent">
-          <div className="flex items-center justify-between text-sm text-foreground-secondary">
+      {/* Bottom Info + Try Now Button */}
+      <div className="px-3 py-3 flex flex-col gap-2" style={{ background: '#111' }}>
+        {(creator || views || likes) && (
+          <div className="flex items-center justify-between text-xs text-foreground-secondary">
             {creator && <span>@{creator}</span>}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               {views && (
                 <span className="flex items-center gap-1">
-                  <Eye className="w-4 h-4" />
+                  <Eye className="w-3 h-3" />
                   {views}
                 </span>
               )}
               {likes && (
                 <span className="flex items-center gap-1">
-                  <Heart className="w-4 h-4" />
+                  <Heart className="w-3 h-3" />
                   {likes}
                 </span>
               )}
             </div>
           </div>
-        </div>
-      )}
+        )}
+        <button
+          onClick={onClick}
+          className="w-full py-2 rounded-lg text-sm font-semibold text-white transition-colors flex items-center justify-center gap-2"
+          style={{ background: '#E01E1E' }}
+          onMouseEnter={e => e.currentTarget.style.background = '#ff2222'}
+          onMouseLeave={e => e.currentTarget.style.background = '#E01E1E'}
+        >
+          <Wand2 className="w-4 h-4" />
+          Try Now
+        </button>
+      </div>
     </div>
   );
 }
