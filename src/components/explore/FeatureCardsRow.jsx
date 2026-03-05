@@ -23,7 +23,7 @@ function ImageCarousel() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrent(prev => (prev + 1) % NANO_BANANA_IMAGES.length);
-    }, 2500);
+    }, 800);
     return () => clearInterval(timer);
   }, []);
 
