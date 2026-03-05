@@ -126,7 +126,7 @@ export default function DiscoverFeed() {
               prompt={item.prompt}
               imageUrl={item.imageUrl}
               gradientIndex={index}
-              className={index % 3 === 0 ? 'md:row-span-2' : ''}
+              className=""
               onClick={() => setSelectedItem(item)}
             />
           ))}
