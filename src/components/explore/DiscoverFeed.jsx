@@ -31,9 +31,9 @@ function ImageModal({ item, onClose }) {
         </button>
 
         {/* Image */}
-        <div className="aspect-video w-full relative overflow-hidden" style={{ background: '#1a1a1a' }}>
+        <div className="w-full relative overflow-hidden" style={{ background: '#1a1a1a' }}>
           {item.imageUrl ? (
-            <img src={item.imageUrl} alt="" className="w-full h-full object-cover" />
+            <img src={item.imageUrl} alt="" className="w-full h-auto block" />
           ) : (
             <div
               className="w-full h-full"
