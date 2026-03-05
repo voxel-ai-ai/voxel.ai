@@ -15,7 +15,6 @@ const NANO_BANANA_IMAGES = [
   'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/3f5150d23_hf_20260305_215156_32b827a7-a96e-49fa-a8b5-5f3469e742f6.png',
   'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/dbb89c959_hf_20260305_223734_38d5166b-2396-4e82-95e8-1b12124d37a4.png',
   'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/80b8b24e2_hf_20260305_223817_243ab818-26fc-4bcb-bd1e-1a8d4996b1e5.png',
-  'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/1a9382dde_hf_20260305_221453_b848f7f8-c4f4-4105-87b5-6d644c5eb62f.png',
 ];
 
 function ImageCarousel() {
@@ -24,7 +23,7 @@ function ImageCarousel() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrent(prev => (prev + 1) % NANO_BANANA_IMAGES.length);
-    }, 700);
+    }, 400);
     return () => clearInterval(timer);
   }, []);
 
