@@ -39,10 +39,14 @@ export default function MediaCard({
       {/* Thumbnail */}
       <div 
         className="w-full relative overflow-hidden"
-        style={{ background: imageUrl ? 'transparent' : gradientStyles[gradientIndex % gradientStyles.length], minHeight: imageUrl ? 0 : '200px' }}
+        style={{ 
+          background: gradientStyles[gradientIndex % gradientStyles.length], 
+          minHeight: '200px',
+          aspectRatio: '4/3'
+        }}
       >
         {imageUrl && (
-          <img src={imageUrl} alt={title || model} className="w-full h-auto block" />
+          <img src={imageUrl} alt={title || model} className="absolute inset-0 w-full h-full object-cover" />
         )}
         {type === 'video' && (
           <div className="absolute inset-0 flex items-center justify-center">
