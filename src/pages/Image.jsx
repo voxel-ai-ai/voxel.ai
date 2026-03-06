@@ -175,6 +175,7 @@ export default function Image() {
               Generating your image...
             </p>
 
+
             {/* Progress bar at bottom of page */}
             <div
               className="fixed bottom-0 left-0 right-0 overflow-hidden"
