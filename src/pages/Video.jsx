@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
-import ModelSelector from '@/components/common/ModelSelector';
 import GenerationCanvas from '@/components/common/GenerationCanvas';
-import PromptBar from '@/components/common/PromptBar';
+import VideoPromptBar from '@/components/video/VideoPromptBar';
 import TemplateModal from '@/components/common/TemplateModal';
 import TransitionCard from '@/components/common/TransitionCard';
 import { videoModels, videoTemplates, transitions } from '@/components/data/siteData';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { 
   ZoomIn, ZoomOut, MoveHorizontal, MoveVertical, 
-  RotateCcw, Hand, Circle, Orbit, Upload, FileText, Film
+  Hand, Circle, Orbit
 } from 'lucide-react';
 
 const cameraControls = [
