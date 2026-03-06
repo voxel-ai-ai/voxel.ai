@@ -401,7 +401,7 @@ export default function VideoPromptBar({ prompt, onPromptChange, onGenerate, isG
           </div>
 
           {/* BOTTOM ROW */}
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-2 flex-wrap hide-scrollbar" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '10px 14px 14px 14px', overflowX: 'auto' }}>
             {/* Model chip */}
             <button
               onClick={() => { setShowModelModal(v => !v); setShowAspectDrop(false); setShowDurationDrop(false); }}
