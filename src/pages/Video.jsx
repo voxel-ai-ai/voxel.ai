@@ -59,7 +59,6 @@ export default function Video() {
 
   const handleRecreate = (template) => {
     setPrompt(template.prompt);
-    setSelectedModel(videoModels.find(m => m.name === template.model) || videoModels[0]);
     setSelectedTemplate(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
