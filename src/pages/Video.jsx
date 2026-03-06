@@ -26,7 +26,7 @@ const videoCategories = ['All', 'Action', 'Cinematic', 'Product Ad', 'Nature', '
 const transitionCategories = ['All', 'Cinematic', 'Elemental', 'Motion', 'Glitch', 'Smooth', '3D'];
 
 export default function Video() {
-  const [selectedModel, setSelectedModel] = useState(videoModels[0]);
+  const [selectedModel, setSelectedModel] = useState(null);
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [result, setResult] = useState(null);
