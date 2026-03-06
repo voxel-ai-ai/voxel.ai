@@ -1,228 +1,525 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Plus, Zap, ChevronRight, Minus, AtSign, Sparkles } from 'lucide-react';
-import ModelDropdown from './ModelDropdown';
+import { ArrowUp, ChevronDown, Minus, Plus, Pencil, Type, X, Check } from 'lucide-react';
+
+// ─── Image Models ────────────────────────────────────────────────────────────
+const IMAGE_MODELS = [
+  { id: 'nano-pro',        name: 'Nano Banana Pro',   brand: 'VOXEL',            credits: 150,  badge: null,        desc: 'Best 4K image model for stunning high-aesthetic visuals',                   tags: ['4K', 'Fast', 'Portrait'] },
+  { id: 'nano-2',          name: 'Nano Banana 2',     brand: 'VOXEL',            credits: 100,  badge: 'NEW',       desc: 'Pro-level quality at Flash speed with subject consistency',                  tags: ['4K', 'Ultra Fast'] },
+  { id: 'soul-2',          name: 'Soul 2.0',          brand: 'VOXEL',            credits: 120,  badge: null,        desc: 'Fashion-forward portraits with built-in cultural fluency',                   tags: ['4K', 'Fashion', 'Portrait'] },
+  { id: 'seedream-5-lite', name: 'Seedream 5.0 Lite', brand: 'ByteDance',        credits: 50,   badge: 'UNLIMITED', desc: 'Intelligent visual reasoning for logically accurate images',                 tags: ['2K', 'Fast', 'Unlimited'] },
+  { id: 'seedream-4',      name: 'Seedream 4.5',      brand: 'ByteDance',        credits: 80,   badge: null,        desc: 'Next-gen 4K image model for detailed photorealistic images',                 tags: ['4K', 'Photorealistic'] },
+  { id: 'gpt-image',       name: 'GPT Image 1.5',     brand: 'OpenAI',           credits: 200,  badge: 'PREMIUM',   desc: 'True-color precision rendering with intelligent composition',                tags: ['4K', 'Precise'] },
+  { id: 'flux-kontext',    name: 'Flux Kontext',       brand: 'Black Forest Labs', credits: 90,  badge: null,        desc: 'Stylistic diversity and aesthetic variations for any genre',                 tags: ['2K', 'Stylized'] },
+  { id: 'flux-2',          name: 'Flux 2',             brand: 'Black Forest Labs', credits: 60,  badge: null,        desc: 'Fast high-quality generation with strong prompt adherence',                  tags: ['2K', 'Fast'] },
+  { id: 'wan-22',          name: 'Wan 2.2 Image',      brand: 'Alibaba',          credits: 70,   badge: null,        desc: 'Stylized and illustrated visual creation with artistic depth',               tags: ['2K', 'Artistic'] },
+  { id: 'skin-enhancer',   name: 'Skin Enhancer',      brand: 'VOXEL',            credits: 40,   badge: null,        desc: 'Adds natural realistic skin textures to any portrait',                       tags: ['Enhancement', 'Portrait'] },
+  { id: 'face-swap',       name: 'Face Swap',          brand: 'VOXEL',            credits: 30,   badge: null,        desc: 'Instant seamless AI face replacement in any image',                          tags: ['Swap', 'Fast'] },
+  { id: 'relight',         name: 'Relight',            brand: 'VOXEL',            credits: 35,   badge: null,        desc: 'Change lighting conditions in any generated or real image',                  tags: ['Edit', 'Lighting'] },
+];
 
 const ASPECT_RATIOS = ['1:1', '16:9', '9:16', '4:3', '3:4', '21:9'];
 const QUALITIES = ['Draft', '1K', '2K', '4K'];
+const STYLES = ['Photorealistic', 'Cinematic', 'Fashion', 'Dark', 'Minimal', '3D', 'Anime', 'Illustration'];
 
-export default function ImagePromptBar({ prompt, onPromptChange, onGenerate, isGenerating, selectedModel, onModelChange, imageCount, onCountChange }) {
-  const [showModelDropdown, setShowModelDropdown] = useState(false);
-  const [showAspectDropdown, setShowAspectDropdown] = useState(false);
-  const [showQualityDropdown, setShowQualityDropdown] = useState(false);
+const brandColors = {
+  VOXEL: '#E01E1E',
+  ByteDance: '#F59E0B',
+  OpenAI: '#10A37F',
+  'Black Forest Labs': '#8B5CF6',
+  Alibaba: '#F97316',
+};
 
-  const [aspectRatio, setAspectRatio] = useState('1:1');
-  const [quality, setQuality] = useState('2K');
-  const modelBtnRef = useRef(null);
-
-  const handleKey = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      onGenerate();
-    }
+const Badge = ({ type }) => {
+  const styles = {
+    NEW:       { background: 'rgba(100,220,100,0.15)', border: '1px solid rgba(100,220,100,0.3)', color: '#88EE88' },
+    UNLIMITED: { background: 'rgba(100,160,255,0.15)', border: '1px solid rgba(100,160,255,0.3)', color: '#88BBFF' },
+    PREMIUM:   { background: 'rgba(255,200,50,0.15)',  border: '1px solid rgba(255,200,50,0.3)',  color: '#FFCC44' },
   };
-
-  const Chip = ({ children, onClick, active }) => (
-    <button
-      onClick={onClick}
-      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] transition-all whitespace-nowrap relative"
-      style={{
-        background: active ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.07)',
-        border: `1px solid ${active ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.1)'}`,
-        color: 'rgba(255,255,255,0.85)',
-      }}
-      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.13)'; }}
-      onMouseLeave={e => { e.currentTarget.style.background = active ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.07)'; }}
-    >
-      {children}
-    </button>
+  if (!styles[type]) return null;
+  return (
+    <span style={{ ...styles[type], padding: '2px 7px', borderRadius: 5, fontSize: 11, marginLeft: 6 }}>
+      {type}
+    </span>
   );
+};
 
-  const Dropdown = ({ options, selected, onSelect, onClose }) => {
-    const ref = useRef(null);
-    React.useEffect(() => {
-      const fn = (e) => { if (ref.current && !ref.current.contains(e.target)) onClose(); };
-      document.addEventListener('mousedown', fn);
-      return () => document.removeEventListener('mousedown', fn);
-    }, [onClose]);
-    return (
-      <div
-        ref={ref}
-        className="absolute z-50"
-        style={{
-          bottom: 'calc(100% + 8px)',
-          left: 0,
-          background: 'rgba(22,22,26,0.92)',
-          backdropFilter: 'blur(24px)',
-          WebkitBackdropFilter: 'blur(24px)',
-          border: '1px solid rgba(255,255,255,0.12)',
-          borderRadius: 12,
-          boxShadow: '0 -8px 30px rgba(0,0,0,0.7)',
-          minWidth: 120,
-          overflow: 'hidden',
-        }}
-      >
-        {options.map(opt => (
-          <button
-            key={opt}
-            onClick={() => { onSelect(opt); onClose(); }}
-            className="w-full text-left px-4 py-2.5 text-sm transition-colors"
-            style={{
-              background: selected === opt ? 'rgba(255,255,255,0.1)' : 'transparent',
-              color: selected === opt ? '#fff' : 'rgba(255,255,255,0.6)',
-            }}
-            onMouseEnter={e => { if (selected !== opt) e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; }}
-            onMouseLeave={e => { if (selected !== opt) e.currentTarget.style.background = 'transparent'; }}
-          >
-            {opt}
-          </button>
-        ))}
-      </div>
-    );
-  };
+const BrandDot = ({ brand }) => (
+  <span
+    style={{
+      width: 18, height: 18, borderRadius: '50%',
+      background: brandColors[brand] || '#666',
+      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+      fontSize: 9, fontWeight: 700, color: '#fff', flexShrink: 0,
+    }}
+  >
+    {brand.charAt(0)}
+  </span>
+);
+
+// ─── Model Modal ─────────────────────────────────────────────────────────────
+function ModelModal({ selectedId, onSelect, onClose }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const fn = (e) => { if (ref.current && !ref.current.contains(e.target)) onClose(); };
+    document.addEventListener('mousedown', fn);
+    return () => document.removeEventListener('mousedown', fn);
+  }, [onClose]);
 
   return (
     <div
+      ref={ref}
       style={{
         position: 'fixed',
-        bottom: 24,
+        bottom: 'calc(28px + 140px + 8px)',
         left: '50%',
         transform: 'translateX(-50%)',
-        width: 'min(780px, 90vw)',
-        background: 'rgba(18,18,22,0.75)',
-        backdropFilter: 'blur(32px) saturate(1.6)',
-        WebkitBackdropFilter: 'blur(32px) saturate(1.6)',
+        width: 'min(880px, 92vw)',
+        maxHeight: '65vh',
+        overflowY: 'auto',
+        background: 'rgba(20,20,24,0.97)',
+        backdropFilter: 'blur(32px)',
+        WebkitBackdropFilter: 'blur(32px)',
         border: '1px solid rgba(255,255,255,0.09)',
-        borderRadius: 20,
-        padding: '14px 16px 12px 16px',
-        boxShadow: '0 8px 48px rgba(0,0,0,0.65), 0 1px 0 rgba(255,255,255,0.05) inset',
-        zIndex: 50,
+        borderRadius: 22,
+        padding: 20,
+        boxShadow: '0 -12px 60px rgba(0,0,0,0.7)',
+        zIndex: 200,
+        animation: 'imgModelSlideUp 0.28s cubic-bezier(0.4,0,0.2,1)',
       }}
     >
-      {/* Top Row */}
-      <div className="flex items-center gap-3 mb-3">
-        {/* + Button */}
-        <button
-          className="w-8 h-8 flex items-center justify-center rounded-lg flex-shrink-0 transition-all"
-          style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)' }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.13)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
-        >
-          <Plus className="w-4 h-4" style={{ color: 'rgba(255,255,255,0.6)' }} />
-        </button>
+      <style>{`
+        @keyframes imgModelSlideUp {
+          from { opacity:0; transform:translateX(-50%) translateY(16px); }
+          to   { opacity:1; transform:translateX(-50%) translateY(0); }
+        }
+      `}</style>
 
-        {/* Prompt Input */}
-        <input
-          type="text"
-          value={prompt}
-          onChange={e => onPromptChange(e.target.value)}
-          onKeyDown={handleKey}
-          placeholder="Describe the scene you imagine..."
-          className="flex-1 bg-transparent outline-none text-white text-[15px] video-prompt-input"
-          style={{ fontFamily: 'DM Sans, sans-serif' }}
-        />
-
-        {/* Generate Button */}
-        <button
-          onClick={onGenerate}
-          disabled={isGenerating}
-          className="flex items-center gap-2 font-bold text-white transition-all flex-shrink-0"
-          style={{
-            background: isGenerating ? '#8B0000' : '#E01E1E',
-            borderRadius: 10,
-            padding: '10px 20px',
-            fontSize: 14,
-            opacity: isGenerating ? 0.8 : 1,
-          }}
-        >
-          {isGenerating ? (
-            <span className="animate-pulse">Generating...</span>
-          ) : (
-            <>Generate <span style={{ color: '#ffaaaa' }}>✦</span> 2</>
-          )}
-        </button>
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4 pb-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+        <span style={{ color: '#fff', fontSize: 17, fontWeight: 700 }}>Models</span>
+        <div className="flex items-center gap-3">
+          <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13 }}>✦ 40,000 credits remaining</span>
+          <button onClick={onClose} className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors">
+            <X className="w-4 h-4" style={{ color: 'rgba(255,255,255,0.5)' }} />
+          </button>
+        </div>
       </div>
 
-      {/* Bottom Chips Row */}
-      <div className="flex items-center gap-2 flex-wrap">
-        {/* Model Chip */}
-        <div className="relative" ref={modelBtnRef}>
-          <Chip onClick={() => { setShowModelDropdown(v => !v); setShowAspectDropdown(false); setShowQualityDropdown(false); }} active={showModelDropdown}>
-            <span className="w-3 h-3 rounded-sm flex-shrink-0" style={{ background: '#E01E1E' }} />
-            <span>{selectedModel.name}</span>
-            <ChevronRight className="w-3 h-3" style={{ color: '#666' }} />
-          </Chip>
-          {showModelDropdown && (
-            <ModelDropdown
-              selectedModelId={selectedModel.id}
-              onSelect={m => { onModelChange(m); setShowModelDropdown(false); }}
-              onClose={() => setShowModelDropdown(false)}
-            />
-          )}
-        </div>
-
-        {/* Aspect Ratio */}
-        <div className="relative">
-          <Chip onClick={() => { setShowAspectDropdown(v => !v); setShowModelDropdown(false); setShowQualityDropdown(false); }} active={showAspectDropdown}>
-            <span className="text-[11px]">□</span>
-            {aspectRatio}
-          </Chip>
-          {showAspectDropdown && (
-            <Dropdown
-              options={ASPECT_RATIOS}
-              selected={aspectRatio}
-              onSelect={setAspectRatio}
-              onClose={() => setShowAspectDropdown(false)}
-            />
-          )}
-        </div>
-
-        {/* Quality */}
-        <div className="relative">
-          <Chip onClick={() => { setShowQualityDropdown(v => !v); setShowModelDropdown(false); setShowAspectDropdown(false); }} active={showQualityDropdown}>
-            <span style={{ color: '#E01E1E' }}>♡</span>
-            {quality}
-          </Chip>
-          {showQualityDropdown && (
-            <Dropdown
-              options={QUALITIES}
-              selected={quality}
-              onSelect={setQuality}
-              onClose={() => setShowQualityDropdown(false)}
-            />
-          )}
-        </div>
-
-        {/* Image Count */}
-        <div
-          className="flex items-center gap-1 px-2 py-1.5 rounded-full text-[13px]"
-          style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.85)' }}
-        >
-          <button
-            onClick={() => onCountChange(Math.max(1, imageCount - 1))}
-            className="w-5 h-5 flex items-center justify-center rounded hover:bg-white/10 transition-colors"
-          >
-            <Minus className="w-3 h-3" />
-          </button>
-          <span className="w-6 text-center">{imageCount}/4</span>
-          <button
-            onClick={() => onCountChange(Math.min(4, imageCount + 1))}
-            className="w-5 h-5 flex items-center justify-center rounded hover:bg-white/10 transition-colors"
-          >
-            <Plus className="w-3 h-3" />
-          </button>
-        </div>
-
-        {/* @ chip */}
-        <Chip onClick={() => {}}>
-          <AtSign className="w-3.5 h-3.5" />
-        </Chip>
-
-        {/* Enhance chip */}
-        <Chip onClick={() => {}}>
-          <Sparkles className="w-3.5 h-3.5" style={{ color: '#E01E1E' }} />
-          Enhance
-        </Chip>
+      {/* Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+        {IMAGE_MODELS.map((m) => {
+          const isSelected = selectedId === m.id;
+          return (
+            <button
+              key={m.id}
+              onClick={() => { onSelect(m); onClose(); }}
+              className="text-left transition-all duration-200"
+              style={{
+                background: isSelected ? 'rgba(224,30,30,0.05)' : 'rgba(255,255,255,0.04)',
+                border: `1px solid ${isSelected ? 'rgba(224,30,30,0.55)' : 'rgba(255,255,255,0.08)'}`,
+                borderRadius: 14,
+                padding: 15,
+                cursor: 'pointer',
+              }}
+              onMouseEnter={e => { if (!isSelected) { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)'; }}}
+              onMouseLeave={e => { if (!isSelected) { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <BrandDot brand={m.brand} />
+                  <span style={{ color: '#fff', fontSize: 14, fontWeight: 600 }}>{m.name}</span>
+                  {m.badge && <Badge type={m.badge} />}
+                </div>
+                <span style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 999, padding: '2px 8px', fontSize: 12, color: 'rgba(255,255,255,0.6)', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                  ✦ {m.credits}
+                </span>
+              </div>
+              <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 12, marginBottom: 8, lineHeight: 1.5 }}>{m.desc}</p>
+              <div className="flex flex-wrap gap-1">
+                {m.tags.map(tag => (
+                  <span key={tag} style={{ background: 'rgba(255,255,255,0.07)', borderRadius: 6, padding: '3px 8px', fontSize: 11, color: 'rgba(255,255,255,0.55)' }}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              {isSelected && (
+                <div className="flex justify-end mt-2">
+                  <Check className="w-3.5 h-3.5" style={{ color: '#E01E1E' }} />
+                </div>
+              )}
+            </button>
+          );
+        })}
       </div>
     </div>
+  );
+}
+
+// ─── Simple Dropdown ─────────────────────────────────────────────────────────
+function SimpleDropdown({ options, selected, onSelect, onClose }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const fn = (e) => { if (ref.current && !ref.current.contains(e.target)) onClose(); };
+    document.addEventListener('mousedown', fn);
+    return () => document.removeEventListener('mousedown', fn);
+  }, [onClose]);
+  return (
+    <div ref={ref} style={{
+      position: 'absolute', bottom: 'calc(100% + 8px)', left: 0,
+      background: 'rgba(18,18,22,0.88)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
+      border: '1px solid rgba(255,255,255,0.12)', borderRadius: 12,
+      boxShadow: '0 -8px 30px rgba(0,0,0,0.7)', overflow: 'hidden', minWidth: 120, zIndex: 300,
+    }}>
+      {options.map(opt => (
+        <button key={opt} onClick={() => { onSelect(opt); onClose(); }}
+          className="w-full text-left px-4 py-2.5 text-sm transition-colors"
+          style={{ background: selected === opt ? 'rgba(255,255,255,0.1)' : 'transparent', color: selected === opt ? '#fff' : 'rgba(255,255,255,0.6)' }}
+          onMouseEnter={e => { if (selected !== opt) e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; }}
+          onMouseLeave={e => { if (selected !== opt) e.currentTarget.style.background = 'transparent'; }}
+        >
+          {opt}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+// ─── Style Popup ─────────────────────────────────────────────────────────────
+function StylePopup({ selected, onSelect, onClose }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const fn = (e) => { if (ref.current && !ref.current.contains(e.target)) onClose(); };
+    document.addEventListener('mousedown', fn);
+    return () => document.removeEventListener('mousedown', fn);
+  }, [onClose]);
+  return (
+    <div ref={ref} style={{
+      position: 'absolute', bottom: 'calc(100% + 8px)', left: 0,
+      background: 'rgba(18,18,22,0.92)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
+      border: '1px solid rgba(255,255,255,0.12)', borderRadius: 14,
+      boxShadow: '0 -8px 30px rgba(0,0,0,0.7)', padding: 12, zIndex: 300,
+      display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, minWidth: 220,
+    }}>
+      {STYLES.map(s => (
+        <button key={s} onClick={() => { onSelect(s); onClose(); }}
+          className="text-left px-3 py-2 rounded-lg text-[13px] transition-all"
+          style={{
+            background: selected === s ? 'rgba(224,30,30,0.12)' : 'rgba(255,255,255,0.05)',
+            border: `1px solid ${selected === s ? 'rgba(224,30,30,0.4)' : 'rgba(255,255,255,0.08)'}`,
+            color: selected === s ? '#fff' : 'rgba(255,255,255,0.65)',
+          }}
+          onMouseEnter={e => { if (selected !== s) e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; }}
+          onMouseLeave={e => { if (selected !== s) e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
+        >
+          {s}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+// ─── Chip ────────────────────────────────────────────────────────────────────
+const chipBase = {
+  display: 'inline-flex', alignItems: 'center', gap: 6,
+  height: 34, padding: '0 14px',
+  background: 'rgba(255,255,255,0.07)',
+  border: '1px solid rgba(255,255,255,0.11)',
+  borderRadius: 999, fontSize: 13,
+  fontFamily: '"DM Sans", sans-serif',
+  color: 'rgba(255,255,255,0.82)',
+  cursor: 'pointer', whiteSpace: 'nowrap',
+  transition: 'all 0.18s ease',
+};
+
+// ─── Main Component ───────────────────────────────────────────────────────────
+export default function ImagePromptBar({
+  prompt, onPromptChange, onGenerate, isGenerating,
+  selectedModel, onModelChange, imageCount, onCountChange,
+}) {
+  const [model, setModel] = useState(IMAGE_MODELS[0]);
+  const [aspectRatio, setAspectRatio] = useState('16:9');
+  const [quality, setQuality] = useState('2K');
+  const [style, setStyle] = useState(null);
+  const [negativeActive, setNegativeActive] = useState(false);
+  const [negativePrompt, setNegativePrompt] = useState('');
+  const [showModelModal, setShowModelModal] = useState(false);
+  const [showAspectDrop, setShowAspectDrop] = useState(false);
+  const [showQualityDrop, setShowQualityDrop] = useState(false);
+  const [showStylePop, setShowStylePop] = useState(false);
+  const negRef = useRef(null);
+
+  const handleSelectModel = (m) => {
+    setModel(m);
+    if (onModelChange) onModelChange(m);
+  };
+
+  const closeAll = () => { setShowModelModal(false); setShowAspectDrop(false); setShowQualityDrop(false); setShowStylePop(false); };
+
+  useEffect(() => {
+    if (negativeActive && negRef.current) negRef.current.focus();
+  }, [negativeActive]);
+
+  const handleGenerate = () => { if (onGenerate) onGenerate(); };
+  const handleKey = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleGenerate(); } };
+
+  // sync selectedModel from parent if provided
+  useEffect(() => {
+    if (selectedModel && selectedModel.id !== model.id) setModel(selectedModel);
+  }, [selectedModel]);
+
+  return (
+    <>
+      {showModelModal && (
+        <ModelModal selectedId={model.id} onSelect={handleSelectModel} onClose={() => setShowModelModal(false)} />
+      )}
+
+      <style>{`
+        .img-prompt-textarea::placeholder { color: rgba(255,255,255,0.28); }
+        .img-neg-textarea::placeholder { color: rgba(255,255,255,0.25); }
+        @keyframes imgSendPulse {
+          0%   { transform: scale(1); }
+          40%  { transform: scale(0.88); }
+          70%  { transform: scale(1.08); }
+          100% { transform: scale(1); }
+        }
+      `}</style>
+
+      {/* ── Fixed Bar ── */}
+      <div style={{
+        position: 'fixed',
+        bottom: 28,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: 'min(880px, 92vw)',
+        background: 'rgba(18,18,22,0.72)',
+        backdropFilter: 'blur(36px) saturate(1.8)',
+        WebkitBackdropFilter: 'blur(36px) saturate(1.8)',
+        border: '1px solid rgba(255,255,255,0.1)',
+        borderRadius: 22,
+        overflow: 'hidden',
+        boxShadow: '0 8px 48px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.05) inset, 0 -1px 0 rgba(0,0,0,0.3) inset',
+        transition: 'all 0.32s cubic-bezier(0.4,0,0.2,1)',
+        zIndex: 100,
+      }}>
+
+        {/* ── Content Padding ── */}
+        <div style={{ padding: '16px 16px 0 16px', position: 'relative' }}>
+
+          {/* Top-right corner buttons */}
+          <div style={{ position: 'absolute', top: 14, right: 14, display: 'flex', alignItems: 'center', gap: 6 }}>
+            <button
+              onClick={() => setNegativeActive(false)}
+              title="Collapse"
+              style={{ width: 34, height: 34, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'rgba(255,255,255,0.6)', transition: 'background 0.18s' }}
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.14)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
+            >
+              <span style={{ fontSize: 14 }}>←</span>
+            </button>
+            <button
+              title="Enhance text"
+              style={{ width: 34, height: 34, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'rgba(255,255,255,0.6)', transition: 'background 0.18s' }}
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.14)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
+            >
+              <Type className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          {/* + Upload button */}
+          <button
+            style={{ width: 32, height: 32, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'rgba(255,255,255,0.7)', fontSize: 18, marginBottom: 10, transition: 'background 0.18s' }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.13)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.07)'}
+            title="Upload reference image"
+          >
+            <Plus className="w-4 h-4" />
+          </button>
+
+          {/* Main prompt textarea */}
+          <div style={{ position: 'relative', paddingRight: 44 }}>
+            <textarea
+              value={prompt}
+              onChange={e => onPromptChange && onPromptChange(e.target.value)}
+              onKeyDown={handleKey}
+              placeholder="Describe the image you want to create"
+              rows={2}
+              className="img-prompt-textarea"
+              style={{
+                width: '100%', background: 'transparent', border: 'none', outline: 'none',
+                color: '#fff', fontSize: 15, fontFamily: '"DM Sans", sans-serif',
+                resize: 'none', lineHeight: 1.6, caretColor: 'white',
+              }}
+            />
+            <Pencil className="w-3 h-3" style={{ position: 'absolute', bottom: 4, right: 2, color: 'rgba(255,255,255,0.28)' }} />
+          </div>
+
+          {/* ── Negative Prompt Zone ── */}
+          {negativeActive && (
+            <>
+              <div style={{ width: '100%', height: 1, background: 'rgba(255,255,255,0.07)', margin: '10px 0 0 0' }} />
+              <div style={{ padding: '12px 0 6px 0' }}>
+                <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: 14, fontWeight: 600, marginBottom: 4 }}>Negative Prompt</p>
+                <p style={{ color: 'rgba(255,255,255,0.38)', fontSize: 13, marginBottom: 10 }}>
+                  List what to exclude from your image (e.g. if you don't want blur, type "blur")
+                </p>
+                <div style={{ position: 'relative', paddingRight: 20 }}>
+                  <textarea
+                    ref={negRef}
+                    value={negativePrompt}
+                    onChange={e => setNegativePrompt(e.target.value)}
+                    placeholder="blurry, low quality, watermark, distorted face, extra fingers, bad anatomy..."
+                    rows={2}
+                    className="img-neg-textarea"
+                    style={{
+                      width: '100%', background: 'transparent', border: 'none', outline: 'none',
+                      color: '#fff', fontSize: 15, fontFamily: '"DM Sans", sans-serif',
+                      resize: 'none', lineHeight: 1.6, caretColor: 'white',
+                    }}
+                  />
+                  <Pencil className="w-3 h-3" style={{ position: 'absolute', bottom: 4, right: 2, color: 'rgba(255,255,255,0.28)' }} />
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* ── Chips Row ── */}
+        <div style={{
+          borderTop: '1px solid rgba(255,255,255,0.06)',
+          padding: '10px 14px 14px 14px',
+          display: 'flex', alignItems: 'center', gap: 8,
+          overflowX: 'auto',
+        }}
+          className="hide-scrollbar"
+        >
+          {/* Model chip */}
+          <button
+            onClick={() => { closeAll(); setShowModelModal(v => !v); }}
+            style={{
+              ...chipBase,
+              background: showModelModal ? 'rgba(255,255,255,0.12)' : chipBase.background,
+              border: showModelModal ? '1px solid rgba(255,255,255,0.22)' : chipBase.border,
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.12)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = showModelModal ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.07)'; e.currentTarget.style.borderColor = showModelModal ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.11)'; }}
+          >
+            <BrandDot brand={model.brand} />
+            <span>{model.name}</span>
+            <ChevronDown className="w-3 h-3" style={{ color: 'rgba(255,255,255,0.4)' }} />
+          </button>
+
+          {/* Aspect Ratio */}
+          <div className="relative">
+            <button
+              onClick={() => { closeAll(); setShowAspectDrop(v => !v); }}
+              style={{ ...chipBase, background: showAspectDrop ? 'rgba(255,255,255,0.12)' : chipBase.background }}
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.12)'}
+              onMouseLeave={e => e.currentTarget.style.background = showAspectDrop ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.07)'}
+            >
+              <span style={{ fontSize: 11 }}>□</span>
+              <span>{aspectRatio}</span>
+            </button>
+            {showAspectDrop && (
+              <SimpleDropdown options={ASPECT_RATIOS} selected={aspectRatio} onSelect={setAspectRatio} onClose={() => setShowAspectDrop(false)} />
+            )}
+          </div>
+
+          {/* Quality */}
+          <div className="relative">
+            <button
+              onClick={() => { closeAll(); setShowQualityDrop(v => !v); }}
+              style={{ ...chipBase, background: showQualityDrop ? 'rgba(255,255,255,0.12)' : chipBase.background }}
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.12)'}
+              onMouseLeave={e => e.currentTarget.style.background = showQualityDrop ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.07)'}
+            >
+              <span style={{ color: '#E01E1E', fontSize: 14 }}>♡</span>
+              <span>{quality}</span>
+            </button>
+            {showQualityDrop && (
+              <SimpleDropdown options={QUALITIES} selected={quality} onSelect={setQuality} onClose={() => setShowQualityDrop(false)} />
+            )}
+          </div>
+
+          {/* Image Count stepper */}
+          <div style={{ ...chipBase, padding: '0 8px', gap: 4, cursor: 'default' }}>
+            <button
+              onClick={() => onCountChange && onCountChange(Math.max(1, imageCount - 1))}
+              style={{ width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 4, background: 'transparent', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.7)' }}
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+            >
+              <Minus className="w-3 h-3" />
+            </button>
+            <span style={{ width: 28, textAlign: 'center', fontSize: 13 }}>{imageCount}/4</span>
+            <button
+              onClick={() => onCountChange && onCountChange(Math.min(4, imageCount + 1))}
+              style={{ width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 4, background: 'transparent', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.7)' }}
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+            >
+              <Plus className="w-3 h-3" />
+            </button>
+          </div>
+
+          {/* Negative Prompt chip */}
+          <button
+            onClick={() => setNegativeActive(v => !v)}
+            style={{
+              ...chipBase,
+              background: negativeActive ? 'rgba(255,255,255,0.13)' : chipBase.background,
+              border: negativeActive ? '1px solid rgba(255,255,255,0.28)' : chipBase.border,
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.12)'}
+            onMouseLeave={e => e.currentTarget.style.background = negativeActive ? 'rgba(255,255,255,0.13)' : 'rgba(255,255,255,0.07)'}
+          >
+            Negative Prompt{negativeActive ? ' ●' : ''}
+          </button>
+
+          {/* Style chip */}
+          <div className="relative">
+            <button
+              onClick={() => { closeAll(); setShowStylePop(v => !v); }}
+              style={{
+                ...chipBase,
+                background: showStylePop || style ? 'rgba(255,255,255,0.12)' : chipBase.background,
+                border: showStylePop || style ? '1px solid rgba(255,255,255,0.22)' : chipBase.border,
+              }}
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.12)'}
+              onMouseLeave={e => e.currentTarget.style.background = showStylePop || style ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.07)'}
+            >
+              <span style={{ fontSize: 14 }}>⊕</span>
+              <span>{style || 'Style'}</span>
+            </button>
+            {showStylePop && (
+              <StylePopup selected={style} onSelect={setStyle} onClose={() => setShowStylePop(false)} />
+            )}
+          </div>
+
+          {/* Spacer */}
+          <div style={{ flex: 1 }} />
+
+          {/* Send button — RED for image page */}
+          <button
+            onClick={handleGenerate}
+            disabled={isGenerating}
+            style={{
+              width: 46, height: 46, borderRadius: '50%',
+              background: isGenerating ? 'rgba(224,30,30,0.5)' : 'rgba(224,30,30,0.9)',
+              border: 'none',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: isGenerating ? 'not-allowed' : 'pointer',
+              flexShrink: 0,
+              boxShadow: isGenerating ? 'none' : '0 0 20px rgba(224,30,30,0.35)',
+              transition: 'all 0.18s ease',
+            }}
+            onMouseEnter={e => { if (!isGenerating) { e.currentTarget.style.background = '#FF2222'; e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 0 28px rgba(224,30,30,0.55)'; }}}
+            onMouseLeave={e => { if (!isGenerating) { e.currentTarget.style.background = 'rgba(224,30,30,0.9)'; e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 0 20px rgba(224,30,30,0.35)'; }}}
+          >
+            <ArrowUp className="w-5 h-5" style={{ color: '#fff' }} />
+          </button>
+        </div>
+      </div>
+    </>
   );
 }
