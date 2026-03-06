@@ -136,7 +136,7 @@ export default function Image() {
 
             {/* Subtitle */}
             <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 15, color: '#666' }}>
-              {selectedModel.subtitle}
+              {MODEL_SUBTITLES[selectedModel.name] || 'Create stunning images in seconds'}
             </p>
           </div>
         )}
