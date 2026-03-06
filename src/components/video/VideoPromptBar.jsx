@@ -315,119 +315,85 @@ export default function VideoPromptBar({ prompt, onPromptChange, onGenerate, isG
             transition: 'all 0.32s cubic-bezier(0.4,0,0.2,1)',
           }}
         >
-          {/* Dismiss button top-right */}
-          <button
-            style={{ position: 'absolute', top: 10, right: 12, width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 6, cursor: 'pointer', background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.3)', transition: 'color 0.2s' }}
-            onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,255,255,0.7)'}
-            onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.3)'}
-            title="Dismiss"
-          >
-            <X className="w-3.5 h-3.5" />
-          </button>
+          {/* Content area */}
+          <div style={{ padding: '14px 16px 0 14px', position: 'relative' }}>
 
-          {/* TOP ROW */}
-          <div className="flex items-center gap-2 mb-3" style={{ paddingRight: 28 }}>
-            {!negativeMode ? (
+            {/* Top-right corner buttons */}
+            <div style={{ position: 'absolute', top: 10, right: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <button
+                style={{ width: 34, height: 34, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'rgba(255,255,255,0.6)', transition: 'background 0.18s' }}
+                onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.14)'}
+                onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.07)'}
+                title="Add text overlay"
+              >
+                <Type className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            {/* Main prompt row */}
+            <div className="flex items-center gap-2 mb-3" style={{ paddingRight: 48 }}>
+              {/* Start frame */}
+              <button
+                style={iconBtnBase}
+                title="Upload start frame"
+                onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.12)'}
+                onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.07)'}
+              >
+                <ImagePlus className="w-4 h-4" />
+              </button>
+              {/* Swap */}
+              <button
+                style={iconBtnBase}
+                title="Swap frames"
+                onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.12)'}
+                onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.07)'}
+              >
+                <ArrowLeftRight className="w-4 h-4" />
+              </button>
+              {/* End frame */}
+              <button
+                style={iconBtnBase}
+                title="Upload end frame"
+                onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.12)'}
+                onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.07)'}
+              >
+                <ImagePlus className="w-4 h-4" />
+              </button>
+
+              {/* Prompt input */}
+              <input
+                ref={inputRef}
+                type="text"
+                value={prompt}
+                onChange={e => onPromptChange && onPromptChange(e.target.value)}
+                onKeyDown={handleKey}
+                placeholder="Describe the video you want to create"
+                className="video-prompt-input"
+                style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', color: '#fff', fontSize: 15, fontFamily: '"DM Sans", sans-serif' }}
+              />
+              <Pencil className="w-3 h-3 flex-shrink-0" style={{ color: 'rgba(255,255,255,0.28)' }} />
+            </div>
+
+            {/* Negative Prompt inline zone */}
+            {negativeMode && (
               <>
-                {/* Start frame */}
-                <button
-                  style={iconBtnBase}
-                  title="Upload start frame"
-                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.12)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.07)'}
-                >
-                  <ImagePlus className="w-4 h-4" />
-                </button>
-                {/* Swap */}
-                <button
-                  style={iconBtnBase}
-                  title="Swap frames"
-                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.12)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.07)'}
-                >
-                  <ArrowLeftRight className="w-4 h-4" />
-                </button>
-                {/* End frame */}
-                <button
-                  style={iconBtnBase}
-                  title="Upload end frame"
-                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.12)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.07)'}
-                >
-                  <ImagePlus className="w-4 h-4" />
-                </button>
-
-                {/* Prompt input */}
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={prompt}
-                  onChange={e => onPromptChange && onPromptChange(e.target.value)}
-                  onKeyDown={handleKey}
-                  placeholder="Describe the video you want to create"
-                  className="video-prompt-input"
-                  style={{
-                    flex: 1,
-                    background: 'transparent',
-                    border: 'none',
-                    outline: 'none',
-                    color: '#fff',
-                    fontSize: 15,
-                    fontFamily: '"DM Sans", sans-serif',
-                  }}
-                />
-
-                {/* +T button */}
-                <button
-                  style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0, color: 'rgba(255,255,255,0.7)', transition: 'background 0.2s' }}
-                  title="Add text overlay"
-                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.18)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
-                >
-                  <Type className="w-3.5 h-3.5" />
-                </button>
-              </>
-            ) : (
-              <>
-                {/* Negative prompt mode header */}
-                <div className="flex-1">
-                  <div className="flex items-start justify-between mb-1">
-                    <div>
-                      <p style={{ color: '#fff', fontSize: 15, fontWeight: 600, fontFamily: '"DM Sans", sans-serif', marginBottom: 3 }}>Negative Prompt</p>
-                      <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, fontFamily: '"DM Sans", sans-serif' }}>
-                        List what to exclude from your video (e.g. if you don't want trees, type "trees")
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2 flex-shrink-0 ml-4">
-                      <button
-                        onClick={() => setNegativeMode(false)}
-                        style={{ ...iconBtnBase, width: 30, height: 30, borderRadius: 8 }}
-                        title="Back to prompt"
-                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.12)'}
-                        onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.07)'}
-                      >
-                        <ArrowLeft className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        style={{ ...iconBtnBase, width: 30, height: 30, borderRadius: 8 }}
-                        title="Add text overlay"
-                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.12)'}
-                        onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.07)'}
-                      >
-                        <Type className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 mt-2">
-                    <input
+                <div style={{ width: '100%', height: 1, background: 'rgba(255,255,255,0.07)', marginBottom: 12 }} />
+                <div style={{ paddingBottom: 6 }}>
+                  <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: 14, fontWeight: 600, fontFamily: '"DM Sans", sans-serif', marginBottom: 4 }}>Negative Prompt</p>
+                  <p style={{ color: 'rgba(255,255,255,0.38)', fontSize: 13, fontFamily: '"DM Sans", sans-serif', marginBottom: 10 }}>
+                    List what to exclude from your video (e.g. if you don't want trees, type "trees")
+                  </p>
+                  <div style={{ position: 'relative', paddingRight: 20 }}>
+                    <textarea
                       autoFocus
-                      type="text"
                       value={negativePrompt}
                       onChange={e => setNegativePrompt(e.target.value)}
                       placeholder="trees, blurry, low quality, distorted faces, watermark..."
-                      style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', color: '#fff', fontSize: 14, fontFamily: '"DM Sans", sans-serif' }}
+                      rows={2}
+                      style={{ width: '100%', background: 'transparent', border: 'none', outline: 'none', color: '#fff', fontSize: 15, fontFamily: '"DM Sans", sans-serif', resize: 'none', lineHeight: 1.6, caretColor: 'white' }}
+                      className="video-prompt-input"
                     />
-                    <Pencil className="w-4 h-4 flex-shrink-0" style={{ color: 'rgba(255,255,255,0.3)' }} />
+                    <Pencil className="w-3 h-3" style={{ position: 'absolute', bottom: 4, right: 2, color: 'rgba(255,255,255,0.28)' }} />
                   </div>
                 </div>
               </>
