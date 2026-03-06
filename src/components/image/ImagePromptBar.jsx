@@ -21,14 +21,14 @@ const IMAGE_MODELS = [
 const ASPECT_RATIOS = ['1:1', '16:9', '9:16', '4:3', '3:4', '21:9'];
 const QUALITIES = ['Draft', '1K', '2K', '4K'];
 const STYLES = [
-  { name: 'Photorealistic', img: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=120&q=80&fit=crop' },
   { name: 'Cinematic',      img: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=120&q=80&fit=crop' },
-  { name: 'Fashion',        img: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=120&q=80&fit=crop' },
-  { name: 'Dark',           img: 'https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?w=120&q=80&fit=crop' },
-  { name: 'Minimal',        img: 'https://images.unsplash.com/photo-1557683316-973673baf926?w=120&q=80&fit=crop' },
-  { name: '3D',             img: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=120&q=80&fit=crop' },
+  { name: 'Realistic',      img: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=120&q=80&fit=crop' },
   { name: 'Anime',          img: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=120&q=80&fit=crop' },
-  { name: 'Illustration',   img: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=120&q=80&fit=crop' },
+  { name: '3D',             img: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=120&q=80&fit=crop' },
+  { name: '2D',             img: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=120&q=80&fit=crop' },
+  { name: 'Illustration',   img: 'https://images.unsplash.com/photo-1536924940846-227afb31e2a5?w=120&q=80&fit=crop' },
+  { name: 'Pixar',          img: 'https://images.unsplash.com/photo-1560942485-b2a11cc13456?w=120&q=80&fit=crop' },
+  { name: 'Cartoon',        img: 'https://images.unsplash.com/photo-1534972195531-d756b9bfa9f2?w=120&q=80&fit=crop' },
 ];
 
 const brandColors = {
