@@ -214,7 +214,6 @@ const iconBtnBase = {
 };
 
 export default function VideoPromptBar({ prompt, onPromptChange, onGenerate, isGenerating, selectedModel, onModelChange }) {
-  const navigate = useNavigate();
   const [model, setModel] = useState(VIDEO_MODELS[0]);
   const [aspectRatio, setAspectRatio] = useState('Auto');
   const [duration, setDuration] = useState('5 sec');
