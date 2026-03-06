@@ -205,25 +205,41 @@ function StylePopup({ selected, onSelect, onClose }) {
   return (
     <div ref={ref} style={{
       position: 'absolute', bottom: 'calc(100% + 8px)', left: 0,
-      background: 'rgba(18,18,22,0.92)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
-      border: '1px solid rgba(255,255,255,0.12)', borderRadius: 14,
-      boxShadow: '0 -8px 30px rgba(0,0,0,0.7)', padding: 12, zIndex: 300,
-      display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, minWidth: 220,
+      background: 'rgba(14,14,18,0.88)', backdropFilter: 'blur(32px)', WebkitBackdropFilter: 'blur(32px)',
+      border: '1px solid rgba(255,255,255,0.12)', borderRadius: 16,
+      boxShadow: '0 -8px 40px rgba(0,0,0,0.8)', padding: 10, zIndex: 300,
+      display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, minWidth: 380,
     }}>
-      {STYLES.map(s => (
-        <button key={s} onClick={() => { onSelect(s); onClose(); }}
-          className="text-left px-3 py-2 rounded-lg text-[13px] transition-all"
-          style={{
-            background: selected === s ? 'rgba(224,30,30,0.12)' : 'rgba(255,255,255,0.05)',
-            border: `1px solid ${selected === s ? 'rgba(224,30,30,0.4)' : 'rgba(255,255,255,0.08)'}`,
-            color: selected === s ? '#fff' : 'rgba(255,255,255,0.65)',
-          }}
-          onMouseEnter={e => { if (selected !== s) e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; }}
-          onMouseLeave={e => { if (selected !== s) e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
-        >
-          {s}
-        </button>
-      ))}
+      {STYLES.map(s => {
+        const isSelected = selected === s.name;
+        return (
+          <button key={s.name} onClick={() => { onSelect(s.name); onClose(); }}
+            style={{
+              background: 'transparent', border: 'none', padding: 0, cursor: 'pointer',
+              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
+            }}
+          >
+            <div style={{
+              width: 76, height: 76, borderRadius: 10, overflow: 'hidden',
+              border: `2px solid ${isSelected ? 'rgba(224,30,30,0.8)' : 'rgba(255,255,255,0.1)'}`,
+              boxShadow: isSelected ? '0 0 12px rgba(224,30,30,0.4)' : 'none',
+              transition: 'all 0.18s',
+              position: 'relative',
+            }}
+            onMouseEnter={e => { if (!isSelected) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.35)'; }}
+            onMouseLeave={e => { if (!isSelected) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
+            >
+              <img src={s.img} alt={s.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+              {isSelected && (
+                <div style={{ position: 'absolute', inset: 0, background: 'rgba(224,30,30,0.18)' }} />
+              )}
+            </div>
+            <span style={{ fontSize: 11, color: isSelected ? '#fff' : 'rgba(255,255,255,0.55)', fontFamily: '"DM Sans", sans-serif', transition: 'color 0.18s' }}>
+              {s.name}
+            </span>
+          </button>
+        );
+      })}
     </div>
   );
 }
