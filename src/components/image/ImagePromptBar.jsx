@@ -197,55 +197,76 @@ function SimpleDropdown({ options, selected, onSelect, onClose }) {
 // ─── Style Popup ─────────────────────────────────────────────────────────────
 function StylePopup({ selected, onSelect, onClose }) {
   const ref = useRef(null);
+  const [search, setSearch] = useState('');
   useEffect(() => {
     const fn = (e) => { if (ref.current && !ref.current.contains(e.target)) onClose(); };
     document.addEventListener('mousedown', fn);
     return () => document.removeEventListener('mousedown', fn);
   }, [onClose]);
+
+  const filtered = STYLES.filter(s => s.name.toLowerCase().includes(search.toLowerCase()));
+
   return (
     <div ref={ref} style={{
       position: 'fixed',
-      bottom: 'calc(28px + 140px + 12px)',
+      bottom: 'calc(28px + 72px + 12px)',
       left: '50%',
       transform: 'translateX(-50%)',
-      width: 'min(520px, 92vw)',
-      background: 'rgba(16,16,20,0.95)',
+      width: 'min(360px, 92vw)',
+      maxHeight: '70vh',
+      overflowY: 'auto',
+      background: 'rgba(22,22,26,0.97)',
       backdropFilter: 'blur(40px) saturate(1.8)',
       WebkitBackdropFilter: 'blur(40px) saturate(1.8)',
-      border: '1px solid rgba(255,255,255,0.1)',
+      border: '1px solid rgba(255,255,255,0.09)',
       borderRadius: 18,
-      boxShadow: '0 -8px 60px rgba(0,0,0,0.8)',
-      padding: 14, zIndex: 200,
-      display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10,
+      boxShadow: '0 -12px 60px rgba(0,0,0,0.8)',
+      padding: '14px 0 8px 0',
+      zIndex: 200,
       animation: 'imgStyleSlideUp 0.25s cubic-bezier(0.4,0,0.2,1)',
     }}>
-      {STYLES.map(s => {
+      {/* Search */}
+      <div style={{ padding: '0 12px 10px 12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 10, padding: '8px 12px' }}>
+          <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 14 }}>⌕</span>
+          <input
+            autoFocus
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search styles..."
+            style={{ background: 'transparent', border: 'none', outline: 'none', color: '#fff', fontSize: 13, fontFamily: '"DM Sans", sans-serif', width: '100%' }}
+          />
+        </div>
+      </div>
+
+      {/* Label */}
+      <div style={{ padding: '0 14px 8px 14px', color: 'rgba(255,255,255,0.3)', fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: 6 }}>
+        <span>✦</span> STYLES
+      </div>
+
+      {/* List */}
+      {filtered.map(s => {
         const isSelected = selected === s.name;
         return (
-          <button key={s.name} onClick={() => { onSelect(s.name); onClose(); }}
+          <button
+            key={s.name}
+            onClick={() => { onSelect(s.name); onClose(); }}
             style={{
-              background: 'transparent', border: 'none', padding: 0, cursor: 'pointer',
-              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
+              width: '100%', display: 'flex', alignItems: 'center', gap: 12,
+              padding: '10px 14px', background: isSelected ? 'rgba(255,255,255,0.08)' : 'transparent',
+              border: 'none', cursor: 'pointer', textAlign: 'left', transition: 'background 0.15s',
             }}
+            onMouseEnter={e => { if (!isSelected) e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
+            onMouseLeave={e => { if (!isSelected) e.currentTarget.style.background = 'transparent'; }}
           >
-            <div style={{
-              width: 76, height: 76, borderRadius: 10, overflow: 'hidden',
-              border: `2px solid ${isSelected ? 'rgba(224,30,30,0.8)' : 'rgba(255,255,255,0.1)'}`,
-              boxShadow: isSelected ? '0 0 12px rgba(224,30,30,0.4)' : 'none',
-              transition: 'all 0.18s',
-              position: 'relative',
-            }}
-            onMouseEnter={e => { if (!isSelected) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.35)'; }}
-            onMouseLeave={e => { if (!isSelected) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
-            >
+            <div style={{ width: 44, height: 44, borderRadius: 10, overflow: 'hidden', flexShrink: 0, border: `2px solid ${isSelected ? 'rgba(224,30,30,0.7)' : 'rgba(255,255,255,0.1)'}` }}>
               <img src={s.img} alt={s.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-              {isSelected && (
-                <div style={{ position: 'absolute', inset: 0, background: 'rgba(224,30,30,0.18)' }} />
-              )}
             </div>
-            <span style={{ fontSize: 11, color: isSelected ? '#fff' : 'rgba(255,255,255,0.55)', fontFamily: '"DM Sans", sans-serif', transition: 'color 0.18s' }}>
-              {s.name}
-            </span>
+            <div style={{ flex: 1 }}>
+              <div style={{ color: '#fff', fontSize: 14, fontWeight: 600, fontFamily: '"DM Sans", sans-serif' }}>{s.name}</div>
+              <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12, fontFamily: '"DM Sans", sans-serif', marginTop: 2 }}>{s.desc}</div>
+            </div>
+            {isSelected && <Check className="w-3.5 h-3.5" style={{ color: '#E01E1E', flexShrink: 0 }} />}
           </button>
         );
       })}
