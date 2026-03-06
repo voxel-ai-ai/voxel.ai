@@ -84,11 +84,13 @@ export default function ImagePromptBar({ prompt, onPromptChange, onGenerate, isG
         left: '50%',
         transform: 'translateX(-50%)',
         width: 'min(780px, 90vw)',
-        background: '#1A1A1A',
-        border: '1px solid #2A2A2A',
-        borderRadius: 16,
+        background: 'rgba(18,18,22,0.75)',
+        backdropFilter: 'blur(32px) saturate(1.6)',
+        WebkitBackdropFilter: 'blur(32px) saturate(1.6)',
+        border: '1px solid rgba(255,255,255,0.09)',
+        borderRadius: 20,
         padding: '14px 16px 12px 16px',
-        boxShadow: '0 8px 40px rgba(0,0,0,0.6)',
+        boxShadow: '0 8px 48px rgba(0,0,0,0.65), 0 1px 0 rgba(255,255,255,0.05) inset',
         zIndex: 50,
       }}
     >
