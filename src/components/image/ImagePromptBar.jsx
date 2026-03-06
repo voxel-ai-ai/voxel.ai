@@ -194,8 +194,8 @@ export default function ImagePromptBar({ prompt, onPromptChange, onGenerate, isG
 
         {/* Image Count */}
         <div
-          className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[13px]"
-          style={{ background: '#111', border: '1px solid #333', color: '#ccc' }}
+          className="flex items-center gap-1 px-2 py-1.5 rounded-full text-[13px]"
+          style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.85)' }}
         >
           <button
             onClick={() => onCountChange(Math.max(1, imageCount - 1))}
