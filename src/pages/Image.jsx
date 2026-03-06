@@ -30,7 +30,7 @@ const RESULT_GRADIENTS = [
 ];
 
 export default function Image() {
-  const [selectedModel, setSelectedModel] = useState(IMAGE_MODELS[0]);
+  const [selectedModel, setSelectedModel] = useState({ id: 'nano-pro', name: 'Nano Banana Pro' });
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [results, setResults] = useState(null); // null = empty, array = done
