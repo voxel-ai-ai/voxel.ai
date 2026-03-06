@@ -30,7 +30,6 @@ export default function Video() {
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [result, setResult] = useState(null);
-  const [inputMode, setInputMode] = useState('text');
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [activeVideoCategory, setActiveVideoCategory] = useState('All');
   const [activeTransitionCategory, setActiveTransitionCategory] = useState('All');
