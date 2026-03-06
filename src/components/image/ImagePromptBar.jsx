@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Plus, Zap, ChevronRight, Minus, AtSign, PenLine } from 'lucide-react';
+import { Plus, Zap, ChevronRight, Minus, AtSign, Sparkles } from 'lucide-react';
 import ModelDropdown from './ModelDropdown';
 
 const ASPECT_RATIOS = ['1:1', '16:9', '9:16', '4:3', '3:4', '21:9'];
