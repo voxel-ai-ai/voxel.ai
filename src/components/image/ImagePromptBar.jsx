@@ -24,12 +24,14 @@ export default function ImagePromptBar({ prompt, onPromptChange, onGenerate, isG
   const Chip = ({ children, onClick, active }) => (
     <button
       onClick={onClick}
-      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[13px] transition-colors whitespace-nowrap relative"
+      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] transition-all whitespace-nowrap relative"
       style={{
-        background: active ? '#222' : '#111',
-        border: `1px solid ${active ? '#444' : '#333'}`,
-        color: '#ccc',
+        background: active ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.07)',
+        border: `1px solid ${active ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.1)'}`,
+        color: 'rgba(255,255,255,0.85)',
       }}
+      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.13)'; }}
+      onMouseLeave={e => { e.currentTarget.style.background = active ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.07)'; }}
     >
       {children}
     </button>
