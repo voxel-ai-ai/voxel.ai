@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowUp, ChevronDown, Minus, Plus, Pencil, Type, X, Check } from 'lucide-react';
+import PageSwitcher from '@/components/common/PageSwitcher';
 
 // ─── Image Models ────────────────────────────────────────────────────────────
 const IMAGE_MODELS = [

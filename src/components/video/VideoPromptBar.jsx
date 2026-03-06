@@ -1,11 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
   ImagePlus, ArrowLeftRight, ArrowUp, X, ChevronDown,
-  Clock, Volume2, Crosshair, Pencil, Type,
-  Image, Video, Music, Check
+  Clock, Volume2, Crosshair, Pencil, Type, Check
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
+import PageSwitcher from '@/components/common/PageSwitcher';
 
 const VIDEO_MODELS = [
   { id: 'veo31', name: 'Veo 3.1', brand: 'Google', credits: 1200, tags: ['Start/End Frame', 'Audio', '4K', '8 sec'] },

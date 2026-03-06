@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PageSwitcher from '@/components/common/PageSwitcher';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
