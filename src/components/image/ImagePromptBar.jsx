@@ -117,7 +117,7 @@ export default function ImagePromptBar({ prompt, onPromptChange, onGenerate, isG
           onChange={e => onPromptChange(e.target.value)}
           onKeyDown={handleKey}
           placeholder="Describe the scene you imagine..."
-          className="flex-1 bg-transparent outline-none text-white text-[15px] placeholder:text-[#444]"
+          className="flex-1 bg-transparent outline-none text-white text-[15px] video-prompt-input"
           style={{ fontFamily: 'DM Sans, sans-serif' }}
         />
 
