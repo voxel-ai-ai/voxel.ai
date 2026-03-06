@@ -101,15 +101,14 @@ export default function Video() {
           </div>
         </div>
 
-        {/* Prompt Bar */}
-        <PromptBar
+        {/* Video Prompt Bar */}
+        <VideoPromptBar
           prompt={prompt}
           onPromptChange={setPrompt}
           onGenerate={handleGenerate}
           isGenerating={isGenerating}
-          model={selectedModel}
-          type="video"
-          className="mb-16"
+          selectedModel={selectedModel}
+          onModelChange={setSelectedModel}
         />
 
         {/* Video Templates Section */}
