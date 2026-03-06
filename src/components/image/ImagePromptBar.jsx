@@ -512,6 +512,7 @@ export default function ImagePromptBar({
                 ...chipBase,
                 background: showStylePop || style ? 'rgba(255,255,255,0.12)' : chipBase.background,
                 border: showStylePop || style ? '1px solid rgba(255,255,255,0.22)' : chipBase.border,
+
               }}
               onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.12)'}
               onMouseLeave={e => e.currentTarget.style.background = showStylePop || style ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.07)'}
