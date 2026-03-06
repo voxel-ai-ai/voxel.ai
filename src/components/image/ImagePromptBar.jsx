@@ -204,11 +204,20 @@ function StylePopup({ selected, onSelect, onClose }) {
   }, [onClose]);
   return (
     <div ref={ref} style={{
-      position: 'absolute', bottom: 'calc(100% + 8px)', left: 0,
-      background: 'rgba(14,14,18,0.88)', backdropFilter: 'blur(32px)', WebkitBackdropFilter: 'blur(32px)',
-      border: '1px solid rgba(255,255,255,0.12)', borderRadius: 16,
-      boxShadow: '0 -8px 40px rgba(0,0,0,0.8)', padding: 10, zIndex: 300,
-      display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, minWidth: 380,
+      position: 'fixed',
+      bottom: 'calc(28px + 80px + 12px)',
+      left: '50%',
+      transform: 'translateX(-50%)',
+      width: 'min(500px, 92vw)',
+      background: 'rgba(16,16,20,0.92)',
+      backdropFilter: 'blur(40px) saturate(1.8)',
+      WebkitBackdropFilter: 'blur(40px) saturate(1.8)',
+      border: '1px solid rgba(255,255,255,0.1)',
+      borderRadius: 18,
+      boxShadow: '0 -8px 60px rgba(0,0,0,0.7)',
+      padding: 14, zIndex: 200,
+      display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10,
+      animation: 'imgStyleSlideUp 0.25s cubic-bezier(0.4,0,0.2,1)',
     }}>
       {STYLES.map(s => {
         const isSelected = selected === s.name;
