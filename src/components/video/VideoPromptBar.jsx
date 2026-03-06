@@ -365,17 +365,16 @@ export default function VideoPromptBar({ prompt, onPromptChange, onGenerate, isG
                   onChange={e => onPromptChange && onPromptChange(e.target.value)}
                   onKeyDown={handleKey}
                   placeholder="Describe the video you want to create"
+                  className="video-prompt-input"
                   style={{
                     flex: 1,
                     background: 'transparent',
                     border: 'none',
                     outline: 'none',
-                    color: prompt ? '#fff' : undefined,
+                    color: '#fff',
                     fontSize: 15,
                     fontFamily: '"DM Sans", sans-serif',
-                    '--placeholder-color': 'rgba(255,255,255,0.35)',
                   }}
-                  className="placeholder-[rgba(255,255,255,0.35)]"
                 />
 
                 {/* +T button */}
