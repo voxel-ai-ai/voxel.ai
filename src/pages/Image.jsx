@@ -7,18 +7,20 @@ import { imageTemplates } from '@/components/data/siteData';
 import { Download, Heart, RefreshCw, Maximize2, History, Globe } from 'lucide-react';
 import { toast } from 'sonner';
 
-const IMAGE_MODELS = [
-  { id: 'nano-pro', name: 'Nano Banana Pro', subtitle: 'Create stunning, high-aesthetic images in seconds' },
-  { id: 'soul-2', name: 'Soul 2.0', subtitle: 'Fashion-forward portraits with cultural fluency' },
-  { id: 'seedream-4', name: 'Seedream 4.5', subtitle: 'Next-gen 4K images with photorealistic detail' },
-  { id: 'seedream-5-lite', name: 'Seedream 5.0 Lite', subtitle: 'Intelligent visual reasoning, unlimited access' },
-  { id: 'gpt-image', name: 'GPT Image 1.5', subtitle: 'True-color precision rendering by OpenAI' },
-  { id: 'flux', name: 'Flux Kontext', subtitle: 'Stylistic diversity and aesthetic variations' },
-  { id: 'nano-2', name: 'Nano Banana 2', subtitle: 'Pro quality at Flash speed' },
-  { id: 'nano', name: 'Nano Banana', subtitle: 'Create stunning, high-aesthetic images in seconds' },
-  { id: 'soul', name: 'Soul', subtitle: 'Create stunning, high-aesthetic images in seconds' },
-  { id: 'face-swap', name: 'Face Swap', subtitle: 'Seamless face swapping with perfect blending' },
-];
+const MODEL_SUBTITLES = {
+  'Nano Banana Pro':   'Create stunning, high-aesthetic images in seconds',
+  'Nano Banana 2':     'Pro-level quality at Flash speed',
+  'Soul 2.0':          'Fashion-forward portraits with cultural fluency',
+  'Seedream 5.0 Lite': 'Intelligent visual reasoning — unlimited access',
+  'Seedream 4.5':      'Next-gen 4K photorealistic detail',
+  'GPT Image 1.5':     'True-color precision rendering by OpenAI',
+  'Flux Kontext':      'Stylistic diversity for any aesthetic',
+  'Flux 2':            'Strong prompt adherence at high speed',
+  'Wan 2.2 Image':     'Artistic and illustrated visual creation',
+  'Skin Enhancer':     'Natural realistic skin texture enhancement',
+  'Face Swap':         'Seamless instant face replacement',
+  'Relight':           'Change the light, change the mood',
+};
 
 const RESULT_GRADIENTS = [
   'linear-gradient(135deg, #1a0000 0%, #8B0000 50%, #1a1a1a 100%)',
