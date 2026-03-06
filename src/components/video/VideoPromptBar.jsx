@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
   ImagePlus, ArrowLeftRight, ArrowUp, X, ChevronDown,
-  Clock, Volume2, Crosshair, Pencil, ArrowLeft, Type,
+  Clock, Volume2, Crosshair, Pencil, Type,
   Image, Video, Music, Check
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
