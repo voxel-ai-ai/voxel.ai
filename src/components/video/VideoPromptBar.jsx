@@ -146,7 +146,7 @@ function AspectDropdown({ value, onChange, onClose }) {
     return () => document.removeEventListener('mousedown', fn);
   }, [onClose]);
   return (
-    <div ref={ref} style={{ position: 'absolute', bottom: 'calc(100% + 8px)', left: 0, background: '#1C1C20', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 12, boxShadow: '0 -8px 30px rgba(0,0,0,0.7)', overflow: 'hidden', minWidth: 120, zIndex: 300 }}>
+    <div ref={ref} style={{ position: 'absolute', bottom: 'calc(100% + 8px)', left: 0, background: 'rgba(18,18,22,0.88)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 12, boxShadow: '0 -8px 30px rgba(0,0,0,0.7)', overflow: 'hidden', minWidth: 120, zIndex: 300 }}>
       {ASPECT_RATIOS.map(opt => (
         <button key={opt} onClick={() => { onChange(opt); onClose(); }}
           className="w-full text-left px-4 py-2.5 text-sm transition-colors"
