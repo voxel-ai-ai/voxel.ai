@@ -77,33 +77,6 @@ export default function Video() {
           </p>
         </div>
 
-        {/* Model Selector */}
-        <div className="mb-6">
-          <ModelSelector 
-            models={videoModels} 
-            selectedModel={selectedModel} 
-            onSelect={setSelectedModel} 
-          />
-        </div>
-
-        {/* Input Mode Tabs */}
-        <Tabs value={inputMode} onValueChange={setInputMode} className="mb-6">
-          <TabsList className="bg-background-secondary border border-border">
-            <TabsTrigger value="text" className="data-[state=active]:bg-primary data-[state=active]:text-white">
-              <FileText className="w-4 h-4 mr-2" />
-              Text to Video
-            </TabsTrigger>
-            <TabsTrigger value="image" className="data-[state=active]:bg-primary data-[state=active]:text-white">
-              <Upload className="w-4 h-4 mr-2" />
-              Image to Video
-            </TabsTrigger>
-            <TabsTrigger value="extend" className="data-[state=active]:bg-primary data-[state=active]:text-white">
-              <Film className="w-4 h-4 mr-2" />
-              Extend Video
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-
         {/* Generation Canvas */}
         <GenerationCanvas 
           type="video"
