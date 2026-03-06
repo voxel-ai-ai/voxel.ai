@@ -311,6 +311,10 @@ export default function ImagePromptBar({
       <style>{`
         .img-prompt-textarea::placeholder { color: rgba(255,255,255,0.28); }
         .img-neg-textarea::placeholder { color: rgba(255,255,255,0.25); }
+        @keyframes imgStyleSlideUp {
+          from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+          to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
         @keyframes imgSendPulse {
           0%   { transform: scale(1); }
           40%  { transform: scale(0.88); }
