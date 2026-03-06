@@ -3,7 +3,7 @@ import GenerationCanvas from '@/components/common/GenerationCanvas';
 import VideoPromptBar from '@/components/video/VideoPromptBar';
 import TemplateModal from '@/components/common/TemplateModal';
 import TransitionCard from '@/components/common/TransitionCard';
-import { videoModels, videoTemplates, transitions } from '@/components/data/siteData';
+import { videoTemplates, transitions } from '@/components/data/siteData';
 import { toast } from 'sonner';
 import { 
   ZoomIn, ZoomOut, MoveHorizontal, MoveVertical, 
