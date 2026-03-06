@@ -17,9 +17,9 @@ export default function PageSwitcher() {
   return (
     <div style={{
       position: 'fixed',
-      bottom: 28,
-      left: 'calc(50% - min(880px, 92vw) / 2 - 52px)',
-      transform: 'translateX(-100%)',
+      left: 16,
+      top: '50%',
+      transform: 'translateY(-50%)',
       display: 'flex',
       flexDirection: 'column',
       gap: 6,
