@@ -211,36 +211,11 @@ export default function ImagePromptBar({ prompt, onPromptChange, onGenerate, isG
           <AtSign className="w-3.5 h-3.5" />
         </Chip>
 
-        {/* Draw chip */}
-        <div className="relative">
-          <Chip
-            onMouseEnter={() => setShowDrawTooltip(true)}
-            onMouseLeave={() => setShowDrawTooltip(false)}
-            onClick={() => {}}
-          >
-            <PenLine className="w-3.5 h-3.5" />
-            Draw
-          </Chip>
-          {showDrawTooltip && (
-            <div
-              className="absolute pointer-events-none"
-              style={{
-                bottom: 'calc(100% + 8px)',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                background: '#2A2A2A',
-                border: '1px solid #3A3A3A',
-                borderRadius: 8,
-                padding: '6px 12px',
-                fontSize: 12,
-                color: '#aaa',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              Coming Soon
-            </div>
-          )}
-        </div>
+        {/* Enhance chip */}
+        <Chip onClick={() => {}}>
+          <Sparkles className="w-3.5 h-3.5" style={{ color: '#E01E1E' }} />
+          Enhance
+        </Chip>
       </div>
     </div>
   );
