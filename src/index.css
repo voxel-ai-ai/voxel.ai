@@ -294,6 +294,11 @@ body {
   -webkit-backdrop-filter: blur(12px);
 }
 
+/* Video prompt bar placeholder color */
+.video-prompt-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
 /* Hide scrollbar for horizontal scroll */
 .hide-scrollbar {
   -ms-overflow-style: none;
