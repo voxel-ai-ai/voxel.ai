@@ -21,14 +21,14 @@ const IMAGE_MODELS = [
 const ASPECT_RATIOS = ['1:1', '16:9', '9:16', '4:3', '3:4', '21:9'];
 const QUALITIES = ['Draft', '1K', '2K', '4K'];
 const STYLES = [
-  { name: 'Cinematic',      img: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=120&q=80&fit=crop' },
-  { name: 'Realistic',      img: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=120&q=80&fit=crop' },
-  { name: 'Anime',          img: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=120&q=80&fit=crop' },
-  { name: '3D',             img: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=120&q=80&fit=crop' },
-  { name: '2D',             img: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=120&q=80&fit=crop' },
-  { name: 'Illustration',   img: 'https://images.unsplash.com/photo-1536924940846-227afb31e2a5?w=120&q=80&fit=crop' },
-  { name: 'Pixar',          img: 'https://images.unsplash.com/photo-1560942485-b2a11cc13456?w=120&q=80&fit=crop' },
-  { name: 'Cartoon',        img: 'https://images.unsplash.com/photo-1534972195531-d756b9bfa9f2?w=120&q=80&fit=crop' },
+  { name: 'Cinematic',    img: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=120&q=80&fit=crop', desc: 'Film-grade color grading and dramatic lighting' },
+  { name: 'Realistic',    img: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=120&q=80&fit=crop', desc: 'True-to-life photorealistic rendering' },
+  { name: 'Anime',        img: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=120&q=80&fit=crop', desc: 'Japanese animation aesthetic and bold outlines' },
+  { name: '3D',           img: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=120&q=80&fit=crop', desc: 'Rendered 3D visuals with depth and texture' },
+  { name: '2D',           img: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=120&q=80&fit=crop', desc: 'Flat 2D art with clean shapes and colors' },
+  { name: 'Illustration', img: 'https://images.unsplash.com/photo-1536924940846-227afb31e2a5?w=120&q=80&fit=crop', desc: 'Hand-crafted illustrative artistic style' },
+  { name: 'Pixar',        img: 'https://images.unsplash.com/photo-1560942485-b2a11cc13456?w=120&q=80&fit=crop', desc: 'Warm expressive CGI with Pixar-like charm' },
+  { name: 'Cartoon',      img: 'https://images.unsplash.com/photo-1534972195531-d756b9bfa9f2?w=120&q=80&fit=crop', desc: 'Bold outlines and vibrant cartoon colors' },
 ];
 
 const brandColors = {
