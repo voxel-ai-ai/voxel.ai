@@ -304,15 +304,15 @@ export default function VideoPromptBar({ prompt, onPromptChange, onGenerate, isG
             left: '50%',
             transform: 'translateX(-50%)',
             width: 'min(860px, 92vw)',
-            background: 'rgba(18,18,22,0.72)',
-            backdropFilter: 'blur(36px) saturate(1.8)',
-            WebkitBackdropFilter: 'blur(36px) saturate(1.8)',
-            border: '1px solid rgba(255,255,255,0.1)',
-            borderRadius: 20,
-            padding: '14px 16px 14px 14px',
-            boxShadow: '0 8px 60px rgba(0,0,0,0.65), 0 1px 0 rgba(255,255,255,0.07) inset',
+            background: 'rgba(14,14,18,0.55)',
+            backdropFilter: 'blur(48px) saturate(2.2)',
+            WebkitBackdropFilter: 'blur(48px) saturate(2.2)',
+            border: '1px solid rgba(255,255,255,0.13)',
+            borderRadius: 22,
+            overflow: 'hidden',
+            boxShadow: '0 8px 64px rgba(0,0,0,0.7), 0 1px 0 rgba(255,255,255,0.09) inset, 0 -1px 0 rgba(0,0,0,0.4) inset',
             zIndex: 100,
-            transition: 'all 0.3s ease',
+            transition: 'all 0.32s cubic-bezier(0.4,0,0.2,1)',
           }}
         >
           {/* Dismiss button top-right */}
