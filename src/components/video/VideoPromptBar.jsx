@@ -280,9 +280,9 @@ export default function VideoPromptBar({ prompt, onPromptChange, onGenerate, isG
               title={label}
               style={{
                 width: 38, height: 38,
-                background: 'rgba(28,28,32,0.82)',
-                backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
+                background: 'rgba(18,18,22,0.72)',
+                backdropFilter: 'blur(24px)',
+                WebkitBackdropFilter: 'blur(24px)',
                 border: `1px solid ${active ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.08)'}`,
                 borderRadius: 10,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
