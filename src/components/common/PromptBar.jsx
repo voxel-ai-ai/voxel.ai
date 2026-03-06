@@ -104,6 +104,12 @@ export default function PromptBar({
           Add
         </Button>
 
+        {/* Enhance Button */}
+        <Button variant="outline" size="sm" className="h-9 border-border text-foreground-secondary hover:text-white hover:border-primary/50">
+          <Sparkles className="w-4 h-4 mr-1 text-primary" />
+          Enhance
+        </Button>
+
         {/* Spacer */}
         <div className="flex-1" />
 

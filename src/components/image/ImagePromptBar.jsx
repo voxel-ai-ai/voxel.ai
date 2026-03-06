@@ -9,7 +9,7 @@ export default function ImagePromptBar({ prompt, onPromptChange, onGenerate, isG
   const [showModelDropdown, setShowModelDropdown] = useState(false);
   const [showAspectDropdown, setShowAspectDropdown] = useState(false);
   const [showQualityDropdown, setShowQualityDropdown] = useState(false);
-  const [showDrawTooltip, setShowDrawTooltip] = useState(false);
+
   const [aspectRatio, setAspectRatio] = useState('1:1');
   const [quality, setQuality] = useState('2K');
   const modelBtnRef = useRef(null);
