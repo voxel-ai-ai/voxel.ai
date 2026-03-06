@@ -51,9 +51,11 @@ export default function ImagePromptBar({ prompt, onPromptChange, onGenerate, isG
         style={{
           bottom: 'calc(100% + 8px)',
           left: 0,
-          background: '#1C1C1C',
-          border: '1px solid #2A2A2A',
-          borderRadius: 10,
+          background: 'rgba(22,22,26,0.92)',
+          backdropFilter: 'blur(24px)',
+          WebkitBackdropFilter: 'blur(24px)',
+          border: '1px solid rgba(255,255,255,0.12)',
+          borderRadius: 12,
           boxShadow: '0 -8px 30px rgba(0,0,0,0.7)',
           minWidth: 120,
           overflow: 'hidden',
@@ -65,10 +67,10 @@ export default function ImagePromptBar({ prompt, onPromptChange, onGenerate, isG
             onClick={() => { onSelect(opt); onClose(); }}
             className="w-full text-left px-4 py-2.5 text-sm transition-colors"
             style={{
-              background: selected === opt ? '#252525' : 'transparent',
-              color: selected === opt ? '#fff' : '#aaa',
+              background: selected === opt ? 'rgba(255,255,255,0.1)' : 'transparent',
+              color: selected === opt ? '#fff' : 'rgba(255,255,255,0.6)',
             }}
-            onMouseEnter={e => { if (selected !== opt) e.currentTarget.style.background = '#222'; }}
+            onMouseEnter={e => { if (selected !== opt) e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; }}
             onMouseLeave={e => { if (selected !== opt) e.currentTarget.style.background = 'transparent'; }}
           >
             {opt}
