@@ -285,6 +285,8 @@ export default function ImagePromptBar({
         }
       `}</style>
 
+      <PageSwitcher />
+
       {/* ── Fixed Bar ── */}
       <div style={{
         position: 'fixed',

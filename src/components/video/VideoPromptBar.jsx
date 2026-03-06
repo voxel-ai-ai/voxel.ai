@@ -265,34 +265,7 @@ export default function VideoPromptBar({ prompt, onPromptChange, onGenerate, isG
       `}</style>
 
       <div style={{ position: 'relative' }}>
-        {/* Left sidebar tabs */}
-        <div style={{ position: 'absolute', left: -52, top: '50%', transform: 'translateY(-50%)', display: 'flex', flexDirection: 'column', gap: 6 }}>
-          {[
-            { icon: Image, label: 'Image', path: 'Image' },
-            { icon: Video, label: 'Video', path: 'Video', active: true },
-            { icon: Music, label: 'Audio', path: 'Audio' },
-          ].map(({ icon: Icon, label, path, active }) => (
-            <button
-              key={label}
-              onClick={() => navigate(createPageUrl(path))}
-              title={label}
-              style={{
-                width: 38, height: 38,
-                background: 'rgba(18,18,22,0.72)',
-                backdropFilter: 'blur(24px)',
-                WebkitBackdropFilter: 'blur(24px)',
-                border: `1px solid ${active ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.08)'}`,
-                borderRadius: 10,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                cursor: 'pointer',
-                color: active ? '#fff' : 'rgba(255,255,255,0.45)',
-                transition: 'all 0.2s',
-              }}
-            >
-              <Icon className="w-4 h-4" />
-            </button>
-          ))}
-        </div>
+        <PageSwitcher />
 
         {/* Main Bar */}
         <div

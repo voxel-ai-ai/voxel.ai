@@ -31,6 +31,7 @@ export default function Audio() {
 
   return (
     <div className="min-h-screen py-8 px-4">
+      <PageSwitcher />
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
