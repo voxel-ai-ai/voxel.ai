@@ -5,7 +5,7 @@ import StudioTopBar from '@/components/studio/StudioTopBar';
 import StudioSidebar from '@/components/studio/StudioSidebar';
 import StudioTimeline from '@/components/studio/StudioTimeline';
 
-import DirectorModule from '@/components/studio/modules/DirectorModule';
+import DirectorModule from '@/components/studio/modules/DirectorModule.jsx';
 import CastingModule from '@/components/studio/modules/CastingModule';
 import LocationsModule from '@/components/studio/modules/LocationsModule';
 import EditorModule from '@/components/studio/modules/EditorModule';
