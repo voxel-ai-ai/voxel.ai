@@ -7,11 +7,11 @@ import { Button } from '@/components/ui/button';
 
 const primaryNavItems = [
   { name: 'Explore', path: 'Explore' },
-  { name: 'Studio', path: 'Studio', badge: 'New' },
   { name: 'Image', path: 'Image' },
   { name: 'Video', path: 'Video' },
-  { name: 'Edit', path: 'Edit', badge: 'Coming Soon' },
   { name: 'Audio', path: 'Audio' },
+  { name: 'Studio', path: 'Studio', badge: 'New' },
+  { name: 'Edit', path: 'Edit', badge: 'Coming Soon' },
 ];
 
 const secondaryNavItems = [
