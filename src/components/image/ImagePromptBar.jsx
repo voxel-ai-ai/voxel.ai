@@ -543,25 +543,19 @@ export default function ImagePromptBar({
           </button>
 
           {/* Style chip */}
-          <div className="relative">
-            <button
-              onClick={() => { closeAll(); setShowStylePop(v => !v); }}
-              style={{
-                ...chipBase,
-                background: showStylePop || style ? 'rgba(255,255,255,0.12)' : chipBase.background,
-                border: showStylePop || style ? '1px solid rgba(255,255,255,0.22)' : chipBase.border,
-
-              }}
-              onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.12)'}
-              onMouseLeave={e => e.currentTarget.style.background = showStylePop || style ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.07)'}
-            >
-              <span style={{ fontSize: 14 }}>⊕</span>
-              <span>{style || 'Style'}</span>
-            </button>
-            {showStylePop && (
-              <StylePopup selected={style} onSelect={setStyle} onClose={() => setShowStylePop(false)} />
-            )}
-          </div>
+          <button
+            onClick={() => { closeAll(); setShowStylePop(v => !v); }}
+            style={{
+              ...chipBase,
+              background: showStylePop || style ? 'rgba(255,255,255,0.12)' : chipBase.background,
+              border: showStylePop || style ? '1px solid rgba(255,255,255,0.22)' : chipBase.border,
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.12)'}
+            onMouseLeave={e => e.currentTarget.style.background = showStylePop || style ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.07)'}
+          >
+            <span style={{ fontSize: 14 }}>⊕</span>
+            <span>{style || 'Style'}</span>
+          </button>
 
           {/* Spacer */}
           <div style={{ flex: 1 }} />
