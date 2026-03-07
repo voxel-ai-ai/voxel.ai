@@ -4,6 +4,7 @@ import { createPageUrl } from '@/utils';
 import VoxelLogo from '@/components/VoxelLogo';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
+import LiquidBackground from './LiquidBackground';
 
 const tickerItems = [
   'Image', 'Video', 'Edit', 'Audio', 'Apps', '4K Upscaling', 'Face Swap', 
