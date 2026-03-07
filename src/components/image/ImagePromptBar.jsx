@@ -303,6 +303,7 @@ export default function ImagePromptBar({
   const [showQualityDrop, setShowQualityDrop] = useState(false);
   const [showStylePop, setShowStylePop] = useState(false);
   const negRef = useRef(null);
+  const styleChipRef = useRef(null);
 
   const handleSelectModel = (m) => {
     setModel(m);
