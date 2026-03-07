@@ -58,14 +58,12 @@ export default function EditorModule({ scenes, onAddScene }) {
 
           {/* Timeline tracks */}
           <div style={{ height: 120, background: '#0a0a0a', borderTop: '1px solid rgba(255,255,255,0.06)', flexShrink: 0, overflow: 'hidden' }}>
-            {/* Track labels */}
             <div style={{ display: 'flex', height: '100%' }}>
               <div style={{ width: 70, borderRight: '1px solid rgba(255,255,255,0.06)', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
                 {['VIDEO', 'AUDIO', 'TEXT'].map(t => (
                   <div key={t} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', borderBottom: '1px solid rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.25)', fontSize: 9, fontWeight: 700, letterSpacing: '0.08em' }}>{t}</div>
                 ))}
               </div>
-              {/* Tracks content */}
               <div style={{ flex: 1, overflowX: 'auto', position: 'relative' }} className="hide-scrollbar">
                 {/* Video track */}
                 <div style={{ height: 40, borderBottom: '1px solid rgba(255,255,255,0.04)', display: 'flex', alignItems: 'center', padding: '4px 4px', gap: 2 }}>
