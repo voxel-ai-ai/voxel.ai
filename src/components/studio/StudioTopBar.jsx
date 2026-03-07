@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Save, Download, ChevronDown, Zap } from 'lucide-react';
+import { Save, Download, ChevronDown, Zap, ChevronLeft } from 'lucide-react';
 import VoxelLogo from '@/components/VoxelLogo';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 
 export default function StudioTopBar({ project, onProjectNameChange, saveStatus, onExport }) {
   const [editing, setEditing] = useState(false);
