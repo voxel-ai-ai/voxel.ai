@@ -544,7 +544,7 @@ export default function ImagePromptBar({
 
           {/* Style chip */}
           <button
-            onClick={() => { closeAll(); setShowStylePop(v => !v); }}
+            onClick={() => { const next = !showStylePop; closeAll(); setShowStylePop(next); }}
             style={{
               ...chipBase,
               background: showStylePop || style ? 'rgba(255,255,255,0.12)' : chipBase.background,
