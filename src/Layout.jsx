@@ -6,6 +6,7 @@ import { Plus } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
+const STUDIO_PAGE = '/studio';
 const MINIMAL_FOOTER_PAGES = ['/image', '/video', '/audio', '/edit', '/apps'];
 
 export default function Layout({ children, currentPageName }) {
