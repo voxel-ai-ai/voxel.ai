@@ -13,6 +13,17 @@ export default function Layout({ children, currentPageName }) {
   const location = useLocation();
   const isMinimal = MINIMAL_FOOTER_PAGES.includes(location.pathname.toLowerCase());
 
+  const isStudio = location.pathname.toLowerCase() === STUDIO_PAGE;
+
+  if (isStudio) {
+    return (
+      <>
+        {children}
+        <Toaster position="bottom-right" />
+      </>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Navbar />
