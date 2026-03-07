@@ -329,6 +329,9 @@ export default function ImagePromptBar({
       {showModelModal && (
         <ModelModal selectedId={model.id} onSelect={handleSelectModel} onClose={() => setShowModelModal(false)} />
       )}
+      {showStylePop && (
+        <StylePopup selected={style} onSelect={setStyle} onClose={() => setShowStylePop(false)} />
+      )}
 
       <style>{`
         .img-prompt-textarea::placeholder { color: rgba(255,255,255,0.28); }
