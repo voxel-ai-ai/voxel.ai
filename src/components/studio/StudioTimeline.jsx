@@ -14,8 +14,7 @@ export default function StudioTimeline({ scenes, activeSceneId, onSceneSelect, o
     }}>
       {/* Timeline header */}
       <div style={{ height: 36, display: 'flex', alignItems: 'center', padding: '0 12px', gap: 10, borderBottom: collapsed ? 'none' : '1px solid rgba(255,255,255,0.06)', flexShrink: 0 }}>
-        <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Timeline</span>
-        <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: 11 }}>{scenes?.length || 0} scenes</span>
+        <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Timeline — {scenes?.length || 0} scenes</span>
         <div style={{ flex: 1 }} />
         <button
           style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'rgba(229,57,53,0.12)', border: '1px solid rgba(229,57,53,0.25)', borderRadius: 6, padding: '4px 10px', color: '#E53935', fontSize: 12, cursor: 'pointer', fontFamily: '"DM Sans", sans-serif' }}
