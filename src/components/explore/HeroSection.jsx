@@ -13,12 +13,9 @@ const tickerItems = [
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-[90vh] flex flex-col items-center justify-center px-4 overflow-hidden bg-hero-gradient noise-overlay">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[100px] animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary-dark/10 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1s' }} />
-      </div>
+    <section className="relative min-h-[90vh] flex flex-col items-center justify-center px-4 overflow-hidden noise-overlay">
+      {/* Liquid Background */}
+      <LiquidBackground />
 
       {/* Content */}
       <div className="relative z-10 max-w-5xl mx-auto text-center">
