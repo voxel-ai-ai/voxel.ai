@@ -27,6 +27,16 @@ export default function StudioTopBar({ project, onProjectNameChange, saveStatus,
       height: 48, background: '#0a0a0a', borderBottom: '1px solid rgba(255,255,255,0.06)',
       display: 'flex', alignItems: 'center', padding: '0 16px', gap: 16, flexShrink: 0, zIndex: 50,
     }}>
+      {/* Back button */}
+      <Link
+        to={createPageUrl('Explore')}
+        style={{ display: 'flex', alignItems: 'center', gap: 4, color: 'rgba(255,255,255,0.4)', textDecoration: 'none', fontSize: 13, flexShrink: 0, transition: 'color 0.15s', fontFamily: '"DM Sans", sans-serif' }}
+        onMouseEnter={e => e.currentTarget.style.color = '#fff'}
+        onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.4)'}
+      >
+        <ChevronLeft size={16} />
+      </Link>
+
       {/* Logo */}
       <div style={{ flexShrink: 0 }}>
         <VoxelLogo size="sm" />

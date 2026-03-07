@@ -86,7 +86,10 @@ export default function FeatureCardsRow() {
           {featureCards.map((card, index) => (
             <div
               key={card.id}
-              onClick={() => card.title === 'Nano Banana Pro' && navigate(createPageUrl('Image'))}
+              onClick={() => {
+              if (card.title === 'Nano Banana Pro') navigate(createPageUrl('Image'));
+              else if (card.title === 'Voxel Studio') navigate(createPageUrl('Studio'));
+            }}
               className="group flex-shrink-0 w-72 rounded-xl border border-border bg-background-secondary overflow-hidden hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
             >
               {/* Image area */}
