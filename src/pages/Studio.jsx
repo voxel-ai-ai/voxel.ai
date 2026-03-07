@@ -288,15 +288,17 @@ export default function Studio() {
             )}
           </div>
 
-          {/* Timeline */}
-          <StudioTimeline
-            scenes={scenes}
-            activeSceneId={activeSceneId}
-            onSceneSelect={(scene) => { setActiveSceneId(scene.id); setActiveModule('director'); }}
-            onAddScene={handleAddScene}
-            collapsed={timelineCollapsed}
-            onToggle={() => setTimelineCollapsed(p => !p)}
-          />
+          {/* Timeline — hidden for Director module (it has its own built-in strip) */}
+          {activeModule !== 'director' && (
+            <StudioTimeline
+              scenes={scenes}
+              activeSceneId={activeSceneId}
+              onSceneSelect={(scene) => { setActiveSceneId(scene.id); setActiveModule('director'); }}
+              onAddScene={handleAddScene}
+              collapsed={timelineCollapsed}
+              onToggle={() => setTimelineCollapsed(p => !p)}
+            />
+          )}
         </div>
       </div>
 
