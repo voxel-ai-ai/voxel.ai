@@ -580,36 +580,26 @@ export default function ImagePromptBar({
           </button>
 
           {/* Aspect Ratio */}
-          <div className="relative">
-            <button
-              onClick={() => { closeAll(); setShowAspectDrop(v => !v); }}
-              style={{ ...chipBase, background: showAspectDrop ? 'rgba(255,255,255,0.12)' : chipBase.background }}
-              onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.12)'}
-              onMouseLeave={e => e.currentTarget.style.background = showAspectDrop ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.07)'}
-            >
-              {(() => { const r = ASPECT_RATIOS.find(a => a.value === aspectRatio); return r ? <AspectIcon w={r.w} h={r.h} active={true} /> : null; })()}
-              <span>{aspectRatio}</span>
-            </button>
-            {showAspectDrop && (
-              <AspectDropdown selected={aspectRatio} onSelect={setAspectRatio} onClose={() => setShowAspectDrop(false)} />
-            )}
-          </div>
+          <button
+            onClick={() => { closeAll(); setShowAspectDrop(v => !v); }}
+            style={{ ...chipBase, background: showAspectDrop ? 'rgba(255,255,255,0.12)' : chipBase.background }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.12)'}
+            onMouseLeave={e => e.currentTarget.style.background = showAspectDrop ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.07)'}
+          >
+            {(() => { const r = ASPECT_RATIOS.find(a => a.value === aspectRatio); return r ? <AspectIcon w={r.w} h={r.h} active={true} /> : null; })()}
+            <span>{aspectRatio}</span>
+          </button>
 
           {/* Quality */}
-          <div className="relative">
-            <button
-              onClick={() => { closeAll(); setShowQualityDrop(v => !v); }}
-              style={{ ...chipBase, background: showQualityDrop ? 'rgba(255,255,255,0.12)' : chipBase.background }}
-              onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.12)'}
-              onMouseLeave={e => e.currentTarget.style.background = showQualityDrop ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.07)'}
-            >
-              <span style={{ color: '#E01E1E', fontSize: 14 }}>♡</span>
-              <span>{quality}</span>
-            </button>
-            {showQualityDrop && (
-              <SimpleDropdown options={QUALITIES} selected={quality} onSelect={setQuality} onClose={() => setShowQualityDrop(false)} label="QUALITY" />
-            )}
-          </div>
+          <button
+            onClick={() => { closeAll(); setShowQualityDrop(v => !v); }}
+            style={{ ...chipBase, background: showQualityDrop ? 'rgba(255,255,255,0.12)' : chipBase.background }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.12)'}
+            onMouseLeave={e => e.currentTarget.style.background = showQualityDrop ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.07)'}
+          >
+            <span style={{ color: '#E01E1E', fontSize: 14 }}>♡</span>
+            <span>{quality}</span>
+          </button>
 
           {/* Image Count stepper */}
           <div style={{ ...chipBase, padding: '0 8px', gap: 4, cursor: 'default' }}>
