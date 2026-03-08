@@ -581,7 +581,7 @@ export default function ImagePromptBar({
               onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.12)'}
               onMouseLeave={e => e.currentTarget.style.background = showAspectDrop ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.07)'}
             >
-              <span style={{ fontSize: 11 }}>□</span>
+              {(() => { const r = ASPECT_RATIOS.find(a => a.value === aspectRatio); return r ? <AspectIcon w={r.w} h={r.h} active={true} /> : null; })()}
               <span>{aspectRatio}</span>
             </button>
             {showAspectDrop && (
