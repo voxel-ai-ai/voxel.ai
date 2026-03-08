@@ -38,7 +38,7 @@ function ImageCarousel() {
   };
 
   return (
-    <div className="relative h-40 overflow-hidden group/carousel">
+    <div className="relative h-56 overflow-hidden group/carousel">
       {NANO_BANANA_IMAGES.map((src, i) => (
         <img
           key={i}
