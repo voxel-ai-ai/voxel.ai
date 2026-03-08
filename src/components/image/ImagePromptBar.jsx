@@ -430,6 +430,12 @@ export default function ImagePromptBar({
       {showStylePop && (
         <StylePopup selected={style} onSelect={setStyle} onClose={() => setShowStylePop(false)} />
       )}
+      {showAspectDrop && (
+        <AspectDropdown selected={aspectRatio} onSelect={setAspectRatio} onClose={() => setShowAspectDrop(false)} />
+      )}
+      {showQualityDrop && (
+        <SimpleDropdown options={QUALITIES} selected={quality} onSelect={setQuality} onClose={() => setShowQualityDrop(false)} label="Quality" />
+      )}
 
       <style>{`
         .img-prompt-textarea::placeholder { color: rgba(255,255,255,0.28); }
