@@ -524,7 +524,7 @@ export default function ImagePromptBar({
               <span>{quality}</span>
             </button>
             {showQualityDrop && (
-              <SimpleDropdown options={QUALITIES} selected={quality} onSelect={setQuality} onClose={() => setShowQualityDrop(false)} />
+              <SimpleDropdown options={QUALITIES} selected={quality} onSelect={setQuality} onClose={() => setShowQualityDrop(false)} label="QUALITY" />
             )}
           </div>
 
