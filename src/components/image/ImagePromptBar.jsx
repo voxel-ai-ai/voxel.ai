@@ -176,6 +176,72 @@ function ModelModal({ selectedId, onSelect, onClose }) {
   );
 }
 
+// ─── Aspect Icon ─────────────────────────────────────────────────────────────
+function AspectIcon({ w, h, active }) {
+  return (
+    <div style={{
+      width: 22, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+    }}>
+      <div style={{
+        width: w, height: h,
+        border: `1.5px solid ${active ? '#fff' : 'rgba(255,255,255,0.4)'}`,
+        borderRadius: 2,
+      }} />
+    </div>
+  );
+}
+
+// ─── Aspect Ratio Dropdown ────────────────────────────────────────────────────
+function AspectDropdown({ selected, onSelect, onClose }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const fn = (e) => { if (ref.current && !ref.current.contains(e.target)) onClose(); };
+    document.addEventListener('mousedown', fn);
+    return () => document.removeEventListener('mousedown', fn);
+  }, [onClose]);
+  return (
+    <div ref={ref} style={{
+      position: 'fixed',
+      bottom: 'calc(28px + 72px + 12px)',
+      left: '50%',
+      transform: 'translateX(-50%)',
+      width: 'min(240px, 92vw)',
+      background: 'rgba(22,22,26,0.97)',
+      backdropFilter: 'blur(40px) saturate(1.8)',
+      WebkitBackdropFilter: 'blur(40px) saturate(1.8)',
+      border: '1px solid rgba(255,255,255,0.09)',
+      borderRadius: 18,
+      boxShadow: '0 -12px 60px rgba(0,0,0,0.8)',
+      padding: '12px 0 8px 0',
+      zIndex: 200,
+      animation: 'imgStyleSlideUp 0.25s cubic-bezier(0.4,0,0.2,1)',
+    }}>
+      <div style={{ padding: '0 14px 8px 14px', color: 'rgba(255,255,255,0.45)', fontSize: 12, fontWeight: 600, fontFamily: '"DM Sans", sans-serif' }}>
+        Aspect ratio
+      </div>
+      {ASPECT_RATIOS.map(opt => {
+        const isSelected = selected === opt.value;
+        return (
+          <button key={opt.value} onClick={() => { onSelect(opt.value); onClose(); }}
+            style={{
+              width: '100%', display: 'flex', alignItems: 'center', gap: 12,
+              padding: '9px 14px', background: isSelected ? 'rgba(255,255,255,0.08)' : 'transparent',
+              border: 'none', cursor: 'pointer', textAlign: 'left', transition: 'background 0.15s',
+              fontFamily: '"DM Sans", sans-serif',
+            }}
+            onMouseEnter={e => { if (!isSelected) e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
+            onMouseLeave={e => { if (!isSelected) e.currentTarget.style.background = isSelected ? 'rgba(255,255,255,0.08)' : 'transparent'; }}
+          >
+            <AspectIcon w={opt.w} h={opt.h} active={isSelected} />
+            <span style={{ color: isSelected ? '#fff' : 'rgba(255,255,255,0.6)', fontSize: 14 }}>{opt.label}</span>
+            {isSelected && <Check className="w-3.5 h-3.5" style={{ color: '#E01E1E', marginLeft: 'auto', flexShrink: 0 }} />}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 // ─── Simple Dropdown ─────────────────────────────────────────────────────────
 function SimpleDropdown({ options, selected, onSelect, onClose, label }) {
   const ref = useRef(null);
@@ -190,27 +256,27 @@ function SimpleDropdown({ options, selected, onSelect, onClose, label }) {
       bottom: 'calc(28px + 72px + 12px)',
       left: '50%',
       transform: 'translateX(-50%)',
-      width: 'min(260px, 92vw)',
+      width: 'min(240px, 92vw)',
       background: 'rgba(22,22,26,0.97)',
       backdropFilter: 'blur(40px) saturate(1.8)',
       WebkitBackdropFilter: 'blur(40px) saturate(1.8)',
       border: '1px solid rgba(255,255,255,0.09)',
       borderRadius: 18,
       boxShadow: '0 -12px 60px rgba(0,0,0,0.8)',
-      padding: '14px 0 8px 0',
+      padding: '12px 0 8px 0',
       zIndex: 200,
       animation: 'imgStyleSlideUp 0.25s cubic-bezier(0.4,0,0.2,1)',
     }}>
       {label && (
-        <div style={{ padding: '0 14px 8px 14px', color: 'rgba(255,255,255,0.3)', fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span>✦</span> {label}
+        <div style={{ padding: '0 14px 8px 14px', color: 'rgba(255,255,255,0.45)', fontSize: 12, fontWeight: 600, fontFamily: '"DM Sans", sans-serif' }}>
+          {label}
         </div>
       )}
       {options.map(opt => (
         <button key={opt} onClick={() => { onSelect(opt); onClose(); }}
           style={{
             width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            padding: '10px 14px', background: selected === opt ? 'rgba(255,255,255,0.08)' : 'transparent',
+            padding: '9px 14px', background: selected === opt ? 'rgba(255,255,255,0.08)' : 'transparent',
             border: 'none', cursor: 'pointer', textAlign: 'left', transition: 'background 0.15s',
             color: selected === opt ? '#fff' : 'rgba(255,255,255,0.6)', fontSize: 14,
             fontFamily: '"DM Sans", sans-serif',
