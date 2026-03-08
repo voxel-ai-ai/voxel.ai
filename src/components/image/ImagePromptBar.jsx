@@ -166,7 +166,7 @@ function ModelModal({ selectedId, onSelect, onClose }) {
 }
 
 // ─── Simple Dropdown ─────────────────────────────────────────────────────────
-function SimpleDropdown({ options, selected, onSelect, onClose }) {
+function SimpleDropdown({ options, selected, onSelect, onClose, label }) {
   const ref = useRef(null);
   useEffect(() => {
     const fn = (e) => { if (ref.current && !ref.current.contains(e.target)) onClose(); };
@@ -175,19 +175,40 @@ function SimpleDropdown({ options, selected, onSelect, onClose }) {
   }, [onClose]);
   return (
     <div ref={ref} style={{
-      position: 'absolute', bottom: 'calc(100% + 8px)', left: 0,
-      background: 'rgba(18,18,22,0.88)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
-      border: '1px solid rgba(255,255,255,0.12)', borderRadius: 12,
-      boxShadow: '0 -8px 30px rgba(0,0,0,0.7)', overflow: 'hidden', minWidth: 120, zIndex: 300,
+      position: 'fixed',
+      bottom: 'calc(28px + 72px + 12px)',
+      left: '50%',
+      transform: 'translateX(-50%)',
+      width: 'min(260px, 92vw)',
+      background: 'rgba(22,22,26,0.97)',
+      backdropFilter: 'blur(40px) saturate(1.8)',
+      WebkitBackdropFilter: 'blur(40px) saturate(1.8)',
+      border: '1px solid rgba(255,255,255,0.09)',
+      borderRadius: 18,
+      boxShadow: '0 -12px 60px rgba(0,0,0,0.8)',
+      padding: '14px 0 8px 0',
+      zIndex: 200,
+      animation: 'imgStyleSlideUp 0.25s cubic-bezier(0.4,0,0.2,1)',
     }}>
+      {label && (
+        <div style={{ padding: '0 14px 8px 14px', color: 'rgba(255,255,255,0.3)', fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span>✦</span> {label}
+        </div>
+      )}
       {options.map(opt => (
         <button key={opt} onClick={() => { onSelect(opt); onClose(); }}
-          className="w-full text-left px-4 py-2.5 text-sm transition-colors"
-          style={{ background: selected === opt ? 'rgba(255,255,255,0.1)' : 'transparent', color: selected === opt ? '#fff' : 'rgba(255,255,255,0.6)' }}
-          onMouseEnter={e => { if (selected !== opt) e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; }}
+          style={{
+            width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            padding: '10px 14px', background: selected === opt ? 'rgba(255,255,255,0.08)' : 'transparent',
+            border: 'none', cursor: 'pointer', textAlign: 'left', transition: 'background 0.15s',
+            color: selected === opt ? '#fff' : 'rgba(255,255,255,0.6)', fontSize: 14,
+            fontFamily: '"DM Sans", sans-serif',
+          }}
+          onMouseEnter={e => { if (selected !== opt) e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
           onMouseLeave={e => { if (selected !== opt) e.currentTarget.style.background = 'transparent'; }}
         >
           {opt}
+          {selected === opt && <Check className="w-3.5 h-3.5" style={{ color: '#E01E1E', flexShrink: 0 }} />}
         </button>
       ))}
     </div>
