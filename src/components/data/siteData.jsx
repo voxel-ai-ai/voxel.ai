@@ -276,7 +276,7 @@ export const communityFeed = [
 // Feature Cards
 export const featureCards = [
   { id: 1, title: 'Nano Banana Pro', description: 'Our flagship 4K image model with unparalleled detail', tag: 'NEW MODEL' },
-  { id: 2, title: 'Kling 2.6', description: 'Cinema-grade video generation with audio', tag: 'UNLIMITED' },
+  { id: 2, title: 'Kling 3.0', description: 'Cinema-grade video generation with audio', tag: 'UNLIMITED' },
   { id: 5, title: 'Voxel Studio', description: 'Build full films with AI — storyboard, animate, and edit scene by scene', tag: 'NEW' },
   { id: 3, title: 'Seedream 4.5', description: 'Photorealistic 4K images in seconds', tag: 'POPULAR' },
   { id: 4, title: 'Face Swap', description: 'Instant face replacement with perfect blending', tag: 'TRENDING' },

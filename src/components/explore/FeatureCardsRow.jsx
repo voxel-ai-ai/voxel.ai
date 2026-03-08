@@ -96,6 +96,14 @@ export default function FeatureCardsRow() {
               <div className="relative">
                 {card.title === 'Nano Banana Pro' ? (
                   <ImageCarousel />
+                ) : card.title === 'Voxel Studio' ? (
+                  <div className="h-40 relative overflow-hidden">
+                    <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/35e69567c_hf_20260307_232753_6dc6c935-e9cd-4b00-8112-5d6c16e94805.jpg" alt="Voxel Studio" className="w-full h-full object-cover" />
+                  </div>
+                ) : card.title === 'Kling 3.0' ? (
+                  <div className="h-40 relative overflow-hidden">
+                    <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/8e02001c4_ChatGPTImageMar8202603_02_54AM.png" alt="Kling 3.0" className="w-full h-full object-cover" />
+                  </div>
                 ) : (
                   <div className="h-40 relative" style={{ background: gradientStyles[index % 4] }} />
                 )}
