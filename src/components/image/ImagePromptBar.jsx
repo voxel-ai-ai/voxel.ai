@@ -18,7 +18,18 @@ const IMAGE_MODELS = [
   { id: 'relight',         name: 'Relight',            brand: 'VOXEL',            credits: 35,   badge: null,        desc: 'Change lighting conditions in any generated or real image',                  tags: ['Edit', 'Lighting'] },
 ];
 
-const ASPECT_RATIOS = ['1:1', '16:9', '9:16', '4:3', '3:4', '21:9'];
+const ASPECT_RATIOS = [
+  { value: '1:1',  label: '1:1',  w: 18, h: 18 },
+  { value: '3:4',  label: '3:4',  w: 14, h: 18 },
+  { value: '4:3',  label: '4:3',  w: 18, h: 14 },
+  { value: '9:16', label: '9:16', w: 11, h: 18 },
+  { value: '16:9', label: '16:9', w: 18, h: 10 },
+  { value: '2:3',  label: '2:3',  w: 13, h: 18 },
+  { value: '3:2',  label: '3:2',  w: 18, h: 13 },
+  { value: '5:4',  label: '5:4',  w: 17, h: 14 },
+  { value: '4:5',  label: '4:5',  w: 14, h: 17 },
+  { value: '21:9', label: '21:9', w: 18, h: 8  },
+];
 const QUALITIES = ['Draft', '1K', '2K', '4K'];
 const STYLES = [
   { name: 'Cinematic',    img: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=120&q=80&fit=crop', desc: 'Film-grade color grading and dramatic lighting' },
