@@ -585,7 +585,7 @@ export default function ImagePromptBar({
               <span>{aspectRatio}</span>
             </button>
             {showAspectDrop && (
-              <SimpleDropdown options={ASPECT_RATIOS} selected={aspectRatio} onSelect={setAspectRatio} onClose={() => setShowAspectDrop(false)} label="SIZE" />
+              <AspectDropdown selected={aspectRatio} onSelect={setAspectRatio} onClose={() => setShowAspectDrop(false)} />
             )}
           </div>
 
