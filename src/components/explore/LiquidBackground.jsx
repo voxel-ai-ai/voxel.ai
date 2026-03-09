@@ -2,32 +2,27 @@ import React, { useRef, useEffect } from 'react';
 
 export default function LiquidBackground() {
   const canvasRef = useRef(null);
-  const offscreenRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
 
-    // Offscreen canvas for metaball merge trick
-    const off = document.createElement('canvas');
-    offscreenRef.current = off;
-    const offCtx = off.getContext('2d');
-
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Metaball blobs
-    const blobs = [
-      { x: 0.5, y: 0.45, vx: 0, vy: 0, r: 0.22, speed: 0.07 },
-      { x: 0.48, y: 0.50, vx: 0, vy: 0, r: 0.17, speed: 0.11 },
-      { x: 0.52, y: 0.42, vx: 0, vy: 0, r: 0.13, speed: 0.16 },
-      { x: 0.38, y: 0.55, vx: 0, vy: 0, r: 0.14, speed: 0.04, ambient: true },
-      { x: 0.62, y: 0.38, vx: 0, vy: 0, r: 0.12, speed: 0.05, ambient: true },
-      { x: 0.45, y: 0.60, vx: 0, vy: 0, r: 0.10, speed: 0.06, ambient: true },
-    ];
-
-    const TRAIL_LEN = 22;
+    // Trail points for liquid drip effect
+    const TRAIL_LEN = 28;
     const trail = Array.from({ length: TRAIL_LEN }, () => ({ x: 0.5, y: 0.45 }));
+
+    // Blobs: first 3 follow mouse, rest ambient
+    const blobs = [
+      { x: 0.5, y: 0.45, tx: 0.5, ty: 0.45, r: 0.42, color: 'rgba(180,0,0,0.72)',   speed: 0.09  },
+      { x: 0.5, y: 0.5,  tx: 0.5, ty: 0.5,  r: 0.26, color: 'rgba(230,20,20,0.65)', speed: 0.13  },
+      { x: 0.5, y: 0.42, tx: 0.5, ty: 0.42, r: 0.14, color: 'rgba(255,50,50,0.75)', speed: 0.18  },
+      // ambient
+      { x: 0.25, y: 0.65, tx: 0.25, ty: 0.65, r: 0.20, color: 'rgba(100,0,0,0.35)', speed: 0.022, ambient: true },
+      { x: 0.75, y: 0.30, tx: 0.75, ty: 0.30, r: 0.18, color: 'rgba(130,5,5,0.30)', speed: 0.027, ambient: true },
+    ];
 
     let mouse = { x: 0.5, y: 0.45 };
     let frame = 0;
@@ -35,8 +30,10 @@ export default function LiquidBackground() {
     const resize = () => {
       canvas.width  = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
-      off.width     = canvas.width;
-      off.height    = canvas.height;
+      // seed trail to center
+      const cx = canvas.width * 0.5;
+      const cy = canvas.height * 0.45;
+      trail.forEach(p => { p.x = cx; p.y = cy; });
     };
     resize();
     window.addEventListener('resize', resize);
@@ -48,172 +45,124 @@ export default function LiquidBackground() {
     };
     window.addEventListener('mousemove', onMove);
 
-    // Draw metaball blob on offscreen (pure solid fill for contrast trick)
-    const drawMetaBlob = (ctx2, bx, by, br) => {
-      const w = off.width;
-      const h = off.height;
-      const cx = bx * w;
-      const cy = by * h;
-      const r  = br * Math.max(w, h);
-      const g = ctx2.createRadialGradient(cx, cy, 0, cx, cy, r);
-      g.addColorStop(0,   'rgba(200,0,0,1)');
-      g.addColorStop(0.5, 'rgba(160,0,0,0.6)');
-      g.addColorStop(1,   'rgba(0,0,0,0)');
-      ctx2.fillStyle = g;
-      ctx2.beginPath();
-      ctx2.arc(cx, cy, r, 0, Math.PI * 2);
-      ctx2.fill();
+    const drawBlob = (blob) => {
+      const w = canvas.width;
+      const h = canvas.height;
+      const cx = blob.x * w;
+      const cy = blob.y * h;
+      const r  = blob.r * Math.max(w, h);
+
+      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+      grad.addColorStop(0,   blob.color);
+      grad.addColorStop(0.45, blob.color.replace(/[\d.]+\)$/, '0.18)'));
+      grad.addColorStop(1,   'rgba(0,0,0,0)');
+
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, r, r * 0.7, Math.sin(frame * 0.008) * 0.35, 0, Math.PI * 2);
+      ctx.fill();
     };
 
-    // 3D specular highlight on a blob
-    const drawSpecular = (cx, cy, r) => {
-      // top-left highlight for 3D lit look
-      const hx = cx - r * 0.28;
-      const hy = cy - r * 0.28;
-      const hr = r * 0.45;
-      const spec = ctx.createRadialGradient(hx, hy, 0, hx, hy, hr);
-      spec.addColorStop(0,   'rgba(255,180,160,0.55)');
-      spec.addColorStop(0.4, 'rgba(255,80,60,0.2)');
-      spec.addColorStop(1,   'rgba(0,0,0,0)');
-      ctx.fillStyle = spec;
-      ctx.beginPath();
-      ctx.arc(cx, cy, r, 0, Math.PI * 2);
-      ctx.fill();
+    const drawTrail = () => {
+      const w = canvas.width;
+      const h = canvas.height;
 
-      // tiny bright hotspot
-      const sg = ctx.createRadialGradient(hx, hy, 0, hx, hy, r * 0.18);
-      sg.addColorStop(0, 'rgba(255,230,220,0.8)');
-      sg.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.fillStyle = sg;
-      ctx.beginPath();
-      ctx.arc(hx, hy, r * 0.18, 0, Math.PI * 2);
-      ctx.fill();
+      for (let i = 0; i < trail.length; i++) {
+        const t = 1 - i / trail.length;
+        const p = trail[i];
+        const r = (0.04 + t * 0.09) * Math.min(w, h);
+        const alpha = t * 0.55;
+
+        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
+        grad.addColorStop(0, `rgba(255,30,30,${alpha})`);
+        grad.addColorStop(0.5, `rgba(180,0,0,${alpha * 0.4})`);
+        grad.addColorStop(1, 'rgba(0,0,0,0)');
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
     };
 
     let raf;
     const render = () => {
       frame++;
-      const W = canvas.width;
-      const H = canvas.height;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       if (!prefersReducedMotion) {
-        // Blob targets
+        // Update blob targets
         blobs[0].tx = mouse.x;
         blobs[0].ty = mouse.y;
-        blobs[1].tx = mouse.x + Math.sin(frame * 0.014) * 0.06;
-        blobs[1].ty = mouse.y + Math.cos(frame * 0.011) * 0.05;
-        blobs[2].tx = mouse.x + Math.cos(frame * 0.019) * 0.04;
-        blobs[2].ty = mouse.y + Math.sin(frame * 0.016) * 0.04;
-        blobs[3].tx = 0.38 + Math.sin(frame * 0.007) * 0.18;
-        blobs[3].ty = 0.55 + Math.cos(frame * 0.005) * 0.12;
-        blobs[4].tx = 0.62 + Math.cos(frame * 0.009) * 0.15;
-        blobs[4].ty = 0.38 + Math.sin(frame * 0.006) * 0.12;
-        blobs[5].tx = 0.45 + Math.sin(frame * 0.011) * 0.12;
-        blobs[5].ty = 0.60 + Math.cos(frame * 0.008) * 0.10;
+        blobs[1].tx = mouse.x + Math.sin(frame * 0.012) * 0.05;
+        blobs[1].ty = mouse.y + Math.cos(frame * 0.010) * 0.04;
+        blobs[2].tx = mouse.x + Math.cos(frame * 0.018) * 0.03;
+        blobs[2].ty = mouse.y + Math.sin(frame * 0.015) * 0.03;
+
+        blobs[3].tx = 0.25 + Math.sin(frame * 0.007) * 0.14;
+        blobs[3].ty = 0.65 + Math.cos(frame * 0.005) * 0.1;
+        blobs[4].tx = 0.75 + Math.cos(frame * 0.009) * 0.12;
+        blobs[4].ty = 0.30 + Math.sin(frame * 0.006) * 0.1;
 
         // Shift trail
-        trail.unshift({ x: mouse.x * W, y: mouse.y * H });
+        const mx = mouse.x * canvas.width;
+        const my = mouse.y * canvas.height;
+        trail.unshift({ x: mx, y: my });
         trail.pop();
       }
 
       blobs.forEach(b => {
-        b.x += ((b.tx || 0.5) - b.x) * b.speed;
-        b.y += ((b.ty || 0.45) - b.y) * b.speed;
+        b.x += (b.tx - b.x) * b.speed;
+        b.y += (b.ty - b.y) * b.speed;
       });
 
-      // ── OFFSCREEN: metaball blur+contrast pass ──
-      offCtx.clearRect(0, 0, W, H);
-      offCtx.save();
-      offCtx.filter = 'blur(38px) contrast(14)';
-      blobs.forEach(b => drawMetaBlob(offCtx, b.x, b.y, b.r));
-      // trail blobs
-      trail.forEach((p, i) => {
-        const t = 1 - i / TRAIL_LEN;
-        const r = (0.025 + t * 0.055);
-        drawMetaBlob(offCtx, p.x / W, p.y / H, r);
-      });
-      offCtx.restore();
-
-      // ── MAIN CANVAS ──
-      ctx.clearRect(0, 0, W, H);
-
-      // Dark base
-      ctx.fillStyle = '#080808';
-      ctx.fillRect(0, 0, W, H);
-
-      // Composite metaball layer — colorize deep red
+      // Ambient pass — blurred, large
       ctx.save();
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.drawImage(off, 0, 0);
+      ctx.filter = 'blur(90px)';
+      blobs.forEach(drawBlob);
       ctx.restore();
 
-      // Color wash over metaballs — deep crimson with glow
+      // Sharp inner glow
       ctx.save();
-      ctx.globalCompositeOperation = 'multiply';
-      const colorWash = ctx.createRadialGradient(
-        mouse.x * W, mouse.y * H, 0,
-        mouse.x * W, mouse.y * H, 0.6 * Math.max(W, H)
-      );
-      colorWash.addColorStop(0,   'rgba(255,30,10,1)');
-      colorWash.addColorStop(0.3, 'rgba(180,0,0,1)');
-      colorWash.addColorStop(0.7, 'rgba(90,0,0,1)');
-      colorWash.addColorStop(1,   'rgba(20,0,0,1)');
-      ctx.fillStyle = colorWash;
-      ctx.fillRect(0, 0, W, H);
+      ctx.filter = 'blur(28px)';
+      ctx.globalAlpha = 0.75;
+      drawBlob(blobs[2]);
       ctx.restore();
 
-      // 3D specular highlights per blob
+      // Liquid trail
       ctx.save();
+      ctx.filter = 'blur(18px)';
       ctx.globalCompositeOperation = 'screen';
-      blobs.slice(0, 3).forEach(b => {
-        const cx = b.x * W;
-        const cy = b.y * H;
-        const r  = b.r * Math.max(W, H) * 0.55;
-        drawSpecular(cx, cy, r);
-      });
+      drawTrail();
       ctx.restore();
 
-      // Edge rim glow on liquid surface
+      // Extra sharp hot-spot at cursor
       ctx.save();
-      ctx.globalCompositeOperation = 'screen';
-      blobs.slice(0, 3).forEach(b => {
-        const cx = b.x * W;
-        const cy = b.y * H;
-        const r  = b.r * Math.max(W, H) * 0.6;
-        const rim = ctx.createRadialGradient(cx, cy, r * 0.7, cx, cy, r);
-        rim.addColorStop(0,   'rgba(0,0,0,0)');
-        rim.addColorStop(0.8, 'rgba(255,40,10,0.12)');
-        rim.addColorStop(1,   'rgba(255,100,50,0.25)');
-        ctx.fillStyle = rim;
-        ctx.beginPath();
-        ctx.arc(cx, cy, r, 0, Math.PI * 2);
-        ctx.fill();
-      });
-      ctx.restore();
-
-      // Cursor hot spot
-      ctx.save();
-      ctx.globalCompositeOperation = 'screen';
-      const mx = mouse.x * W;
-      const my = mouse.y * H;
-      const hs = 0.04 * Math.min(W, H);
-      const hg = ctx.createRadialGradient(mx - hs * 0.3, my - hs * 0.3, 0, mx, my, hs * 1.4);
-      hg.addColorStop(0,   'rgba(255,220,200,0.95)');
-      hg.addColorStop(0.25,'rgba(255,80,40,0.7)');
-      hg.addColorStop(0.6, 'rgba(200,10,10,0.3)');
-      hg.addColorStop(1,   'rgba(0,0,0,0)');
+      ctx.filter = 'blur(8px)';
+      ctx.globalAlpha = 0.9;
+      const hw = canvas.width;
+      const hh = canvas.height;
+      const hx = mouse.x * hw;
+      const hy = mouse.y * hh;
+      const hr = 0.05 * Math.min(hw, hh);
+      const hg = ctx.createRadialGradient(hx, hy, 0, hx, hy, hr);
+      hg.addColorStop(0, 'rgba(255,80,80,0.9)');
+      hg.addColorStop(0.5, 'rgba(200,20,20,0.4)');
+      hg.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = hg;
       ctx.beginPath();
-      ctx.arc(mx, my, hs * 1.4, 0, Math.PI * 2);
+      ctx.arc(hx, hy, hr, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
 
       // Vignette
-      const vg = ctx.createRadialGradient(W / 2, H / 2, H * 0.15, W / 2, H / 2, H * 1.0);
+      const vw = canvas.width;
+      const vh = canvas.height;
+      const vg = ctx.createRadialGradient(vw / 2, vh / 2, vh * 0.2, vw / 2, vh / 2, vh * 0.95);
       vg.addColorStop(0, 'rgba(0,0,0,0)');
-      vg.addColorStop(1, 'rgba(0,0,0,0.92)');
+      vg.addColorStop(1, 'rgba(0,0,0,0.88)');
       ctx.fillStyle = vg;
-      ctx.fillRect(0, 0, W, H);
+      ctx.fillRect(0, 0, vw, vh);
 
       raf = requestAnimationFrame(render);
     };
@@ -236,7 +185,7 @@ export default function LiquidBackground() {
         width: '100%',
         height: '100%',
         zIndex: 0,
-        background: '#080808',
+        background: '#0a0a0a',
       }}
     />
   );
