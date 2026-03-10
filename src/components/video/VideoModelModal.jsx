@@ -64,9 +64,9 @@ export default function VideoModelModal({ selectedId, onSelect, onClose }) {
       <div style={{ flexShrink:0, padding:'0 20px 16px 20px' }}>
         <div className="featured-cards-row" style={{ display:'flex', gap:12, overflowX:'auto', overflowY:'visible', scrollbarWidth:'none', paddingBottom:4 }}>
           {[
-            { id:'kling-3-omni', name:'Kling 3.0 Omni', brand:'Kling', color:'#2563EB', desc:'Enhanced multimodal references',           img:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80' },
-            { id:'kling-3',      name:'Kling 3.0',       brand:'Kling', color:'#2563EB', desc:'Enhanced audio, consistency & multi-shots', img:'https://images.unsplash.com/photo-1574717024453-354056afd6fc?w=600&q=80' },
-            { id:'seedance-1-5', name:'Seedance 1.5 Pro', brand:'Seedance', color:'#0D9488', desc:'Cinematic videos with audio & multi-shots', img:'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80' },
+            { id:'kling-3-omni', name:'Kling 3.0 Omni', brand:'Kling', color:'#2563EB', desc:'Enhanced multimodal references',           img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80' },
+            { id:'kling-3',      name:'Kling 3.0',       brand:'Kling', color:'#2563EB', desc:'Enhanced audio, consistency & multi-shots', img:'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=600&q=80' },
+            { id:'seedance-1-5', name:'Seedance 1.5 Pro', brand:'Seedance', color:'#0D9488', desc:'Cinematic videos with audio & multi-shots', img:'https://images.unsplash.com/photo-1519608487953-e999c86e7455?w=600&q=80' },
           ].map(card => (
             <div key={card.id} onClick={() => { const m = VIDEO_MODELS.find(x => x.id === card.id); if (m) { onSelect(m); onClose(); } }}
               style={{ minWidth:300, height:145, borderRadius:14, overflow:'hidden', position:'relative', cursor:'pointer', flexShrink:0, border: selectedId===card.id ? '2px solid #E01E1E' : '1px solid #2A2A2A', transition:'border-color 0.2s' }}>
