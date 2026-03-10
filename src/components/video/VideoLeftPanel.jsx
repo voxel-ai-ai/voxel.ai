@@ -134,7 +134,11 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
                       onMouseLeave={e => { e.currentTarget.style.background='#1E1E1E'; e.currentTarget.style.color='rgba(255,255,255,0.45)'; }}
                     >⇄</button>
                   )}
-                  <div style={{ flex:1, minHeight:120, position:'relative' }}>
+                  <div
+                    style={{ flex:1, minHeight:120, position:'relative' }}
+                    onMouseEnter={e => { const btn = e.currentTarget.querySelector('.frame-x-btn'); if (btn) btn.style.opacity='1'; }}
+                    onMouseLeave={e => { const btn = e.currentTarget.querySelector('.frame-x-btn'); if (btn) btn.style.opacity='0'; }}
+                  >
                     <label style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:8, cursor:'pointer', padding:'16px 10px', transition:'all 0.2s', opacity: i===1 && !frameUrl ? 0.55 : 1, position:'relative', overflow:'hidden', height:'100%', minHeight:120, background:'#0F0F0F', border:'1.5px solid #303030', borderRadius:10 }}
                       onMouseEnter={e => { if (!frameUrl) { e.currentTarget.style.borderColor='rgba(224,30,30,0.5)'; e.currentTarget.style.background='rgba(224,30,30,0.05)'; e.currentTarget.style.opacity='1'; }}}
                       onMouseLeave={e => { if (!frameUrl) { e.currentTarget.style.borderColor='#303030'; e.currentTarget.style.background='#0F0F0F'; e.currentTarget.style.opacity= i===1 ? '0.55' : '1'; }}}
@@ -151,10 +155,11 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
                     </label>
                     {frameUrl && (
                       <button
+                        className="frame-x-btn"
                         onClick={e => { e.stopPropagation(); if (type === 'start') setStartFrame(null); else setEndFrame(null); }}
-                        style={{ position:'absolute', top:6, right:6, width:22, height:22, borderRadius:'50%', background:'rgba(0,0,0,0.6)', border:'1px solid rgba(255,255,255,0.2)', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', color:'#fff', fontSize:12, zIndex:10, transition:'background 0.15s' }}
-                        onMouseEnter={e => e.currentTarget.style.background='rgba(200,0,0,0.8)'}
-                        onMouseLeave={e => e.currentTarget.style.background='rgba(0,0,0,0.6)'}
+                        style={{ position:'absolute', top:6, right:6, width:24, height:24, borderRadius:'50%', background:'rgba(30,30,30,0.85)', border:'1.5px solid rgba(255,255,255,0.25)', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', color:'#fff', fontSize:12, zIndex:10, opacity:0, transition:'opacity 0.18s, background 0.15s' }}
+                        onMouseEnter={e => e.currentTarget.style.background='rgba(180,0,0,0.9)'}
+                        onMouseLeave={e => e.currentTarget.style.background='rgba(30,30,30,0.85)'}
                       >✕</button>
                     )}
                   </div>
