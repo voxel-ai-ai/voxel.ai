@@ -1,20 +1,10 @@
 import React, { useState } from 'react';
 import { ChevronDown, Star, Filter, Grid, Search, SlidersHorizontal, MessageSquare, Video, Music } from 'lucide-react';
 
-
 const font = '"DM Sans", sans-serif';
 
-const videoCategories = ['All', 'Action', 'Cinematic', 'Product Ad', 'Nature', 'Character'];
-const transitionCategories = ['All', 'Cinematic', 'Elemental', 'Motion', 'Glitch', 'Smooth', '3D'];
-
-export default function VideoRightArea({ videos = [], onRecreate }) {
+export default function VideoRightArea({ videos = [] }) {
   const [activeTab, setActiveTab] = useState('creations');
-  const [selectedTemplate, setSelectedTemplate] = useState(null);
-  const [activeVideoCategory, setActiveVideoCategory] = useState('All');
-  const [activeTransitionCategory, setActiveTransitionCategory] = useState('All');
-
-  const filteredTemplates = activeVideoCategory === 'All' ? videoTemplates : videoTemplates.filter(t => t.category === activeVideoCategory);
-  const filteredTransitions = activeTransitionCategory === 'All' ? transitions : transitions.filter(t => t.category === activeTransitionCategory);
 
   return (
     <div style={{ marginLeft:450, height:'calc(100vh - 60px)', overflowY:'auto', background:'#0A0A0A', display:'flex', flexDirection:'column' }}>
@@ -54,7 +44,7 @@ export default function VideoRightArea({ videos = [], onRecreate }) {
 
       {/* Creations area */}
       {videos.length === 0 ? (
-        <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:14, minHeight:300 }}>
+        <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:14, minHeight:400 }}>
           <div style={{ fontSize:80, opacity:0.55 }}>📁</div>
           <p style={{ fontSize:14, color:'rgba(255,255,255,0.3)', fontFamily:font }}>No items to display</p>
         </div>
@@ -66,76 +56,6 @@ export default function VideoRightArea({ videos = [], onRecreate }) {
             </div>
           ))}
         </div>
-      )}
-
-      {/* Video Templates */}
-      <div style={{ padding:'32px 20px 0' }}>
-        <h2 style={{ fontSize:20, fontWeight:700, color:'#fff', fontFamily:font, marginBottom:6 }}>Video Templates</h2>
-        <p style={{ fontSize:13, color:'rgba(255,255,255,0.4)', fontFamily:font, marginBottom:16 }}>Click to view prompt and recreate</p>
-        <div style={{ display:'flex', flexWrap:'wrap', gap:8, marginBottom:16 }}>
-          {videoCategories.map(cat => (
-            <button key={cat} onClick={() => setActiveVideoCategory(cat)} style={{
-              padding:'6px 14px', borderRadius:999, fontSize:12, fontFamily:font, cursor:'pointer', border:'none', transition:'all 0.18s',
-              background: activeVideoCategory===cat ? '#E01E1E' : '#1A1A1A',
-              color: activeVideoCategory===cat ? '#fff' : 'rgba(255,255,255,0.55)',
-              outline: activeVideoCategory!==cat ? '1px solid #2A2A2A' : 'none',
-            }}>{cat}</button>
-          ))}
-        </div>
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(180px,1fr))', gap:12, marginBottom:32 }}>
-          {filteredTemplates.map((template, index) => {
-            const gradients = [
-              'linear-gradient(135deg,#1a0000,#8B0000,#1a1a1a)',
-              'linear-gradient(135deg,#0a0a1a,#1a0a2a,#2a0a0a)',
-              'linear-gradient(135deg,#0d0d0d,#2a0000,#111)',
-              'linear-gradient(135deg,#1a1a0a,#3a1a00,#0a0a0a)',
-            ];
-            return (
-              <div key={template.id} onClick={() => setSelectedTemplate(template)} className="group" style={{ position:'relative', borderRadius:12, overflow:'hidden', cursor:'pointer', border:'1px solid #2A2A2A', background: gradients[index%4], transition:'all 0.2s' }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor='rgba(224,30,30,0.5)'; e.currentTarget.style.transform='translateY(-2px)'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor='#2A2A2A'; e.currentTarget.style.transform='none'; }}
-              >
-                <div style={{ aspectRatio:'16/9', display:'flex', alignItems:'center', justifyContent:'center' }}>
-                  <div style={{ width:40, height:40, borderRadius:'50%', background:'rgba(0,0,0,0.5)', display:'flex', alignItems:'center', justifyContent:'center' }}>
-                    <div style={{ width:0, height:0, borderLeft:'10px solid #fff', borderTop:'7px solid transparent', borderBottom:'7px solid transparent', marginLeft:3 }} />
-                  </div>
-                </div>
-                <div style={{ position:'absolute', top:8, left:8 }}>
-                  <span style={{ padding:'2px 8px', background:'#E01E1E', color:'#fff', fontSize:10, fontWeight:700, borderRadius:4, fontFamily:font }}>{template.model}</span>
-                </div>
-                <div style={{ padding:'10px 12px', background:'rgba(0,0,0,0.6)' }}>
-                  <div style={{ fontSize:13, fontWeight:600, color:'#fff', fontFamily:font }}>{template.title}</div>
-                  <div style={{ fontSize:11, color:'rgba(255,255,255,0.4)', fontFamily:font }}>{template.category}</div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Video Transitions */}
-      <div style={{ padding:'0 20px 40px' }}>
-        <h2 style={{ fontSize:20, fontWeight:700, color:'#fff', fontFamily:font, marginBottom:6 }}>Video Transitions</h2>
-        <p style={{ fontSize:13, color:'rgba(255,255,255,0.4)', fontFamily:font, marginBottom:16 }}>Add cinematic transitions to your videos</p>
-        <div style={{ display:'flex', flexWrap:'wrap', gap:8, marginBottom:16 }}>
-          {transitionCategories.map(cat => (
-            <button key={cat} onClick={() => setActiveTransitionCategory(cat)} style={{
-              padding:'6px 14px', borderRadius:999, fontSize:12, fontFamily:font, cursor:'pointer', border:'none', transition:'all 0.18s',
-              background: activeTransitionCategory===cat ? '#E01E1E' : '#1A1A1A',
-              color: activeTransitionCategory===cat ? '#fff' : 'rgba(255,255,255,0.55)',
-              outline: activeTransitionCategory!==cat ? '1px solid #2A2A2A' : 'none',
-            }}>{cat}</button>
-          ))}
-        </div>
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(150px,1fr))', gap:12 }}>
-          {filteredTransitions.map(transition => (
-            <TransitionCard key={transition.id} transition={transition} />
-          ))}
-        </div>
-      </div>
-
-      {selectedTemplate && (
-        <TemplateModal template={selectedTemplate} onClose={() => setSelectedTemplate(null)} type="video" onRecreate={t => { onRecreate && onRecreate(t); setSelectedTemplate(null); }} />
       )}
     </div>
   );
