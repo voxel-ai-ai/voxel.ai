@@ -64,14 +64,18 @@ export default function VideoModelModal({ selectedId, onSelect, onClose }) {
       <div style={{ flexShrink:0, padding:'0 20px 16px 20px' }}>
         <div className="featured-cards-row" style={{ display:'flex', gap:12, overflowX:'auto', overflowY:'visible', scrollbarWidth:'none', paddingBottom:4 }}>
           {[
-            { id:'kling-3-omni', name:'Kling 3.0 Omni', desc:'Enhanced multimodal references',           img:'https://images.unsplash.com/photo-1616400619175-5beda3a17896?w=600&q=80' },
-            { id:'kling-3',      name:'Kling 3.0',       desc:'Enhanced audio, consistency & multi-shots', img:'https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=600&q=80' },
-            { id:'seedance-1-5', name:'Seedance 1.5 Pro', desc:'Cinematic videos with audio & multi-shots', img:'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600&q=80' },
+            { id:'kling-3-omni', name:'Kling 3.0 Omni', brand:'Kling', color:'#2563EB', desc:'Enhanced multimodal references',           img:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80' },
+            { id:'kling-3',      name:'Kling 3.0',       brand:'Kling', color:'#2563EB', desc:'Enhanced audio, consistency & multi-shots', img:'https://images.unsplash.com/photo-1574717024453-354056afd6fc?w=600&q=80' },
+            { id:'seedance-1-5', name:'Seedance 1.5 Pro', brand:'Seedance', color:'#0D9488', desc:'Cinematic videos with audio & multi-shots', img:'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80' },
           ].map(card => (
             <div key={card.id} onClick={() => { const m = VIDEO_MODELS.find(x => x.id === card.id); if (m) { onSelect(m); onClose(); } }}
               style={{ minWidth:300, height:145, borderRadius:14, overflow:'hidden', position:'relative', cursor:'pointer', flexShrink:0, border: selectedId===card.id ? '2px solid #E01E1E' : '1px solid #2A2A2A', transition:'border-color 0.2s' }}>
               <img src={card.img} alt={card.name} style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'top', display:'block' }} />
               <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 50%, transparent 100%)', display:'flex', flexDirection:'column', justifyContent:'flex-end', padding:'12px 14px' }}>
+                {/* Brand logo top-left */}
+                <div style={{ position:'absolute', top:10, left:12, width:32, height:32, borderRadius:'50%', background: card.color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:13, fontWeight:700, color:'#fff', fontFamily:font, boxShadow:'0 2px 8px rgba(0,0,0,0.5)' }}>
+                  {card.brand.charAt(0)}
+                </div>
                 <div style={{ fontSize:18, fontWeight:800, color:'#fff', fontFamily:font, lineHeight:1.1, textShadow:'0 1px 4px rgba(0,0,0,0.5)' }}>{card.name}</div>
                 <div style={{ fontSize:11, color:'rgba(255,255,255,0.7)', fontFamily:font, marginTop:3 }}>{card.desc}</div>
               </div>
