@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronDown, Star, Filter, Grid, Search, SlidersHorizontal, MessageSquare, Video, Music } from 'lucide-react';
-import { videoTemplates, transitions } from '@/components/data/siteData';
-import TransitionCard from '@/components/common/TransitionCard';
-import TemplateModal from '@/components/common/TemplateModal';
+
 
 const font = '"DM Sans", sans-serif';
 
