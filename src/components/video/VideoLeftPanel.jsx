@@ -126,12 +126,8 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
                   onMouseEnter={e => { e.currentTarget.style.borderColor='rgba(224,30,30,0.5)'; e.currentTarget.style.background='rgba(224,30,30,0.05)'; e.currentTarget.style.opacity='1'; }}
                   onMouseLeave={e => { e.currentTarget.style.borderColor='#303030'; e.currentTarget.style.background='#0F0F0F'; e.currentTarget.style.opacity= i===1 ? '0.55' : '1'; }}
                 >
-                  <div style={{ position:'relative', display:'inline-block' }}>
-                    <span style={{ color:'rgba(255,255,255,0.35)', fontSize:28 }}>🖼</span>
-                    <div style={{ position:'absolute', bottom:-4, right:-6, background:'#E01E1E', color:'#fff', fontSize:9, width:14, height:14, borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700 }}>+</div>
-                  </div>
+                  <div style={{ width:32, height:32, borderRadius:'50%', background:'#E01E1E', display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontSize:18, fontWeight:700 }}>+</div>
                   <span style={{ fontSize:12, color:'rgba(255,255,255,0.4)', fontFamily:S.font, textAlign:'center', lineHeight:1.4 }}>Add a {type}<br/>frame</span>
-                  <span style={{ fontSize:11, fontFamily:S.font, cursor:'pointer', color: i===0 ? '#E01E1E' : 'rgba(255,255,255,0.2)', textDecoration: i===0 ? 'underline' : 'none' }}>History</span>
                 </div>
               </React.Fragment>
             ))}
