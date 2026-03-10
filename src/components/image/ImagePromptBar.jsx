@@ -508,13 +508,18 @@ export default function ImagePromptBar({
           <input ref={imgInputRef} type="file" accept="image/*" style={{ display:'none' }} onChange={handleImageUpload} />
           <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:10 }}>
             {uploadedImage ? (
-              <div style={{ position:'relative', width:40, height:40, borderRadius:8, overflow:'visible', flexShrink:0 }}>
+              <div
+                style={{ position:'relative', width:40, height:40, borderRadius:8, overflow:'visible', flexShrink:0 }}
+                onMouseEnter={e => { const btn = e.currentTarget.querySelector('.img-x-btn'); if (btn) btn.style.opacity='1'; }}
+                onMouseLeave={e => { const btn = e.currentTarget.querySelector('.img-x-btn'); if (btn) btn.style.opacity='0'; }}
+              >
                 <img src={uploadedImage} alt="reference" style={{ width:40, height:40, objectFit:'cover', borderRadius:8, display:'block', border:'1px solid rgba(255,255,255,0.15)' }} />
                 <button
+                  className="img-x-btn"
                   onClick={() => setUploadedImage(null)}
-                  style={{ position:'absolute', top:-6, right:-6, width:18, height:18, borderRadius:'50%', background:'rgba(0,0,0,0.75)', border:'1px solid rgba(255,255,255,0.25)', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', color:'#fff', fontSize:10, zIndex:10 }}
+                  style={{ position:'absolute', top:-6, right:-6, width:18, height:18, borderRadius:'50%', background:'rgba(30,30,30,0.85)', border:'1.5px solid rgba(255,255,255,0.25)', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', color:'#fff', fontSize:10, zIndex:10, opacity:0, transition:'opacity 0.18s, background 0.15s' }}
                   onMouseEnter={e => e.currentTarget.style.background='rgba(180,0,0,0.9)'}
-                  onMouseLeave={e => e.currentTarget.style.background='rgba(0,0,0,0.75)'}
+                  onMouseLeave={e => e.currentTarget.style.background='rgba(30,30,30,0.85)'}
                 >✕</button>
               </div>
             ) : (
