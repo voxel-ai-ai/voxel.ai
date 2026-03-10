@@ -100,11 +100,11 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
       <div style={{ padding:'14px 16px 0' }}>
         <button onClick={onModelClick} style={{
           width:'100%', display:'flex', alignItems:'center', gap:12,
-          padding:'13px 16px', background:'#161616', border:'1px solid #252525',
+          padding:'13px 16px', background:'#252525', border:'1px solid #383838',
           borderRadius:12, cursor:'pointer', transition:'all 0.18s', textAlign:'left',
         }}
-          onMouseEnter={e => { e.currentTarget.style.background='#1C1C1C'; e.currentTarget.style.borderColor='#333333'; }}
-          onMouseLeave={e => { e.currentTarget.style.background='#161616'; e.currentTarget.style.borderColor='#252525'; }}
+          onMouseEnter={e => { e.currentTarget.style.background='#2E2E2E'; e.currentTarget.style.borderColor='rgba(224,30,30,0.4)'; }}
+          onMouseLeave={e => { e.currentTarget.style.background='#252525'; e.currentTarget.style.borderColor='#383838'; }}
         >
           <div style={{ width:34, height:34, borderRadius:'50%', background: model?.color || '#1B7FE4', display:'flex', alignItems:'center', justifyContent:'center', fontSize:13, fontWeight:700, color:'#fff', flexShrink:0 }}>
             {(model?.brand || 'K').charAt(0)}
