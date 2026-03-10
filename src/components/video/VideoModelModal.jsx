@@ -64,8 +64,8 @@ export default function VideoModelModal({ selectedId, onSelect, onClose }) {
       <div style={{ flexShrink:0, padding:'0 20px 16px 20px' }}>
         <div className="featured-cards-row" style={{ display:'flex', gap:12, overflowX:'auto', overflowY:'visible', scrollbarWidth:'none', paddingBottom:4 }}>
           {[
-            { id:'kling-3-omni', name:'Kling 3.0 Omni', brand:'Kling', color:'#2563EB', desc:'Enhanced multimodal references',           img:'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/6568d539e_Screenshot2026-03-11at22532AM.png', objPos:'20% 10%' },
-            { id:'kling-3',      name:'Kling 3.0',       brand:'Kling', color:'#2563EB', desc:'Enhanced audio, consistency & multi-shots', img:'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/592be7b6d_ChatGPTImageMar8202603_02_54AM.png', objPos:'center 30%' },
+            { id:'kling-3-omni', name:'Kling 3.0 Omni', brand:'Kling', color:'#2563EB', desc:'Enhanced multimodal references',           img:'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/6568d539e_Screenshot2026-03-11at22532AM.png', objPos:'20% 0%' },
+            { id:'kling-3',      name:'Kling 3.0',       brand:'Kling', color:'#2563EB', desc:'Enhanced audio, consistency & multi-shots', img:'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/592be7b6d_ChatGPTImageMar8202603_02_54AM.png', objPos:'center 0%' },
             { id:'seedance-1-5', name:'Seedance 1.5 Pro', brand:'Seedance', color:'#0D9488', desc:'Cinematic videos with audio & multi-shots', img:'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/55231ed2c_Screenshot2026-03-11at22510AM.png', objPos:'center top' },
           ].map(card => (
             <div key={card.id} onClick={() => { const m = VIDEO_MODELS.find(x => x.id === card.id); if (m) { onSelect(m); onClose(); } }}
