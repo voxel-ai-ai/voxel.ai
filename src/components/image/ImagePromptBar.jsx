@@ -504,15 +504,31 @@ export default function ImagePromptBar({
             </button>
           </div>
 
-          {/* + Upload button */}
-          <button
-            style={{ width: 32, height: 32, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'rgba(255,255,255,0.7)', fontSize: 18, marginBottom: 10, transition: 'background 0.18s' }}
-            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.13)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.07)'}
-            title="Upload reference image"
-          >
-            <Plus className="w-4 h-4" />
-          </button>
+          {/* + Upload button / uploaded image preview */}
+          <input ref={imgInputRef} type="file" accept="image/*" style={{ display:'none' }} onChange={handleImageUpload} />
+          <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:10 }}>
+            {uploadedImage ? (
+              <div style={{ position:'relative', width:40, height:40, borderRadius:8, overflow:'visible', flexShrink:0 }}>
+                <img src={uploadedImage} alt="reference" style={{ width:40, height:40, objectFit:'cover', borderRadius:8, display:'block', border:'1px solid rgba(255,255,255,0.15)' }} />
+                <button
+                  onClick={() => setUploadedImage(null)}
+                  style={{ position:'absolute', top:-6, right:-6, width:18, height:18, borderRadius:'50%', background:'rgba(0,0,0,0.75)', border:'1px solid rgba(255,255,255,0.25)', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', color:'#fff', fontSize:10, zIndex:10 }}
+                  onMouseEnter={e => e.currentTarget.style.background='rgba(180,0,0,0.9)'}
+                  onMouseLeave={e => e.currentTarget.style.background='rgba(0,0,0,0.75)'}
+                >✕</button>
+              </div>
+            ) : (
+              <button
+                onClick={() => imgInputRef.current && imgInputRef.current.click()}
+                style={{ width: 32, height: 32, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'rgba(255,255,255,0.7)', transition: 'background 0.18s' }}
+                onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.13)'}
+                onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.07)'}
+                title="Upload reference image"
+              >
+                <Plus className="w-4 h-4" />
+              </button>
+            )}
+          </div>
 
           {/* Main prompt textarea */}
           <div style={{ position: 'relative', paddingRight: 44 }}>
