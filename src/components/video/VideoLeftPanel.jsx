@@ -134,28 +134,30 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
                       onMouseLeave={e => { e.currentTarget.style.background='#1E1E1E'; e.currentTarget.style.color='rgba(255,255,255,0.45)'; }}
                     >⇄</button>
                   )}
-                  <label style={{ flex:1, minHeight:120, background:'#0F0F0F', border:'1.5px solid #303030', borderRadius:10, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:8, cursor:'pointer', padding:'16px 10px', transition:'all 0.2s', opacity: i===1 ? 0.55 : 1, position:'relative', overflow:'hidden' }}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor='rgba(224,30,30,0.5)'; e.currentTarget.style.background='rgba(224,30,30,0.05)'; e.currentTarget.style.opacity='1'; }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor='#303030'; e.currentTarget.style.background='#0F0F0F'; e.currentTarget.style.opacity= i===1 ? '0.55' : '1'; }}
-                  >
-                    <input type="file" accept="image/*" style={{ display:'none' }} onChange={e => handleFrameUpload(type, e)} />
-                    {frameUrl ? (
-                      <>
+                  <div style={{ flex:1, minHeight:120, position:'relative' }}>
+                    <label style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:8, cursor:'pointer', padding:'16px 10px', transition:'all 0.2s', opacity: i===1 && !frameUrl ? 0.55 : 1, position:'relative', overflow:'hidden', height:'100%', minHeight:120, background:'#0F0F0F', border:'1.5px solid #303030', borderRadius:10 }}
+                      onMouseEnter={e => { if (!frameUrl) { e.currentTarget.style.borderColor='rgba(224,30,30,0.5)'; e.currentTarget.style.background='rgba(224,30,30,0.05)'; e.currentTarget.style.opacity='1'; }}}
+                      onMouseLeave={e => { if (!frameUrl) { e.currentTarget.style.borderColor='#303030'; e.currentTarget.style.background='#0F0F0F'; e.currentTarget.style.opacity= i===1 ? '0.55' : '1'; }}}
+                    >
+                      <input type="file" accept="image/*" style={{ display:'none' }} onChange={e => handleFrameUpload(type, e)} />
+                      {frameUrl ? (
                         <img src={frameUrl} alt={`${type} frame`} style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', borderRadius:10 }} />
-                        <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.45)', borderRadius:10, display:'flex', alignItems:'center', justifyContent:'center', opacity:0, transition:'opacity 0.2s' }}
-                          onMouseEnter={e => e.currentTarget.style.opacity='1'}
-                          onMouseLeave={e => e.currentTarget.style.opacity='0'}
-                        >
-                          <div style={{ width:28, height:28, borderRadius:'50%', background:'#E01E1E', display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontSize:16, fontWeight:700 }}>+</div>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div style={{ width:32, height:32, borderRadius:'50%', background:'#E01E1E', display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontSize:18, fontWeight:700 }}>+</div>
-                        <span style={{ fontSize:12, color:'rgba(255,255,255,0.4)', fontFamily:S.font, textAlign:'center', lineHeight:1.4 }}>Add a {type}<br/>frame</span>
-                      </>
+                      ) : (
+                        <>
+                          <div style={{ width:32, height:32, borderRadius:'50%', background:'#E01E1E', display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontSize:18, fontWeight:700 }}>+</div>
+                          <span style={{ fontSize:12, color:'rgba(255,255,255,0.4)', fontFamily:S.font, textAlign:'center', lineHeight:1.4 }}>Add a {type}<br/>frame</span>
+                        </>
+                      )}
+                    </label>
+                    {frameUrl && (
+                      <button
+                        onClick={e => { e.stopPropagation(); if (type === 'start') setStartFrame(null); else setEndFrame(null); }}
+                        style={{ position:'absolute', top:6, right:6, width:22, height:22, borderRadius:'50%', background:'rgba(0,0,0,0.6)', border:'1px solid rgba(255,255,255,0.2)', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', color:'#fff', fontSize:12, zIndex:10, transition:'background 0.15s' }}
+                        onMouseEnter={e => e.currentTarget.style.background='rgba(200,0,0,0.8)'}
+                        onMouseLeave={e => e.currentTarget.style.background='rgba(0,0,0,0.6)'}
+                      >✕</button>
                     )}
-                  </label>
+                  </div>
                 </React.Fragment>
               );
             })}
