@@ -70,7 +70,7 @@ export default function VideoModelModal({ selectedId, onSelect, onClose }) {
           ].map(card => (
             <div key={card.id} onClick={() => { const m = VIDEO_MODELS.find(x => x.id === card.id); if (m) { onSelect(m); onClose(); } }}
               style={{ minWidth:300, height:145, borderRadius:14, overflow:'hidden', position:'relative', cursor:'pointer', flexShrink:0, border: selectedId===card.id ? '2px solid #E01E1E' : '1px solid #2A2A2A', transition:'border-color 0.2s' }}>
-              <img src={card.img} alt={card.name} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
+              <img src={card.img} alt={card.name} style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'top', display:'block' }} />
               <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 50%, transparent 100%)', display:'flex', flexDirection:'column', justifyContent:'flex-end', padding:'12px 14px' }}>
                 <div style={{ fontSize:18, fontWeight:800, color:'#fff', fontFamily:font, lineHeight:1.1, textShadow:'0 1px 4px rgba(0,0,0,0.5)' }}>{card.name}</div>
                 <div style={{ fontSize:11, color:'rgba(255,255,255,0.7)', fontFamily:font, marginTop:3 }}>{card.desc}</div>
