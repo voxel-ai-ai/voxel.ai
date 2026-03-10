@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
 import VideoLeftPanel from '@/components/video/VideoLeftPanel';
 import VideoRightArea from '@/components/video/VideoRightArea';
+import VideoModelModal from '@/components/video/VideoModelModal';
 import { toast } from 'sonner';
+
+const DEFAULT_MODEL = { id: 'kling-2-6', name: 'Kling 2.6', brand: 'Kling', color: '#1B7FE4' };
 
 export default function Video() {
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [count, setCount] = useState(1);
   const [videos, setVideos] = useState([]);
+  const [model, setModel] = useState(DEFAULT_MODEL);
+  const [showModelModal, setShowModelModal] = useState(false);
 
   const handleGenerate = () => {
     if (!prompt.trim()) {
@@ -23,13 +28,7 @@ export default function Video() {
   };
 
   return (
-    <div style={{
-      display: 'flex',
-      height: 'calc(100vh - 60px)',
-      background: '#0A0A0A',
-      position: 'relative',
-      overflow: 'hidden',
-    }}>
+    <div style={{ position: 'relative', background: '#0A0A0A', minHeight: 'calc(100vh - 60px)' }}>
       <VideoLeftPanel
         prompt={prompt}
         onPromptChange={setPrompt}
@@ -37,8 +36,20 @@ export default function Video() {
         isGenerating={isGenerating}
         count={count}
         onCountChange={setCount}
+        model={model}
+        onModelClick={() => setShowModelModal(true)}
       />
-      <VideoRightArea videos={videos} />
+      <VideoRightArea
+        videos={videos}
+        onRecreate={(t) => setPrompt(t.prompt)}
+      />
+      {showModelModal && (
+        <VideoModelModal
+          selectedId={model.id}
+          onSelect={(m) => setModel(m)}
+          onClose={() => setShowModelModal(false)}
+        />
+      )}
     </div>
   );
 }
