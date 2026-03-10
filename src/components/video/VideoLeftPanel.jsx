@@ -123,24 +123,42 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
           <div style={{ fontSize:13, fontWeight:600, color:'#fff', fontFamily:S.font, marginBottom:10 }}>Set start &amp; end frame</div>
           {/* Outer container */}
           <div style={{ background:'#141414', border:'1px solid #252525', borderRadius:12, padding:12, display:'flex', alignItems:'center', gap:10 }}>
-            {['start', 'end'].map((type, i) => (
-              <React.Fragment key={type}>
-                {i === 1 && (
-                  <button style={{ width:32, height:32, flexShrink:0, background:'#1E1E1E', border:'1px solid #2A2A2A', borderRadius:8, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'rgba(255,255,255,0.45)', fontSize:15, transition:'all 0.15s' }}
-                    onMouseEnter={e => { e.currentTarget.style.background='#2A2A2A'; e.currentTarget.style.color='#fff'; }}
-                    onMouseLeave={e => { e.currentTarget.style.background='#1E1E1E'; e.currentTarget.style.color='rgba(255,255,255,0.45)'; }}
-                  >⇄</button>
-                )}
-                <div
-                  style={{ flex:1, minHeight:120, background:'#0F0F0F', border:'1.5px solid #303030', borderRadius:10, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:8, cursor:'pointer', padding:'16px 10px', transition:'all 0.2s', opacity: i===1 ? 0.55 : 1 }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor='rgba(224,30,30,0.5)'; e.currentTarget.style.background='rgba(224,30,30,0.05)'; e.currentTarget.style.opacity='1'; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor='#303030'; e.currentTarget.style.background='#0F0F0F'; e.currentTarget.style.opacity= i===1 ? '0.55' : '1'; }}
-                >
-                  <div style={{ width:32, height:32, borderRadius:'50%', background:'#E01E1E', display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontSize:18, fontWeight:700 }}>+</div>
-                  <span style={{ fontSize:12, color:'rgba(255,255,255,0.4)', fontFamily:S.font, textAlign:'center', lineHeight:1.4 }}>Add a {type}<br/>frame</span>
-                </div>
-              </React.Fragment>
-            ))}
+            {['start', 'end'].map((type, i) => {
+              const frameUrl = i === 0 ? startFrame : endFrame;
+              return (
+                <React.Fragment key={type}>
+                  {i === 1 && (
+                    <button style={{ width:32, height:32, flexShrink:0, background:'#1E1E1E', border:'1px solid #2A2A2A', borderRadius:8, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'rgba(255,255,255,0.45)', fontSize:15, transition:'all 0.15s' }}
+                      onClick={() => { const tmp = startFrame; setStartFrame(endFrame); setEndFrame(tmp); }}
+                      onMouseEnter={e => { e.currentTarget.style.background='#2A2A2A'; e.currentTarget.style.color='#fff'; }}
+                      onMouseLeave={e => { e.currentTarget.style.background='#1E1E1E'; e.currentTarget.style.color='rgba(255,255,255,0.45)'; }}
+                    >⇄</button>
+                  )}
+                  <label style={{ flex:1, minHeight:120, background:'#0F0F0F', border:'1.5px solid #303030', borderRadius:10, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:8, cursor:'pointer', padding:'16px 10px', transition:'all 0.2s', opacity: i===1 ? 0.55 : 1, position:'relative', overflow:'hidden' }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor='rgba(224,30,30,0.5)'; e.currentTarget.style.background='rgba(224,30,30,0.05)'; e.currentTarget.style.opacity='1'; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor='#303030'; e.currentTarget.style.background='#0F0F0F'; e.currentTarget.style.opacity= i===1 ? '0.55' : '1'; }}
+                  >
+                    <input type="file" accept="image/*" style={{ display:'none' }} onChange={e => handleFrameUpload(type, e)} />
+                    {frameUrl ? (
+                      <>
+                        <img src={frameUrl} alt={`${type} frame`} style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', borderRadius:10 }} />
+                        <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.45)', borderRadius:10, display:'flex', alignItems:'center', justifyContent:'center', opacity:0, transition:'opacity 0.2s' }}
+                          onMouseEnter={e => e.currentTarget.style.opacity='1'}
+                          onMouseLeave={e => e.currentTarget.style.opacity='0'}
+                        >
+                          <div style={{ width:28, height:28, borderRadius:'50%', background:'#E01E1E', display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontSize:16, fontWeight:700 }}>+</div>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div style={{ width:32, height:32, borderRadius:'50%', background:'#E01E1E', display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontSize:18, fontWeight:700 }}>+</div>
+                        <span style={{ fontSize:12, color:'rgba(255,255,255,0.4)', fontFamily:S.font, textAlign:'center', lineHeight:1.4 }}>Add a {type}<br/>frame</span>
+                      </>
+                    )}
+                  </label>
+                </React.Fragment>
+              );
+            })}
           </div>
         </div>
       )}
