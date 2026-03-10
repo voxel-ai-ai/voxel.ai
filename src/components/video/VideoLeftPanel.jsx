@@ -43,8 +43,8 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
     <div style={{
       width: 450, minWidth: 450, maxWidth: 450,
       height: 'calc(100vh - 60px)',
-      background: '#0D0D0D',
-      borderRight: '1px solid #1E1E1E',
+      background: '#0A0A0A',
+      borderRight: '1px solid #1A1A1A',
       overflowY: 'auto',
       position: 'fixed',
       left: 0, top: 60,
@@ -73,11 +73,12 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
           <button key={tab.id} onClick={() => setMode(tab.id)} style={{
             display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
             gap:8, padding:'14px 10px', borderRadius:12, cursor:'pointer', border:'none',
-            background: mode===tab.id ? 'linear-gradient(135deg, rgba(139,0,0,0.35), rgba(224,30,30,0.2))' : '#141414',
+            background: mode===tab.id ? 'linear-gradient(135deg, #7A0000 0%, #C01010 40%, #E01E1E 100%)' : '#161616',
             borderWidth:1, borderStyle:'solid',
-            borderColor: mode===tab.id ? 'rgba(224,30,30,0.5)' : '#252525',
+            borderColor: mode===tab.id ? 'rgba(224,30,30,0.6)' : '#262626',
             color: mode===tab.id ? '#fff' : 'rgba(255,255,255,0.5)',
             fontFamily:S.font, fontSize:14, transition:'all 0.2s',
+            boxShadow: mode===tab.id ? 'inset 0 1px 0 rgba(255,255,255,0.1), 0 2px 12px rgba(224,30,30,0.3)' : 'none',
           }}>
             <span style={{ fontSize:22 }}>{tab.icon}</span>
             {tab.label}
@@ -108,25 +109,29 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
 
       {/* ④ Start & End Frame */}
       {mode === 'frame' && (
-        <div style={{ padding:'16px 16px 0' }}>
-          <div style={{ fontSize:13, fontWeight:600, color:'#fff', fontFamily:S.font, marginBottom:12 }}>Set start &amp; end frame</div>
-          <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+        <div style={{ padding:'14px 16px 0' }}>
+          <div style={{ fontSize:13, fontWeight:600, color:'#fff', fontFamily:S.font, marginBottom:10 }}>Set start &amp; end frame</div>
+          {/* Outer container */}
+          <div style={{ background:'#141414', border:'1px solid #252525', borderRadius:12, padding:12, display:'flex', alignItems:'center', gap:10 }}>
             {['start', 'end'].map((type, i) => (
               <React.Fragment key={type}>
                 {i === 1 && (
-                  <button style={{ width:32, height:32, flexShrink:0, background:'#1A1A1A', border:'1px solid #2A2A2A', borderRadius:8, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'rgba(255,255,255,0.5)', fontSize:16, transition:'all 0.2s' }}
+                  <button style={{ width:32, height:32, flexShrink:0, background:'#1E1E1E', border:'1px solid #2A2A2A', borderRadius:8, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'rgba(255,255,255,0.45)', fontSize:15, transition:'all 0.15s' }}
                     onMouseEnter={e => { e.currentTarget.style.background='#2A2A2A'; e.currentTarget.style.color='#fff'; }}
-                    onMouseLeave={e => { e.currentTarget.style.background='#1A1A1A'; e.currentTarget.style.color='rgba(255,255,255,0.5)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background='#1E1E1E'; e.currentTarget.style.color='rgba(255,255,255,0.45)'; }}
                   >⇄</button>
                 )}
                 <div
-                  style={{ flex:1, aspectRatio:'4/3', background:'#111111', border:`1.5px dashed ${i===0 ? '#333333' : '#222222'}`, borderRadius:12, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:8, cursor:'pointer', padding:'16px 10px', transition:'all 0.2s', opacity: i===1 ? 0.85 : 1 }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor='rgba(224,30,30,0.45)'; e.currentTarget.style.background='rgba(224,30,30,0.04)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = i===0 ? '#333333' : '#222222'; e.currentTarget.style.background='#111111'; }}
+                  style={{ flex:1, minHeight:120, background:'#0F0F0F', border:'1.5px solid #303030', borderRadius:10, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:8, cursor:'pointer', padding:'16px 10px', transition:'all 0.2s', opacity: i===1 ? 0.55 : 1 }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor='rgba(224,30,30,0.5)'; e.currentTarget.style.background='rgba(224,30,30,0.05)'; e.currentTarget.style.opacity='1'; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor='#303030'; e.currentTarget.style.background='#0F0F0F'; e.currentTarget.style.opacity= i===1 ? '0.55' : '1'; }}
                 >
-                  <span style={{ color:'rgba(255,255,255,0.25)', fontSize:26 }}>🖼</span>
-                  <span style={{ fontSize:12, color:'rgba(255,255,255,0.4)', fontFamily:S.font, textAlign:'center' }}>Add a {type}<br/>frame</span>
-                  <span style={{ fontSize:11, color: i===0 ? '#E01E1E' : 'rgba(255,255,255,0.2)', fontFamily:S.font, textDecoration: i===0 ? 'underline' : 'none', cursor:'pointer' }}>History</span>
+                  <div style={{ position:'relative', display:'inline-block' }}>
+                    <span style={{ color:'rgba(255,255,255,0.35)', fontSize:28 }}>🖼</span>
+                    <div style={{ position:'absolute', bottom:-4, right:-6, background:'#E01E1E', color:'#fff', fontSize:9, width:14, height:14, borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700 }}>+</div>
+                  </div>
+                  <span style={{ fontSize:12, color:'rgba(255,255,255,0.4)', fontFamily:S.font, textAlign:'center', lineHeight:1.4 }}>Add a {type}<br/>frame</span>
+                  <span style={{ fontSize:11, fontFamily:S.font, cursor:'pointer', color: i===0 ? '#E01E1E' : 'rgba(255,255,255,0.2)', textDecoration: i===0 ? 'underline' : 'none' }}>History</span>
                 </div>
               </React.Fragment>
             ))}
@@ -263,15 +268,16 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
         </div>
         <button onClick={() => onGenerate && onGenerate()} disabled={isGenerating}
           style={{
-            flex:1, height:46,
-            background: isGenerating ? 'rgba(139,0,0,0.5)' : 'linear-gradient(135deg, #8B0000 0%, #E01E1E 100%)',
-            border:'none', borderRadius:12, color:'#fff', fontSize:15, fontWeight:600, fontFamily:S.font,
+            flex:1, height:48,
+            background: isGenerating ? 'rgba(139,0,0,0.5)' : 'linear-gradient(90deg, #CC0000 0%, #FF2222 50%, #E01E1E 100%)',
+            border:'none', borderRadius:14, color:'#fff', fontSize:15, fontWeight:700, fontFamily:S.font,
             cursor: isGenerating ? 'not-allowed' : 'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:8, transition:'all 0.2s',
+            boxShadow: isGenerating ? 'none' : '0 2px 20px rgba(224,30,30,0.35)',
           }}
-          onMouseEnter={e => { if (!isGenerating) { e.currentTarget.style.background='linear-gradient(135deg, #9B0000 0%, #FF2222 100%)'; e.currentTarget.style.boxShadow='0 4px 24px rgba(224,30,30,0.4)'; }}}
-          onMouseLeave={e => { if (!isGenerating) { e.currentTarget.style.background='linear-gradient(135deg, #8B0000 0%, #E01E1E 100%)'; e.currentTarget.style.boxShadow='none'; }}}
+          onMouseEnter={e => { if (!isGenerating) { e.currentTarget.style.background='linear-gradient(90deg, #DD0000 0%, #FF3333 50%, #FF2020 100%)'; e.currentTarget.style.boxShadow='0 4px 28px rgba(224,30,30,0.55)'; e.currentTarget.style.transform='translateY(-1px)'; }}}
+          onMouseLeave={e => { if (!isGenerating) { e.currentTarget.style.background='linear-gradient(90deg, #CC0000 0%, #FF2222 50%, #E01E1E 100%)'; e.currentTarget.style.boxShadow='0 2px 20px rgba(224,30,30,0.35)'; e.currentTarget.style.transform='none'; }}}
         >
-          {isGenerating ? 'Generating...' : <><span>Generate</span><Sparkles className="w-4 h-4" /><span style={{ fontSize:13, opacity:0.85 }}>100</span></>}
+          {isGenerating ? 'Generating...' : <><span>Generate</span><Sparkles className="w-4 h-4" style={{ opacity:0.9 }} /><span style={{ fontSize:14, fontWeight:700, opacity:0.9 }}>100</span></>}
         </button>
       </div>
     </div>
