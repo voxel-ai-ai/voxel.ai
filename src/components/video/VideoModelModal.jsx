@@ -38,42 +38,50 @@ export default function VideoModelModal({ selectedId, onSelect, onClose }) {
       width:'calc(100% - 450px)', height:'100%',
       background:'rgba(10,10,10,0.98)',
       backdropFilter:'blur(8px)', WebkitBackdropFilter:'blur(8px)',
-      zIndex:50, overflowY:'auto', display:'flex', flexDirection:'column',
+      zIndex:50, display:'flex', flexDirection:'column', overflow:'hidden',
       animation:'vmSlideIn 0.22s ease',
     }}>
       <style>{`
         @keyframes vmSlideIn { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
-        .vm-row:hover { background: rgba(255,255,255,0.03) !important; }
-        .vm-cam-opt:hover { background: rgba(255,255,255,0.05); }
+        .vm-row:hover { background: rgba(255,255,255,0.04) !important; }
+        .featured-cards-row::-webkit-scrollbar { display: none; }
       `}</style>
 
-      {/* Header */}
-      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'20px 24px 16px', borderBottom:'1px solid #1E1E1E', position:'sticky', top:0, background:'rgba(10,10,10,0.98)', zIndex:10 }}>
+      {/* Header — flex-shrink: 0 */}
+      <div style={{ flexShrink:0, display:'flex', alignItems:'center', justifyContent:'space-between', padding:'20px 24px 16px', borderBottom:'1px solid #1E1E1E' }}>
         <span style={{ fontSize:18, fontWeight:700, color:'#fff', fontFamily:font }}>Model</span>
         <button onClick={onClose} style={{ width:30, height:30, background:'#1E1E1E', border:'none', borderRadius:8, color:'rgba(255,255,255,0.6)', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center' }}>
           <X className="w-4 h-4" />
         </button>
       </div>
 
-      {/* Featured carousel */}
-      <div style={{ display:'flex', gap:12, overflowX:'auto', padding:'16px 24px', scrollbarWidth:'none' }}>
-        {featured.map(m => (
-          <div key={m.id} onClick={() => { onSelect(m); onClose(); }}
-            style={{ minWidth:320, height:140, borderRadius:14, overflow:'hidden', position:'relative', cursor:'pointer', flexShrink:0, border: selectedId===m.id ? '2px solid #E01E1E' : '2px solid transparent', transition:'border-color 0.2s' }}>
-            <img src={m.img} alt={m.name} style={{ width:'100%', height:'100%', objectFit:'cover' }} />
-            <div style={{ position:'absolute', bottom:0, left:0, right:0, background:'linear-gradient(to top, rgba(0,0,0,0.88), transparent)', padding:'12px 14px' }}>
-              <div style={{ fontSize:18, fontWeight:700, color:'#fff', fontFamily:font, display:'flex', alignItems:'center', gap:8 }}>
-                {m.name}
-                {m.badge && <span style={{ padding:'2px 6px', borderRadius:5, background:'rgba(224,30,30,0.2)', border:'1px solid rgba(224,30,30,0.4)', color:'#FF5555', fontSize:10, fontWeight:700 }}>{m.badge}</span>}
-              </div>
-              <div style={{ fontSize:12, color:'rgba(255,255,255,0.6)', fontFamily:font, marginTop:2 }}>{m.desc}</div>
-            </div>
-          </div>
-        ))}
+      {/* Recommended label — flex-shrink: 0 */}
+      <div style={{ flexShrink:0, fontSize:13, color:'rgba(255,255,255,0.4)', fontFamily:font, padding:'12px 24px 8px 24px' }}>
+        Recommended
       </div>
 
-      {/* Filters */}
-      <div style={{ display:'flex', alignItems:'center', gap:10, padding:'10px 24px', borderBottom:'1px solid #1E1E1E', flexWrap:'wrap' }}>
+      {/* Featured cards — flex-shrink: 0, horizontal scroll */}
+      <div style={{ flexShrink:0, padding:'0 20px 16px 20px' }}>
+        <div className="featured-cards-row" style={{ display:'flex', gap:12, overflowX:'auto', overflowY:'visible', scrollbarWidth:'none', paddingBottom:4 }}>
+          {[
+            { id:'kling-3-omni', name:'Kling 3.0 Omni', desc:'Enhanced multimodal references',           img:'https://images.unsplash.com/photo-1616400619175-5beda3a17896?w=600&q=80' },
+            { id:'kling-3',      name:'Kling 3.0',       desc:'Enhanced audio, consistency & multi-shots', img:'https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=600&q=80' },
+            { id:'seedance-1-5', name:'Seedance 1.5 Pro', desc:'Cinematic videos with audio & multi-shots', img:'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600&q=80' },
+          ].map(card => (
+            <div key={card.id} onClick={() => { const m = VIDEO_MODELS.find(x => x.id === card.id); if (m) { onSelect(m); onClose(); } }}
+              style={{ minWidth:300, height:145, borderRadius:14, overflow:'hidden', position:'relative', cursor:'pointer', flexShrink:0, border: selectedId===card.id ? '2px solid #E01E1E' : '1px solid #2A2A2A', transition:'border-color 0.2s' }}>
+              <img src={card.img} alt={card.name} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
+              <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 50%, transparent 100%)', display:'flex', flexDirection:'column', justifyContent:'flex-end', padding:'12px 14px' }}>
+                <div style={{ fontSize:18, fontWeight:800, color:'#fff', fontFamily:font, lineHeight:1.1, textShadow:'0 1px 4px rgba(0,0,0,0.5)' }}>{card.name}</div>
+                <div style={{ fontSize:11, color:'rgba(255,255,255,0.7)', fontFamily:font, marginTop:3 }}>{card.desc}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Filters — flex-shrink: 0 */}
+      <div style={{ flexShrink:0, display:'flex', alignItems:'center', gap:10, padding:'10px 24px', borderBottom:'1px solid #1E1E1E', borderTop:'1px solid #1E1E1E', flexWrap:'wrap' }}>
         <span style={{ padding:'6px 16px', borderRadius:999, background:'#fff', color:'#000', fontWeight:600, fontSize:13, fontFamily:font }}>All models</span>
         {['All providers', 'All features'].map(f => (
           <span key={f} style={{ padding:'6px 14px', borderRadius:999, border:'1px solid #2A2A2A', color:'rgba(255,255,255,0.6)', fontSize:13, fontFamily:font, cursor:'pointer', display:'flex', alignItems:'center', gap:5 }}>
@@ -87,10 +95,15 @@ export default function VideoModelModal({ selectedId, onSelect, onClose }) {
         </div>
       </div>
 
-      {/* Model list */}
-      <div style={{ padding:'8px 24px 32px' }}>
+      {/* Model list — flex: 1, only this scrolls */}
+      <div style={{ flex:1, overflowY:'auto', padding:'8px 24px 32px' }}>
         {filtered.map(m => {
           const isSel = selectedId === m.id;
+          const logoStyle = m.id === 'veo-3-1'
+            ? { background:'#fff', color:'#4285F4' }
+            : m.id === 'sora-2'
+            ? { background:'#1A1A1A', border:'1.5px solid #3A3A3A', color:'rgba(255,255,255,0.8)' }
+            : { background: m.color, color:'#fff' };
           return (
             <div key={m.id} className="vm-row" onClick={() => { onSelect(m); onClose(); }}
               style={{
@@ -99,7 +112,7 @@ export default function VideoModelModal({ selectedId, onSelect, onClose }) {
                 background: isSel ? 'rgba(224,30,30,0.06)' : 'transparent',
                 borderLeft:`3px solid ${isSel ? '#E01E1E' : 'transparent'}`,
               }}>
-              <div style={{ width:38, height:38, borderRadius:'50%', background:m.color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:14, fontWeight:700, color:'#fff', flexShrink:0 }}>
+              <div style={{ width:38, height:38, borderRadius:'50%', flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, fontWeight:700, fontFamily:font, ...logoStyle }}>
                 {m.brand.charAt(0)}
               </div>
               <div style={{ flex:1, minWidth:0 }}>
