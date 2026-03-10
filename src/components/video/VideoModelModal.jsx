@@ -70,7 +70,7 @@ export default function VideoModelModal({ selectedId, onSelect, onClose }) {
           ].map(card => (
             <div key={card.id} onClick={() => { const m = VIDEO_MODELS.find(x => x.id === card.id); if (m) { onSelect(m); onClose(); } }}
               style={{ minWidth:300, height:145, borderRadius:14, overflow:'hidden', position:'relative', cursor:'pointer', flexShrink:0, border: selectedId===card.id ? '2px solid #E01E1E' : '1px solid #2A2A2A', transition:'border-color 0.2s' }}>
-              <img src={card.img} alt={card.name} style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'top', display:'block' }} />
+              <img src={card.img} alt={card.name} style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition: card.objPos || 'center', display:'block' }} />
               <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 50%, transparent 100%)', display:'flex', flexDirection:'column', justifyContent:'flex-end', padding:'12px 14px' }}>
                 {/* Brand logo top-left */}
                 <div style={{ position:'absolute', top:10, left:12, width:32, height:32, borderRadius:'50%', background: card.color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:13, fontWeight:700, color:'#fff', fontFamily:font, boxShadow:'0 2px 8px rgba(0,0,0,0.5)' }}>
