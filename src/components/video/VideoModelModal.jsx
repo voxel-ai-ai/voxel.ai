@@ -99,11 +99,8 @@ export default function VideoModelModal({ selectedId, onSelect, onClose }) {
                 background: isSel ? 'rgba(224,30,30,0.06)' : 'transparent',
                 borderLeft:`3px solid ${isSel ? '#E01E1E' : 'transparent'}`,
               }}>
-              <div style={{ width:44, height:44, borderRadius:10, overflow:'hidden', flexShrink:0, border:`2px solid ${isSel ? '#E01E1E' : 'rgba(255,255,255,0.08)'}` }}>
-                {m.img
-                  ? <img src={m.img} alt={m.name} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
-                  : <div style={{ width:'100%', height:'100%', background:m.color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:14, fontWeight:700, color:'#fff' }}>{m.brand.charAt(0)}</div>
-                }
+              <div style={{ width:38, height:38, borderRadius:'50%', background:m.color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:14, fontWeight:700, color:'#fff', flexShrink:0 }}>
+                {m.brand.charAt(0)}
               </div>
               <div style={{ flex:1, minWidth:0 }}>
                 <div style={{ display:'flex', alignItems:'center', gap:7, fontSize:14, fontWeight:600, color:'#fff', fontFamily:font, flexWrap:'wrap' }}>
