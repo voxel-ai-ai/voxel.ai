@@ -28,6 +28,16 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
   const [audioOn, setAudioOn] = useState(false);
   const [output, setOutput] = useState('5s | 1080p');
   const [showOutputDrop, setShowOutputDrop] = useState(false);
+  const [startFrame, setStartFrame] = useState(null);
+  const [endFrame, setEndFrame] = useState(null);
+
+  const handleFrameUpload = (type, e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    if (type === 'start') setStartFrame(url);
+    else setEndFrame(url);
+  };
 
   const handleCameraSelect = (m) => {
     const next = cameraMotion === m.id ? null : m.id;
