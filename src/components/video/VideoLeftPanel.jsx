@@ -43,8 +43,8 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
     <div style={{
       width: 450, minWidth: 450, maxWidth: 450,
       height: 'calc(100vh - 60px)',
-      background: '#0A0A0A',
-      borderRight: '1px solid #1A1A1A',
+      background: '#1A1A1A',
+      borderRight: '1px solid #2A2A2A',
       overflowY: 'auto',
       position: 'fixed',
       left: 0, top: 60,
