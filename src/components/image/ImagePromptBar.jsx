@@ -400,8 +400,16 @@ export default function ImagePromptBar({
   const [showAspectDrop, setShowAspectDrop] = useState(false);
   const [showQualityDrop, setShowQualityDrop] = useState(false);
   const [showStylePop, setShowStylePop] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState(null);
   const negRef = useRef(null);
   const styleChipRef = useRef(null);
+  const imgInputRef = useRef(null);
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploadedImage(URL.createObjectURL(file));
+  };
 
   const handleSelectModel = (m) => {
     setModel(m);
