@@ -54,9 +54,9 @@ import Edit from './pages/Edit';
 import Explore from './pages/Explore';
 import Image from './pages/Image';
 import Pricing from './pages/Pricing';
+import Studio from './pages/Studio';
 import Templates from './pages/Templates';
 import Video from './pages/Video';
-import Studio from './pages/Studio';
 import __Layout from './Layout.jsx';
 
 
@@ -68,9 +68,9 @@ export const PAGES = {
     "Explore": Explore,
     "Image": Image,
     "Pricing": Pricing,
+    "Studio": Studio,
     "Templates": Templates,
     "Video": Video,
-    "Studio": Studio,
 }
 
 export const pagesConfig = {
