@@ -43,7 +43,7 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
     <div style={{
       width: 450, minWidth: 450, maxWidth: 450,
       height: 'calc(100vh - 60px)',
-      background: '#0A0A0A',
+      background: '#0D0D0D',
       borderRight: '1px solid #1E1E1E',
       overflowY: 'auto',
       position: 'fixed',
@@ -73,10 +73,10 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
           <button key={tab.id} onClick={() => setMode(tab.id)} style={{
             display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
             gap:8, padding:'14px 10px', borderRadius:12, cursor:'pointer', border:'none',
-            background: mode===tab.id ? 'linear-gradient(135deg, rgba(139,0,0,0.3), rgba(224,30,30,0.2))' : '#161616',
+            background: mode===tab.id ? 'linear-gradient(135deg, rgba(139,0,0,0.35), rgba(224,30,30,0.2))' : '#141414',
             borderWidth:1, borderStyle:'solid',
-            borderColor: mode===tab.id ? 'rgba(224,30,30,0.5)' : '#2A2A2A',
-            color: mode===tab.id ? '#fff' : 'rgba(255,255,255,0.65)',
+            borderColor: mode===tab.id ? 'rgba(224,30,30,0.5)' : '#252525',
+            color: mode===tab.id ? '#fff' : 'rgba(255,255,255,0.5)',
             fontFamily:S.font, fontSize:14, transition:'all 0.2s',
           }}>
             <span style={{ fontSize:22 }}>{tab.icon}</span>
@@ -89,11 +89,11 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
       <div style={{ padding:'14px 16px 0' }}>
         <button onClick={onModelClick} style={{
           width:'100%', display:'flex', alignItems:'center', gap:12,
-          padding:'14px 16px', background:'#161616', border:'1px solid #2A2A2A',
-          borderRadius:12, cursor:'pointer', transition:'all 0.2s', textAlign:'left',
+          padding:'13px 16px', background:'#161616', border:'1px solid #252525',
+          borderRadius:12, cursor:'pointer', transition:'all 0.18s', textAlign:'left',
         }}
-          onMouseEnter={e => { e.currentTarget.style.background='#1E1E1E'; e.currentTarget.style.borderColor='#383838'; }}
-          onMouseLeave={e => { e.currentTarget.style.background='#161616'; e.currentTarget.style.borderColor='#2A2A2A'; }}
+          onMouseEnter={e => { e.currentTarget.style.background='#1C1C1C'; e.currentTarget.style.borderColor='#333333'; }}
+          onMouseLeave={e => { e.currentTarget.style.background='#161616'; e.currentTarget.style.borderColor='#252525'; }}
         >
           <div style={{ width:34, height:34, borderRadius:'50%', background: model?.color || '#1B7FE4', display:'flex', alignItems:'center', justifyContent:'center', fontSize:13, fontWeight:700, color:'#fff', flexShrink:0 }}>
             {(model?.brand || 'K').charAt(0)}
@@ -114,18 +114,19 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
             {['start', 'end'].map((type, i) => (
               <React.Fragment key={type}>
                 {i === 1 && (
-                  <button style={{ width:32, height:32, flexShrink:0, background:'#1E1E1E', border:'1px solid #2A2A2A', borderRadius:8, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'rgba(255,255,255,0.5)', fontSize:16, transition:'all 0.2s' }}
+                  <button style={{ width:32, height:32, flexShrink:0, background:'#1A1A1A', border:'1px solid #2A2A2A', borderRadius:8, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'rgba(255,255,255,0.5)', fontSize:16, transition:'all 0.2s' }}
                     onMouseEnter={e => { e.currentTarget.style.background='#2A2A2A'; e.currentTarget.style.color='#fff'; }}
-                    onMouseLeave={e => { e.currentTarget.style.background='#1E1E1E'; e.currentTarget.style.color='rgba(255,255,255,0.5)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background='#1A1A1A'; e.currentTarget.style.color='rgba(255,255,255,0.5)'; }}
                   >⇄</button>
                 )}
-                <div style={{ flex:1, aspectRatio:'4/3', background:'#161616', border:'1px dashed #2A2A2A', borderRadius:10, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:6, cursor:'pointer', padding:'16px 10px', transition:'all 0.2s' }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor='rgba(224,30,30,0.4)'; e.currentTarget.style.background='rgba(224,30,30,0.04)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor='#2A2A2A'; e.currentTarget.style.background='#161616'; }}
+                <div
+                  style={{ flex:1, aspectRatio:'4/3', background:'#111111', border:`1.5px dashed ${i===0 ? '#333333' : '#222222'}`, borderRadius:12, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:8, cursor:'pointer', padding:'16px 10px', transition:'all 0.2s', opacity: i===1 ? 0.85 : 1 }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor='rgba(224,30,30,0.45)'; e.currentTarget.style.background='rgba(224,30,30,0.04)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = i===0 ? '#333333' : '#222222'; e.currentTarget.style.background='#111111'; }}
                 >
-                  <span style={{ color:'rgba(255,255,255,0.3)', fontSize:22 }}>🖼<span style={{ fontSize:12 }}>+</span></span>
-                  <span style={{ fontSize:12, color:'rgba(255,255,255,0.5)', fontFamily:S.font, textAlign:'center' }}>Add a {type}<br/>frame</span>
-                  <span style={{ fontSize:11, color:'rgba(224,30,30,0.75)', fontFamily:S.font, textDecoration:'underline', cursor:'pointer' }}>History</span>
+                  <span style={{ color:'rgba(255,255,255,0.25)', fontSize:26 }}>🖼</span>
+                  <span style={{ fontSize:12, color:'rgba(255,255,255,0.4)', fontFamily:S.font, textAlign:'center' }}>Add a {type}<br/>frame</span>
+                  <span style={{ fontSize:11, color: i===0 ? '#E01E1E' : 'rgba(255,255,255,0.2)', fontFamily:S.font, textDecoration: i===0 ? 'underline' : 'none', cursor:'pointer' }}>History</span>
                 </div>
               </React.Fragment>
             ))}
@@ -149,7 +150,7 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
             placeholder="Describe scene transitions, camera movement trajectories, or character actions with text to precisely control the entire video from beginning to end."
             rows={5}
             className="vl-ta"
-            style={{ width:'100%', background:'#111111', border:'1px solid #2A2A2A', borderRadius:10, padding:'12px 14px', color:'rgba(255,255,255,0.85)', fontSize:13, lineHeight:1.6, fontFamily:S.font, resize:'none', boxSizing:'border-box', transition:'border-color 0.2s' }}
+            style={{ width:'100%', background:'#111111', border:'1px solid #222222', borderRadius:10, padding:'12px 14px', color:'rgba(255,255,255,0.8)', fontSize:13, lineHeight:1.6, fontFamily:S.font, resize:'none', boxSizing:'border-box', transition:'border-color 0.2s' }}
           />
           <RotateCcw className="w-3 h-3" style={{ position:'absolute', bottom:10, left:12, color:'rgba(255,255,255,0.3)', pointerEvents:'none' }} />
         </div>
@@ -201,9 +202,9 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
       {/* ⑦ Audio + Output */}
       <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, padding:'14px 16px 0' }}>
         {/* Audio */}
-        <div style={{ display:'flex', alignItems:'center', gap:10, padding:'12px 14px', background:'#161616', border:'1px solid #2A2A2A', borderRadius:10, cursor:'pointer' }}
-          onMouseEnter={e => e.currentTarget.style.background='#1E1E1E'}
-          onMouseLeave={e => e.currentTarget.style.background='#161616'}
+        <div style={{ display:'flex', alignItems:'center', gap:10, padding:'12px 14px', background:'#161616', border:'1px solid #222222', borderRadius:10, cursor:'pointer' }}
+          onMouseEnter={e => { e.currentTarget.style.background='#1C1C1C'; e.currentTarget.style.borderColor='#2E2E2E'; }}
+          onMouseLeave={e => { e.currentTarget.style.background='#161616'; e.currentTarget.style.borderColor='#222222'; }}
         >
           <span style={{ fontSize:16, color:'rgba(255,255,255,0.5)' }}>🎵</span>
           <div style={{ flex:1 }}>
@@ -218,10 +219,10 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
 
         {/* Output */}
         <div style={{ position:'relative' }}>
-          <div style={{ display:'flex', alignItems:'center', gap:10, padding:'12px 14px', background:'#161616', border:'1px solid #2A2A2A', borderRadius:10, cursor:'pointer' }}
+          <div style={{ display:'flex', alignItems:'center', gap:10, padding:'12px 14px', background:'#161616', border:'1px solid #222222', borderRadius:10, cursor:'pointer' }}
             onClick={() => setShowOutputDrop(v => !v)}
-            onMouseEnter={e => e.currentTarget.style.background='#1E1E1E'}
-            onMouseLeave={e => e.currentTarget.style.background='#161616'}
+            onMouseEnter={e => { e.currentTarget.style.background='#1C1C1C'; e.currentTarget.style.borderColor='#2E2E2E'; }}
+            onMouseLeave={e => { e.currentTarget.style.background='#161616'; e.currentTarget.style.borderColor='#222222'; }}
           >
             <span style={{ fontSize:16, color:'rgba(255,255,255,0.5)' }}>⚙</span>
             <div style={{ flex:1 }}>

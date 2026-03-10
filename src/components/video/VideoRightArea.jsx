@@ -44,8 +44,16 @@ export default function VideoRightArea({ videos = [] }) {
 
       {/* Creations area */}
       {videos.length === 0 ? (
-        <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:14, minHeight:400 }}>
-          <div style={{ fontSize:80, opacity:0.55 }}>📁</div>
+        <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:14, minHeight:400, background:'transparent' }}>
+          <svg width="90" height="90" viewBox="0 0 90 90" fill="none" style={{ opacity:0.45, filter:'grayscale(1) brightness(0.55)' }}>
+            <rect x="8" y="22" width="74" height="52" rx="6" fill="#444"/>
+            <rect x="8" y="22" width="74" height="12" rx="3" fill="#555"/>
+            {[0,1,2,3,4,5].map(i => (
+              <rect key={i} x={16 + i*12} y="20" width="6" height="16" rx="2" fill="#333" transform={`rotate(-8 ${19+i*12} 28)`}/>
+            ))}
+            <circle cx="45" cy="52" r="13" fill="#333"/>
+            <polygon points="41,46 41,58 54,52" fill="#555"/>
+          </svg>
           <p style={{ fontSize:14, color:'rgba(255,255,255,0.3)', fontFamily:font }}>No items to display</p>
         </div>
       ) : (
