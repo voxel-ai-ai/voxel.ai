@@ -24,6 +24,13 @@ export default function HeroSection() {
           <VoxelLogo size="hero" />
         </div>
 
+        {/* Background "EDIT" text */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none" aria-hidden="true">
+          <span className="font-heading text-[18vw] leading-none tracking-widest text-white/[0.03] uppercase">
+            EDIT
+          </span>
+        </div>
+
         {/* Headline */}
         <h1 className="font-heading text-5xl sm:text-7xl lg:text-8xl tracking-wider text-white mb-6 animate-fade-in-up">
           Create Without Limits
