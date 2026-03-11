@@ -178,7 +178,7 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
       )}
 
       {/* ⑤ Describe textarea */}
-      <div style={{ padding:'16px 16px 0' }}>
+      <div style={{ padding:'0' }}>
         <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:10 }}>
           <span style={{ fontSize:13, fontWeight:600, color:'#fff', fontFamily:S.font }}>Describe your video</span>
           <button style={{ width:28, height:28, background:'#1E1E1E', border:'1px solid #2A2A2A', borderRadius:7, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'rgba(255,255,255,0.5)', transition:'all 0.18s' }}
