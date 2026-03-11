@@ -41,6 +41,8 @@ export default function Video() {
       />
       <VideoRightArea
         videos={videos}
+        isGenerating={isGenerating}
+        durationMs={3000}
         onRecreate={(t) => setPrompt(t.prompt)}
       />
       {showModelModal && (
