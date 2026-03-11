@@ -327,6 +327,9 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
         {/* Divider before generate */}
         <div style={{ height:1, background:'rgba(255,255,255,0.06)', margin:'0 -12px' }} />
 
+        {/* Progress bar */}
+        <VideoGenerationProgress isGenerating={isGenerating} durationMs={3000} />
+
         {/* Count + Generate — inside the main box */}
         <div style={{ display:'flex', alignItems:'center', gap:10 }}>
           <div style={{ display:'flex', alignItems:'center', gap:8 }}>
