@@ -1,9 +1,76 @@
-import React, { useState } from 'react';
-import { ChevronDown, Star, Filter, Grid, Search, SlidersHorizontal, MessageSquare, Video, Music } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { ChevronDown, Star, Filter, Grid, Search, SlidersHorizontal, MessageSquare, Video, Music, Sparkles } from 'lucide-react';
 
 const font = '"DM Sans", sans-serif';
 
-export default function VideoRightArea({ videos = [] }) {
+const STAGES = [
+  { pct: 5,  msg: 'Preparing assets...' },
+  { pct: 18, msg: 'Analyzing prompt...' },
+  { pct: 32, msg: 'Building composition...' },
+  { pct: 48, msg: 'Rendering frame 1 of 24...' },
+  { pct: 56, msg: 'Rendering frame 6 of 24...' },
+  { pct: 64, msg: 'Rendering frame 12 of 24...' },
+  { pct: 74, msg: 'Rendering frame 18 of 24...' },
+  { pct: 83, msg: 'Rendering frame 24 of 24...' },
+  { pct: 91, msg: 'Applying motion smoothing...' },
+  { pct: 97, msg: 'Finalizing video...' },
+];
+
+function LoadingVideoCard({ durationMs = 3000 }) {
+  const [pct, setPct] = useState(0);
+  const [stageIndex, setStageIndex] = useState(0);
+  const intervalRef = useRef(null);
+  const stageRef = useRef(0);
+
+  useEffect(() => {
+    const totalTicks = durationMs / 80;
+    let tick = 0;
+    stageRef.current = 0;
+    setPct(0);
+    setStageIndex(0);
+
+    intervalRef.current = setInterval(() => {
+      tick++;
+      const capped = Math.min((tick / totalTicks) * 100, 97);
+      setPct(Math.round(capped));
+      const nextStage = STAGES.findIndex((s, i) => i > stageRef.current && s.pct <= capped);
+      if (nextStage !== -1) { stageRef.current = nextStage; setStageIndex(nextStage); }
+    }, 80);
+
+    return () => clearInterval(intervalRef.current);
+  }, [durationMs]);
+
+  const msg = STAGES[stageIndex]?.msg || 'Processing...';
+
+  return (
+    <div style={{ background: '#161616', borderRadius: 14, border: '1px solid rgba(224,30,30,0.25)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+      {/* Preview shimmer */}
+      <div style={{ aspectRatio: '16/9', background: 'linear-gradient(135deg, #1a0000 0%, #2a0a0a 50%, #1a1a1a 100%)', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+        {/* Animated shimmer overlay */}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(90deg, transparent 0%, rgba(224,30,30,0.07) 50%, transparent 100%)', backgroundSize: '200% 100%', animation: 'shimmer 1.6s linear infinite' }} />
+        <style>{`@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}`}</style>
+        {/* Spinning icon */}
+        <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(224,30,30,0.12)', border: '1px solid rgba(224,30,30,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'spin 1.8s linear infinite' }}>
+          <style>{`@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}`}</style>
+          <Sparkles className="w-5 h-5" style={{ color: '#FF4444' }} />
+        </div>
+      </div>
+      {/* Progress */}
+      <div style={{ padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.7)', fontFamily: font }}>Generating...</span>
+          <span style={{ fontSize: 12, fontWeight: 700, color: '#FF4444', fontFamily: font }}>{pct}%</span>
+        </div>
+        <div style={{ height: 4, background: '#2A2A2A', borderRadius: 999, overflow: 'hidden' }}>
+          <div style={{ height: '100%', width: `${pct}%`, background: 'linear-gradient(90deg, #CC0000, #FF2222)', borderRadius: 999, transition: 'width 0.12s ease', boxShadow: '0 0 6px rgba(224,30,30,0.5)' }} />
+        </div>
+        <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', fontFamily: font }}>{msg}</span>
+      </div>
+    </div>
+  );
+}
+
+export default function VideoRightArea({ videos = [], isGenerating = false, durationMs = 3000 }) {
   const [activeTab, setActiveTab] = useState('creations');
 
   return (
