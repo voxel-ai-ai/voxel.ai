@@ -257,25 +257,25 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
           </div>
         </div>
 
-        {/* Output */}
+        {/* Duration */}
         <div style={{ position:'relative' }}>
           <div style={{ display:'flex', alignItems:'center', gap:10, padding:'12px 14px', background:'#161616', border:'1px solid #222222', borderRadius:10, cursor:'pointer' }}
-            onClick={() => setShowOutputDrop(v => !v)}
+            onClick={() => { setShowDurationDrop(v => !v); setShowResDrop(false); }}
             onMouseEnter={e => { e.currentTarget.style.background='#1C1C1C'; e.currentTarget.style.borderColor='#2E2E2E'; }}
             onMouseLeave={e => { e.currentTarget.style.background='#161616'; e.currentTarget.style.borderColor='#222222'; }}
           >
-            <span style={{ fontSize:16, color:'rgba(255,255,255,0.5)' }}>⚙</span>
+            <span style={{ fontSize:16, color:'rgba(255,255,255,0.5)' }}>⏱</span>
             <div style={{ flex:1 }}>
-              <div style={{ fontSize:12, color:'rgba(255,255,255,0.5)', fontFamily:S.font }}>Output</div>
-              <div style={{ fontSize:13, fontWeight:600, color:'#fff', fontFamily:S.font }}>{output}</div>
+              <div style={{ fontSize:12, color:'rgba(255,255,255,0.5)', fontFamily:S.font }}>Duration</div>
+              <div style={{ fontSize:13, fontWeight:600, color:'#fff', fontFamily:S.font }}>{duration}</div>
             </div>
             <ChevronRight className="w-3.5 h-3.5" style={{ color:'rgba(255,255,255,0.3)' }} />
           </div>
-          {showOutputDrop && (
+          {showDurationDrop && (
             <div style={{ position:'absolute', bottom:'calc(100% + 4px)', left:0, right:0, background:'#161616', border:'1px solid #2A2A2A', borderRadius:10, overflow:'hidden', zIndex:20 }}>
-              {OUTPUT_OPTIONS.map(opt => (
-                <div key={opt} className="vl-output-opt" onClick={() => { setOutput(opt); setShowOutputDrop(false); }}
-                  style={{ padding:'10px 14px', fontSize:13, fontFamily:S.font, color: output===opt ? '#fff':'rgba(255,255,255,0.6)', background: output===opt ? 'rgba(224,30,30,0.08)':'transparent', cursor:'pointer', transition:'background 0.15s' }}>
+              {DURATION_OPTIONS.map(opt => (
+                <div key={opt} className="vl-output-opt" onClick={() => { setDuration(opt); setShowDurationDrop(false); }}
+                  style={{ padding:'10px 14px', fontSize:13, fontFamily:S.font, color: duration===opt ? '#fff':'rgba(255,255,255,0.6)', background: duration===opt ? 'rgba(224,30,30,0.08)':'transparent', cursor:'pointer', transition:'background 0.15s' }}>
                   {opt}
                 </div>
               ))}
