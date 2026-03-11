@@ -104,7 +104,7 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
       </div>
 
       {/* ③ Model row */}
-      <div style={{ padding:'14px 16px 0' }}>
+      <div style={{ padding:'0' }}>
         <button onClick={onModelClick} style={{
           width:'100%', display:'flex', alignItems:'center', gap:12,
           padding:'13px 16px', background:'#252525', border:'1px solid #383838',
