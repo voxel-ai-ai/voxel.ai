@@ -15,7 +15,8 @@ const CAMERA_MOTIONS = [
   { id: 'static',    icon: '⊙',   label: 'Static'    },
 ];
 
-const OUTPUT_OPTIONS = ['5s | 720p', '5s | 1080p', '10s | 1080p', '10s | 4K'];
+const DURATION_OPTIONS = ['5s', '10s', '15s'];
+const RESOLUTION_OPTIONS = ['480p', '720p', '1080p', '4K'];
 
 const S = {
   font: '"DM Sans", sans-serif',
