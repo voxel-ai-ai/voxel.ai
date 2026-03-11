@@ -680,27 +680,31 @@ export default function ImagePromptBar({
             <span>{style || 'Style'}</span>
           </button>
 
-          {/* Spacer */}
-          <div style={{ flex: 1 }} />
-
-          {/* Send button — RED for image page */}
+          {/* Generate button — styled like video */}
           <button
             onClick={handleGenerate}
             disabled={isGenerating}
             style={{
-              width: 46, height: 46, borderRadius: '50%',
-              background: isGenerating ? 'rgba(224,30,30,0.5)' : 'rgba(224,30,30,0.9)',
-              border: 'none',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              height: 42, padding: '0 20px',
+              background: isGenerating ? 'rgba(139,0,0,0.5)' : 'linear-gradient(90deg, #CC0000 0%, #FF2222 50%, #E01E1E 100%)',
+              border: 'none', borderRadius: 14, color: '#fff', fontSize: 14, fontWeight: 700,
+              fontFamily: '"DM Sans", sans-serif',
               cursor: isGenerating ? 'not-allowed' : 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
               flexShrink: 0,
-              boxShadow: isGenerating ? 'none' : '0 0 20px rgba(224,30,30,0.35)',
-              transition: 'all 0.18s ease',
+              boxShadow: isGenerating ? 'none' : '0 2px 20px rgba(224,30,30,0.35)',
+              transition: 'all 0.2s',
             }}
-            onMouseEnter={e => { if (!isGenerating) { e.currentTarget.style.background = '#FF2222'; e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 0 28px rgba(224,30,30,0.55)'; }}}
-            onMouseLeave={e => { if (!isGenerating) { e.currentTarget.style.background = 'rgba(224,30,30,0.9)'; e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 0 20px rgba(224,30,30,0.35)'; }}}
+            onMouseEnter={e => { if (!isGenerating) { e.currentTarget.style.background = 'linear-gradient(90deg, #DD0000 0%, #FF3333 50%, #FF2020 100%)'; e.currentTarget.style.boxShadow = '0 4px 28px rgba(224,30,30,0.55)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}}
+            onMouseLeave={e => { if (!isGenerating) { e.currentTarget.style.background = 'linear-gradient(90deg, #CC0000 0%, #FF2222 50%, #E01E1E 100%)'; e.currentTarget.style.boxShadow = '0 2px 20px rgba(224,30,30,0.35)'; e.currentTarget.style.transform = 'none'; }}}
           >
-            <ArrowUp className="w-5 h-5" style={{ color: '#fff' }} />
+            {isGenerating ? 'Generating...' : (
+              <>
+                <span>Generate</span>
+                <Sparkles className="w-4 h-4" style={{ opacity: 0.9 }} />
+                <span style={{ fontSize: 13, fontWeight: 700, opacity: 0.9 }}>1.5</span>
+              </>
+            )}
           </button>
         </div>
       </div>
