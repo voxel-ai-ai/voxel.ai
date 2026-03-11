@@ -313,6 +313,8 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
         </div>
       </div>
 
+      </div>{/* end main content box */}
+
       {/* ⑧ Count + Generate (sticky bottom) */}
       <div style={{ position:'sticky', bottom:0, display:'flex', alignItems:'center', gap:10, padding:'14px 16px', background:'linear-gradient(to top, #0A0A0A 70%, transparent)', marginTop:16 }}>
         <div style={{ display:'flex', alignItems:'center', gap:8 }}>
