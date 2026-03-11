@@ -6,9 +6,9 @@
 
 :root {
   /* VOXEL Brand Colors */
-  --background: 0 0% 8%;           /* #141414 dark gray */
-  --background-secondary: 0 0% 11%; /* #1C1C1C dark gray */
-  --background-elevated: 0 0% 14%; /* #242424 dark gray */
+  --background: 0 0% 6%;           /* #0F0F0F dark gray */
+  --background-secondary: 0 0% 8%; /* #141414 dark gray */
+  --background-elevated: 0 0% 11%; /* #1C1C1C dark gray */
   
   --foreground: 0 0% 100%;         /* #FFFFFF */
   --foreground-secondary: 0 0% 80%; /* #CCCCCC */
