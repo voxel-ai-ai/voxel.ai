@@ -28,7 +28,10 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
   const [showCameraDrop, setShowCameraDrop] = useState(false);
   const [audioOn, setAudioOn] = useState(false);
   const [output, setOutput] = useState('5s | 1080p');
-  const [showOutputDrop, setShowOutputDrop] = useState(false);
+  const [showDurationDrop, setShowDurationDrop] = useState(false);
+  const [showResDrop, setShowResDrop] = useState(false);
+  const [duration, setDuration] = useState('5s');
+  const [resolution, setResolution] = useState('1080p');
   const [startFrame, setStartFrame] = useState(null);
   const [endFrame, setEndFrame] = useState(null);
 
