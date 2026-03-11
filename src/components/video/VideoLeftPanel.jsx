@@ -126,7 +126,7 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
 
       {/* ④ Start & End Frame */}
       {mode === 'frame' && (
-        <div style={{ padding:'14px 16px 0' }}>
+        <div style={{ padding:'0' }}>
           <div style={{ fontSize:13, fontWeight:600, color:'#fff', fontFamily:S.font, marginBottom:10 }}>Set start &amp; end frame</div>
           {/* Outer container */}
           <div style={{ background:'#141414', border:'1px solid #252525', borderRadius:12, padding:12, display:'flex', alignItems:'center', gap:10 }}>
