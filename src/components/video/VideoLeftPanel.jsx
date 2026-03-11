@@ -200,7 +200,7 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
       </div>
 
       {/* ⑥ Camera Motion button + dropdown */}
-      <div style={{ padding:'14px 16px 0', position:'relative' }}>
+      <div style={{ padding:'0', position:'relative' }}>
         <button
           onClick={() => setShowCameraDrop(v => !v)}
           style={{
