@@ -240,7 +240,7 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
       </div>
 
       {/* ⑦ Audio + Output */}
-      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, padding:'14px 16px 0' }}>
+      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:10, padding:'14px 16px 0' }}>
         {/* Audio */}
         <div style={{ display:'flex', alignItems:'center', gap:10, padding:'12px 14px', background:'#161616', border:'1px solid #222222', borderRadius:10, cursor:'pointer' }}
           onMouseEnter={e => { e.currentTarget.style.background='#1C1C1C'; e.currentTarget.style.borderColor='#2E2E2E'; }}
