@@ -32,11 +32,11 @@ const footerLinks = {
 };
 
 const socialLinks = [
-  { icon: Twitter, href: '#', label: 'Twitter' },
-  { icon: Instagram, href: '#', label: 'Instagram' },
-  { icon: Youtube, href: '#', label: 'YouTube' },
-  { icon: Linkedin, href: '#', label: 'LinkedIn' },
-  { icon: Github, href: '#', label: 'GitHub' },
+  { icon: Share2, href: '#', label: 'Twitter' },
+  { icon: Camera, href: '#', label: 'Instagram' },
+  { icon: Play, href: '#', label: 'YouTube' },
+  { icon: Briefcase, href: '#', label: 'LinkedIn' },
+  { icon: Code2, href: '#', label: 'GitHub' },
 ];
 
 export default function Footer({ minimal = false }) {
