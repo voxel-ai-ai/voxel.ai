@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowLeft, ChevronRight, ChevronDown, Minus, Plus, Sparkles, Zap, Video, ArrowLeftRight } from 'lucide-react';
 
-const DEFAULT_MODEL = { id: 'kling-2-6', name: 'Kling 2.6', brand: 'Kling', color: '#1B7FE4' };
-
 const CAMERA_MOTIONS = [
   { id: 'zoom-in',   icon: '🔍+', label: 'Zoom In'   },
   { id: 'zoom-out',  icon: '🔍-', label: 'Zoom Out'  },
@@ -17,10 +15,7 @@ const CAMERA_MOTIONS = [
 
 const DURATION_OPTIONS = ['5s', '10s', '15s'];
 const RESOLUTION_OPTIONS = ['480p', '720p', '1080p', '4K'];
-
-const S = {
-  font: '"DM Sans", sans-serif',
-};
+const S = { font: '"DM Sans", sans-serif' };
 
 export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isGenerating, count, onCountChange, model, onModelClick }) {
   const [mode, setMode] = useState('frame');
@@ -43,9 +38,8 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
   };
 
   const handleSwapFrames = () => {
-    const tmp = startFrame;
     setStartFrame(endFrame);
-    setEndFrame(tmp);
+    setEndFrame(startFrame);
   };
 
   const handleCameraSelect = (m) => {
@@ -57,13 +51,7 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
   };
 
   const selectedMotion = CAMERA_MOTIONS.find(m => m.id === cameraMotion);
-
-  // Small box shared style (same as model box)
-  const smallBoxStyle = {
-    display:'flex', alignItems:'center', gap:8, padding:'9px 12px',
-    background:'#252525', border:'1px solid #383838',
-    borderRadius:12, cursor:'pointer', transition:'all 0.18s',
-  };
+  const canSwap = !!(startFrame || endFrame);
 
   return (
     <div style={{
@@ -75,18 +63,18 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
       position: 'fixed',
       left: 0, top: 60,
       display: 'flex', flexDirection: 'column',
-      paddingBottom: 20,
+      paddingBottom: 16,
       scrollbarWidth: 'none',
     }}>
       <style>{`
         .vl-ta::placeholder { color: rgba(255,255,255,0.2); font-size: 12px; font-family: "DM Sans",sans-serif; }
         .vl-ta:focus { border-color: rgba(224,30,30,0.4) !important; outline: none; }
         .vl-cam-opt:hover { background: #222 !important; border-color: rgba(224,30,30,0.3) !important; color: #fff !important; }
-        .vl-output-opt:hover { background: rgba(255,255,255,0.05); }
-        .vl-small-box:hover { background: #2E2E2E !important; border-color: rgba(224,30,30,0.35) !important; }
+        .vl-drop-opt:hover { background: rgba(255,255,255,0.06) !important; }
+        .vl-small-box:hover { background: #2E2E2E !important; border-color: rgba(224,30,30,0.4) !important; }
       `}</style>
 
-      {/* ① Header */}
+      {/* Header */}
       <div style={{ display:'flex', alignItems:'center', gap:10, padding:'18px 18px 14px' }}>
         <button style={{ width:30, height:30, background:'transparent', border:'none', cursor:'pointer', color:'rgba(255,255,255,0.5)', borderRadius:6, display:'flex', alignItems:'center', justifyContent:'center' }}>
           <ArrowLeft className="w-4 h-4" />
@@ -94,18 +82,17 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
         <span style={{ color:'#fff', fontSize:16, fontWeight:600, fontFamily:S.font }}>Frame to Video</span>
       </div>
 
-      {/* Main content box — wraps everything including generate */}
+      {/* ═══ MAIN BOX — wraps everything including generate ═══ */}
       <div style={{ margin:'0 12px 12px 12px', background:'#181818', border:'1px solid #2A2A2A', borderRadius:20, padding:'16px 12px', display:'flex', flexDirection:'column', gap:12 }}>
 
-        {/* ② Mode tabs */}
+        {/* Mode tabs */}
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
           {[{ id:'frame', icon:'🎞', label:'Start/End Frame' }, { id:'text', icon:'📝', label:'Text' }].map(tab => (
             <button key={tab.id} onClick={() => setMode(tab.id)} style={{
               display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
-              gap:8, padding:'14px 10px', borderRadius:12, cursor:'pointer', border:'none',
+              gap:8, padding:'14px 10px', borderRadius:12, cursor:'pointer',
               background: mode===tab.id ? 'linear-gradient(135deg, #7A0000 0%, #C01010 40%, #E01E1E 100%)' : '#161616',
-              borderWidth:1, borderStyle:'solid',
-              borderColor: mode===tab.id ? 'rgba(224,30,30,0.6)' : '#262626',
+              border:`1px solid ${mode===tab.id ? 'rgba(224,30,30,0.6)' : '#262626'}`,
               color: mode===tab.id ? '#fff' : 'rgba(255,255,255,0.5)',
               fontFamily:S.font, fontSize:14, transition:'all 0.2s',
               boxShadow: mode===tab.id ? 'inset 0 1px 0 rgba(255,255,255,0.1), 0 2px 12px rgba(224,30,30,0.3)' : 'none',
@@ -116,7 +103,7 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
           ))}
         </div>
 
-        {/* ③ Model row */}
+        {/* Model row */}
         <button onClick={onModelClick} style={{
           width:'100%', display:'flex', alignItems:'center', gap:12,
           padding:'13px 16px', background:'#252525', border:'1px solid #383838',
@@ -135,7 +122,7 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
           <ChevronRight className="w-4 h-4" style={{ color:'rgba(255,255,255,0.3)' }} />
         </button>
 
-        {/* ④ Start & End Frame */}
+        {/* Start & End Frame */}
         {mode === 'frame' && (
           <div>
             <div style={{ fontSize:13, fontWeight:600, color:'#fff', fontFamily:S.font, marginBottom:10 }}>Set start &amp; end frame</div>
@@ -147,17 +134,18 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
                     {i === 1 && (
                       <button
                         onClick={handleSwapFrames}
-                        title="Swap frames"
+                        title="Swap start & end frames"
                         style={{
                           width:34, height:34, flexShrink:0,
-                          background: (startFrame && endFrame) ? '#2A2A2A' : '#1E1E1E',
-                          border:`1px solid ${(startFrame && endFrame) ? 'rgba(224,30,30,0.5)' : '#2A2A2A'}`,
-                          borderRadius:8, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center',
-                          color: (startFrame && endFrame) ? '#FF4444' : 'rgba(255,255,255,0.35)',
+                          background: canSwap ? 'rgba(224,30,30,0.12)' : '#1E1E1E',
+                          border: `1px solid ${canSwap ? 'rgba(224,30,30,0.5)' : '#2A2A2A'}`,
+                          borderRadius:8, cursor: canSwap ? 'pointer' : 'default',
+                          display:'flex', alignItems:'center', justifyContent:'center',
+                          color: canSwap ? '#FF5555' : 'rgba(255,255,255,0.3)',
                           transition:'all 0.15s',
                         }}
-                        onMouseEnter={e => { e.currentTarget.style.background='#2A2A2A'; e.currentTarget.style.color='#fff'; e.currentTarget.style.borderColor='rgba(224,30,30,0.6)'; }}
-                        onMouseLeave={e => { e.currentTarget.style.background=(startFrame && endFrame) ? '#2A2A2A' : '#1E1E1E'; e.currentTarget.style.color=(startFrame && endFrame) ? '#FF4444' : 'rgba(255,255,255,0.35)'; e.currentTarget.style.borderColor=(startFrame && endFrame) ? 'rgba(224,30,30,0.5)' : '#2A2A2A'; }}
+                        onMouseEnter={e => { if (canSwap) { e.currentTarget.style.background='rgba(224,30,30,0.25)'; e.currentTarget.style.color='#fff'; }}}
+                        onMouseLeave={e => { if (canSwap) { e.currentTarget.style.background='rgba(224,30,30,0.12)'; e.currentTarget.style.color='#FF5555'; }}}
                       >
                         <ArrowLeftRight className="w-3.5 h-3.5" />
                       </button>
@@ -198,7 +186,7 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
           </div>
         )}
 
-        {/* ⑤ Describe textarea */}
+        {/* Describe textarea */}
         <div>
           <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:10 }}>
             <span style={{ fontSize:13, fontWeight:600, color:'#fff', fontFamily:S.font }}>Describe your video</span>
@@ -216,19 +204,19 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
               className="vl-ta"
               style={{ width:'100%', background:'#111111', border:'1px solid #222222', borderRadius:10, padding:'12px 14px 36px 14px', color:'rgba(255,255,255,0.8)', fontSize:13, lineHeight:1.6, fontFamily:S.font, resize:'none', boxSizing:'border-box', transition:'border-color 0.2s' }}
             />
-            {/* Prompt enhancer icon inside textarea bottom-left */}
+            {/* Prompt enhancer inside textarea — bottom left */}
             <button
-              title="Enhance prompt"
-              style={{ position:'absolute', bottom:10, left:10, width:26, height:26, background:'rgba(224,30,30,0.12)', border:'1px solid rgba(224,30,30,0.3)', borderRadius:7, display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', color:'rgba(255,100,100,0.8)', transition:'all 0.18s' }}
-              onMouseEnter={e => { e.currentTarget.style.background='rgba(224,30,30,0.25)'; e.currentTarget.style.color='#FF4444'; }}
-              onMouseLeave={e => { e.currentTarget.style.background='rgba(224,30,30,0.12)'; e.currentTarget.style.color='rgba(255,100,100,0.8)'; }}
+              title="Enhance prompt with AI"
+              style={{ position:'absolute', bottom:10, left:10, width:26, height:26, background:'rgba(224,30,30,0.12)', border:'1px solid rgba(224,30,30,0.35)', borderRadius:7, display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', color:'rgba(255,80,80,0.9)', transition:'all 0.18s', zIndex:2 }}
+              onMouseEnter={e => { e.currentTarget.style.background='rgba(224,30,30,0.28)'; e.currentTarget.style.color='#fff'; e.currentTarget.style.borderColor='rgba(224,30,30,0.7)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background='rgba(224,30,30,0.12)'; e.currentTarget.style.color='rgba(255,80,80,0.9)'; e.currentTarget.style.borderColor='rgba(224,30,30,0.35)'; }}
             >
               <Zap className="w-3 h-3" />
             </button>
           </div>
         </div>
 
-        {/* ⑥ Camera Motion button + dropdown */}
+        {/* Camera Motion */}
         <div style={{ position:'relative' }}>
           <button
             onClick={() => setShowCameraDrop(v => !v)}
@@ -238,8 +226,8 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
               cursor:'pointer', color: selectedMotion ? '#FF4444' : 'rgba(255,255,255,0.7)',
               fontSize:13, fontFamily:S.font, transition:'all 0.18s',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background='#1E1E1E'; }}
-            onMouseLeave={e => { e.currentTarget.style.background='#161616'; }}
+            onMouseEnter={e => e.currentTarget.style.background='#1E1E1E'}
+            onMouseLeave={e => e.currentTarget.style.background='#161616'}
           >
             <span style={{ display:'flex', alignItems:'center', gap:8 }}>
               <Video className="w-4 h-4" />
@@ -247,21 +235,13 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
             </span>
             <ChevronDown className="w-4 h-4" style={{ transform: showCameraDrop ? 'rotate(180deg)' : 'none', transition:'transform 0.2s', color:'rgba(255,255,255,0.4)' }} />
           </button>
-
           {showCameraDrop && (
             <div style={{ marginTop:4, background:'#161616', border:'1px solid #2A2A2A', borderRadius:10, padding:10, display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:8 }}>
               {CAMERA_MOTIONS.map(m => {
                 const isActive = cameraMotion === m.id;
                 return (
                   <button key={m.id} onClick={() => handleCameraSelect(m)} className="vl-cam-opt"
-                    style={{
-                      padding:'10px 8px', background: isActive ? 'rgba(224,30,30,0.1)' : '#1A1A1A',
-                      border:`1px solid ${isActive ? '#E01E1E' : '#2A2A2A'}`,
-                      borderRadius:8, display:'flex', flexDirection:'column', alignItems:'center',
-                      gap:5, cursor:'pointer', fontSize:11, color: isActive ? '#FF4444' : 'rgba(255,255,255,0.6)',
-                      fontFamily:S.font, transition:'all 0.15s',
-                    }}
-                  >
+                    style={{ padding:'10px 8px', background: isActive ? 'rgba(224,30,30,0.1)' : '#1A1A1A', border:`1px solid ${isActive ? '#E01E1E' : '#2A2A2A'}`, borderRadius:8, display:'flex', flexDirection:'column', alignItems:'center', gap:5, cursor:'pointer', fontSize:11, color: isActive ? '#FF4444' : 'rgba(255,255,255,0.6)', fontFamily:S.font, transition:'all 0.15s' }}>
                     <span style={{ fontSize:18 }}>{m.icon}</span>
                     {m.label}
                   </button>
@@ -271,43 +251,44 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
           )}
         </div>
 
-        {/* ⑦ Audio + Resolution + Duration — compact, model-box style */}
+        {/* Audio + Resolution + Duration — compact, model-box color */}
         <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:8 }}>
+
           {/* Audio */}
-          <div className="vl-small-box" style={{ ...smallBoxStyle }}
-            onMouseEnter={e => { e.currentTarget.style.background='#2E2E2E'; e.currentTarget.style.borderColor='rgba(224,30,30,0.35)'; }}
+          <div className="vl-small-box" style={{ display:'flex', alignItems:'center', gap:7, padding:'9px 10px', background:'#252525', border:'1px solid #383838', borderRadius:12, cursor:'pointer', transition:'all 0.18s' }}
+            onMouseEnter={e => { e.currentTarget.style.background='#2E2E2E'; e.currentTarget.style.borderColor='rgba(224,30,30,0.4)'; }}
             onMouseLeave={e => { e.currentTarget.style.background='#252525'; e.currentTarget.style.borderColor='#383838'; }}
           >
             <span style={{ fontSize:13 }}>🎵</span>
             <div style={{ flex:1, minWidth:0 }}>
-              <div style={{ fontSize:10, color:'rgba(255,255,255,0.4)', fontFamily:S.font }}>Audio</div>
+              <div style={{ fontSize:10, color:'rgba(255,255,255,0.4)', fontFamily:S.font, lineHeight:1.2 }}>Audio</div>
               <div style={{ fontSize:12, fontWeight:600, color:'#fff', fontFamily:S.font }}>{audioOn ? 'On' : 'Off'}</div>
             </div>
             <div onClick={e => { e.stopPropagation(); setAudioOn(v => !v); }}
-              style={{ width:28, height:16, background: audioOn ? '#E01E1E' : '#444', borderRadius:999, cursor:'pointer', position:'relative', transition:'background 0.2s', flexShrink:0 }}>
-              <div style={{ position:'absolute', width:12, height:12, background:'#fff', borderRadius:'50%', top:2, left: audioOn ? 14 : 2, transition:'left 0.2s' }} />
+              style={{ width:26, height:14, background: audioOn ? '#E01E1E' : '#444', borderRadius:999, cursor:'pointer', position:'relative', transition:'background 0.2s', flexShrink:0 }}>
+              <div style={{ position:'absolute', width:10, height:10, background:'#fff', borderRadius:'50%', top:2, left: audioOn ? 14 : 2, transition:'left 0.2s' }} />
             </div>
           </div>
 
           {/* Resolution */}
           <div style={{ position:'relative' }}>
-            <div className="vl-small-box" style={{ ...smallBoxStyle }}
+            <div className="vl-small-box" style={{ display:'flex', alignItems:'center', gap:7, padding:'9px 10px', background:'#252525', border:'1px solid #383838', borderRadius:12, cursor:'pointer', transition:'all 0.18s' }}
               onClick={() => { setShowResDrop(v => !v); setShowDurationDrop(false); }}
-              onMouseEnter={e => { e.currentTarget.style.background='#2E2E2E'; e.currentTarget.style.borderColor='rgba(224,30,30,0.35)'; }}
+              onMouseEnter={e => { e.currentTarget.style.background='#2E2E2E'; e.currentTarget.style.borderColor='rgba(224,30,30,0.4)'; }}
               onMouseLeave={e => { e.currentTarget.style.background='#252525'; e.currentTarget.style.borderColor='#383838'; }}
             >
               <span style={{ fontSize:13 }}>🖥</span>
               <div style={{ flex:1, minWidth:0 }}>
-                <div style={{ fontSize:10, color:'rgba(255,255,255,0.4)', fontFamily:S.font }}>Res</div>
+                <div style={{ fontSize:10, color:'rgba(255,255,255,0.4)', fontFamily:S.font, lineHeight:1.2 }}>Res</div>
                 <div style={{ fontSize:12, fontWeight:600, color:'#fff', fontFamily:S.font }}>{resolution}</div>
               </div>
-              <ChevronDown className="w-3 h-3" style={{ color:'rgba(255,255,255,0.3)', transform: showResDrop ? 'rotate(180deg)' : 'none', transition:'transform 0.2s' }} />
+              <ChevronDown className="w-3 h-3" style={{ color:'rgba(255,255,255,0.3)', flexShrink:0, transform: showResDrop ? 'rotate(180deg)' : 'none', transition:'transform 0.2s' }} />
             </div>
             {showResDrop && (
               <div style={{ position:'absolute', bottom:'calc(100% + 4px)', left:0, right:0, background:'#252525', border:'1px solid #383838', borderRadius:10, overflow:'hidden', zIndex:20 }}>
                 {RESOLUTION_OPTIONS.map(opt => (
-                  <div key={opt} className="vl-output-opt" onClick={() => { setResolution(opt); setShowResDrop(false); }}
-                    style={{ padding:'9px 12px', fontSize:12, fontFamily:S.font, color: resolution===opt ? '#fff':'rgba(255,255,255,0.6)', background: resolution===opt ? 'rgba(224,30,30,0.08)':'transparent', cursor:'pointer', transition:'background 0.15s' }}>
+                  <div key={opt} className="vl-drop-opt" onClick={() => { setResolution(opt); setShowResDrop(false); }}
+                    style={{ padding:'9px 12px', fontSize:12, fontFamily:S.font, color: resolution===opt ? '#fff':'rgba(255,255,255,0.6)', background: resolution===opt ? 'rgba(224,30,30,0.1)':'transparent', cursor:'pointer', transition:'background 0.15s' }}>
                     {opt}
                   </div>
                 ))}
@@ -317,23 +298,23 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
 
           {/* Duration */}
           <div style={{ position:'relative' }}>
-            <div className="vl-small-box" style={{ ...smallBoxStyle }}
+            <div className="vl-small-box" style={{ display:'flex', alignItems:'center', gap:7, padding:'9px 10px', background:'#252525', border:'1px solid #383838', borderRadius:12, cursor:'pointer', transition:'all 0.18s' }}
               onClick={() => { setShowDurationDrop(v => !v); setShowResDrop(false); }}
-              onMouseEnter={e => { e.currentTarget.style.background='#2E2E2E'; e.currentTarget.style.borderColor='rgba(224,30,30,0.35)'; }}
+              onMouseEnter={e => { e.currentTarget.style.background='#2E2E2E'; e.currentTarget.style.borderColor='rgba(224,30,30,0.4)'; }}
               onMouseLeave={e => { e.currentTarget.style.background='#252525'; e.currentTarget.style.borderColor='#383838'; }}
             >
               <span style={{ fontSize:13 }}>⏱</span>
               <div style={{ flex:1, minWidth:0 }}>
-                <div style={{ fontSize:10, color:'rgba(255,255,255,0.4)', fontFamily:S.font }}>Duration</div>
+                <div style={{ fontSize:10, color:'rgba(255,255,255,0.4)', fontFamily:S.font, lineHeight:1.2 }}>Duration</div>
                 <div style={{ fontSize:12, fontWeight:600, color:'#fff', fontFamily:S.font }}>{duration}</div>
               </div>
-              <ChevronDown className="w-3 h-3" style={{ color:'rgba(255,255,255,0.3)', transform: showDurationDrop ? 'rotate(180deg)' : 'none', transition:'transform 0.2s' }} />
+              <ChevronDown className="w-3 h-3" style={{ color:'rgba(255,255,255,0.3)', flexShrink:0, transform: showDurationDrop ? 'rotate(180deg)' : 'none', transition:'transform 0.2s' }} />
             </div>
             {showDurationDrop && (
               <div style={{ position:'absolute', bottom:'calc(100% + 4px)', left:0, right:0, background:'#252525', border:'1px solid #383838', borderRadius:10, overflow:'hidden', zIndex:20 }}>
                 {DURATION_OPTIONS.map(opt => (
-                  <div key={opt} className="vl-output-opt" onClick={() => { setDuration(opt); setShowDurationDrop(false); }}
-                    style={{ padding:'9px 12px', fontSize:12, fontFamily:S.font, color: duration===opt ? '#fff':'rgba(255,255,255,0.6)', background: duration===opt ? 'rgba(224,30,30,0.08)':'transparent', cursor:'pointer', transition:'background 0.15s' }}>
+                  <div key={opt} className="vl-drop-opt" onClick={() => { setDuration(opt); setShowDurationDrop(false); }}
+                    style={{ padding:'9px 12px', fontSize:12, fontFamily:S.font, color: duration===opt ? '#fff':'rgba(255,255,255,0.6)', background: duration===opt ? 'rgba(224,30,30,0.1)':'transparent', cursor:'pointer', transition:'background 0.15s' }}>
                     {opt}
                   </div>
                 ))}
@@ -342,10 +323,10 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
           </div>
         </div>
 
-        {/* ⑧ Divider */}
-        <div style={{ height:1, background:'#2A2A2A', margin:'0 -12px' }} />
+        {/* Divider before generate */}
+        <div style={{ height:1, background:'rgba(255,255,255,0.06)', margin:'0 -12px' }} />
 
-        {/* ⑨ Count + Generate — inside the box */}
+        {/* Count + Generate — inside the main box */}
         <div style={{ display:'flex', alignItems:'center', gap:10 }}>
           <div style={{ display:'flex', alignItems:'center', gap:8 }}>
             <button onClick={() => onCountChange && onCountChange(Math.max(1, count - 1))}
@@ -377,7 +358,7 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
           </button>
         </div>
 
-      </div>{/* end main content box */}
+      </div>{/* end main box */}
     </div>
   );
 }
