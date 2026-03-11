@@ -81,8 +81,11 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
         <span style={{ color:'#fff', fontSize:16, fontWeight:600, fontFamily:S.font }}>Frame to Video</span>
       </div>
 
+      {/* Main content box */}
+      <div style={{ margin:'0 12px', background:'#181818', border:'1px solid #2A2A2A', borderRadius:20, padding:'16px 12px', display:'flex', flexDirection:'column', gap:12 }}>
+
       {/* ② Mode tabs */}
-      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, padding:'0 16px' }}>
+      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
         {[{ id:'frame', icon:'🎞', label:'Start/End Frame' }, { id:'text', icon:'📝', label:'Text' }].map(tab => (
           <button key={tab.id} onClick={() => setMode(tab.id)} style={{
             display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
