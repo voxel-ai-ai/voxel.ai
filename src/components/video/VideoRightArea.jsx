@@ -110,7 +110,7 @@ export default function VideoRightArea({ videos = [], isGenerating = false, dura
       </div>
 
       {/* Creations area */}
-      {videos.length === 0 ? (
+      {videos.length === 0 && !isGenerating ? (
         <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:12, minHeight:500, background:'transparent' }}>
           <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
             <rect x="6" y="18" width="60" height="42" rx="5" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.09)" strokeWidth="1.5"/>
@@ -126,10 +126,23 @@ export default function VideoRightArea({ videos = [], isGenerating = false, dura
           <p style={{ fontSize:14, color:'rgba(255,255,255,0.25)', fontFamily:font }}>No items to display</p>
         </div>
       ) : (
-        <div style={{ padding:20, display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(200px,1fr))', gap:12 }}>
+        <div style={{ padding:20, display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(220px,1fr))', gap:14 }}>
+          {/* Loading card — shown first while generating */}
+          {isGenerating && <LoadingVideoCard durationMs={durationMs} />}
+          {/* Completed videos */}
           {videos.map((v, i) => (
-            <div key={i} style={{ background:'#161616', borderRadius:12, border:'1px solid #1E1E1E', aspectRatio:'16/9', display:'flex', alignItems:'center', justifyContent:'center' }}>
-              <span style={{ color:'rgba(255,255,255,0.3)', fontSize:32 }}>▶</span>
+            <div key={v.id || i} style={{ background:'#161616', borderRadius:14, border:'1px solid #1E1E1E', overflow:'hidden', display:'flex', flexDirection:'column' }}>
+              <div style={{ aspectRatio:'16/9', background:'linear-gradient(135deg, #1a1a1a 0%, #222 100%)', display:'flex', alignItems:'center', justifyContent:'center', position:'relative' }}>
+                <div style={{ width:44, height:44, borderRadius:'50%', background:'rgba(255,255,255,0.07)', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer' }}
+                  onMouseEnter={e => e.currentTarget.style.background='rgba(255,255,255,0.14)'}
+                  onMouseLeave={e => e.currentTarget.style.background='rgba(255,255,255,0.07)'}
+                >
+                  <span style={{ color:'rgba(255,255,255,0.6)', fontSize:20, marginLeft:3 }}>▶</span>
+                </div>
+              </div>
+              <div style={{ padding:'10px 12px' }}>
+                <p style={{ fontSize:12, color:'rgba(255,255,255,0.45)', fontFamily:font, margin:0, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{v.prompt}</p>
+              </div>
             </div>
           ))}
         </div>
