@@ -160,7 +160,7 @@ export default function LiquidBackground() {
       const vh = canvas.height;
       const vg = ctx.createRadialGradient(vw / 2, vh / 2, vh * 0.2, vw / 2, vh / 2, vh * 0.95);
       vg.addColorStop(0, 'rgba(0,0,0,0)');
-      vg.addColorStop(1, 'rgba(0,0,0,0.88)');
+      vg.addColorStop(1, 'rgba(15,15,15,0.88)');
       ctx.fillStyle = vg;
       ctx.fillRect(0, 0, vw, vh);
 
