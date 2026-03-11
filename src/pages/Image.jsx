@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
 import ImagePromptBar from '@/components/image/ImagePromptBar';
+import ImageRightArea from '@/components/image/ImageRightArea';
 import TemplateModal from '@/components/common/TemplateModal';
-import { imageTemplates } from '@/components/data/siteData';
-import { Download, Heart, RefreshCw, Maximize2, History, Globe } from 'lucide-react';
+import { History, Globe } from 'lucide-react';
 import { toast } from 'sonner';
 
 const MODEL_SUBTITLES = {
@@ -33,9 +31,8 @@ export default function Image() {
   const [selectedModel, setSelectedModel] = useState({ id: 'nano-pro', name: 'Nano Banana Pro' });
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [results, setResults] = useState(null); // null = empty, array = done
+  const [images, setImages] = useState([]);
   const [imageCount, setImageCount] = useState(1);
-  const [expandedImage, setExpandedImage] = useState(null);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
 
   const handleGenerate = () => {
@@ -44,16 +41,16 @@ export default function Image() {
       return;
     }
     setIsGenerating(true);
-    setResults(null);
     setTimeout(() => {
       setIsGenerating(false);
-      setResults(Array.from({ length: imageCount }, (_, i) => ({ id: i, gradient: RESULT_GRADIENTS[i % 4] })));
+      const newImages = Array.from({ length: imageCount }, (_, i) => ({
+        id: Date.now() + i,
+        gradient: RESULT_GRADIENTS[i % 4],
+        prompt,
+      }));
+      setImages(prev => [...newImages, ...prev]);
       toast.success('Image generated!');
     }, 3000);
-  };
-
-  const handleModelChange = (model) => {
-    setSelectedModel(model);
   };
 
   const handleRecreate = (template) => {
@@ -62,241 +59,122 @@ export default function Image() {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: '#0A0A0A' }}>
-      {/* Secondary nav tabs */}
-      <div className="flex items-center gap-2 px-6 py-2.5" style={{ borderBottom: '1px solid #1A1A1A' }}>
-        <button
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] transition-colors"
-          style={{ color: '#888', border: '1px solid #2A2A2A', background: 'transparent' }}
-          onMouseEnter={e => e.currentTarget.style.color = '#ccc'}
-          onMouseLeave={e => e.currentTarget.style.color = '#888'}
-        >
-          <History className="w-3.5 h-3.5" />
-          History
-        </button>
-        <button
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] transition-colors"
-          style={{ color: '#888', border: '1px solid #2A2A2A', background: 'transparent' }}
-          onMouseEnter={e => e.currentTarget.style.color = '#ccc'}
-          onMouseLeave={e => e.currentTarget.style.color = '#888'}
-        >
-          <Globe className="w-3.5 h-3.5" />
-          Community
-        </button>
+    <div style={{ display: 'flex', minHeight: 'calc(100vh - 64px)', background: '#0A0A0A' }}>
+
+      {/* ── Left / Main area ── */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
+
+        {/* Secondary nav tabs */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px', borderBottom: '1px solid #1A1A1A' }}>
+          <button
+            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px', borderRadius: 999, fontSize: 13, color: '#888', border: '1px solid #2A2A2A', background: 'transparent', cursor: 'pointer', fontFamily: '"DM Sans", sans-serif', transition: 'color 0.15s' }}
+            onMouseEnter={e => e.currentTarget.style.color = '#ccc'}
+            onMouseLeave={e => e.currentTarget.style.color = '#888'}
+          >
+            <History style={{ width: 14, height: 14 }} />
+            History
+          </button>
+          <button
+            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px', borderRadius: 999, fontSize: 13, color: '#888', border: '1px solid #2A2A2A', background: 'transparent', cursor: 'pointer', fontFamily: '"DM Sans", sans-serif', transition: 'color 0.15s' }}
+            onMouseEnter={e => e.currentTarget.style.color = '#ccc'}
+            onMouseLeave={e => e.currentTarget.style.color = '#888'}
+          >
+            <Globe style={{ width: 14, height: 14 }} />
+            Community
+          </button>
+        </div>
+
+        {/* Center content — empty / generating state */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingBottom: 160, paddingTop: 20 }}>
+
+          {/* Empty state */}
+          {!isGenerating && images.length === 0 && (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '0 16px', animation: 'fadeInUp 0.5s ease forwards' }}>
+              <div style={{ position: 'relative', width: 110, height: 110, marginBottom: 32 }}>
+                <span style={{ position: 'absolute', top: -8, right: -4, fontSize: 18, color: '#E01E1E', animation: 'glowPulse 2s ease-in-out infinite', animationDelay: '0s' }}>✦</span>
+                <span style={{ position: 'absolute', top: 20, right: -18, fontSize: 11, color: '#ff5555', animation: 'glowPulse 2s ease-in-out infinite', animationDelay: '0.7s' }}>✦</span>
+                <span style={{ position: 'absolute', bottom: 0, left: -10, fontSize: 14, color: '#8B0000', animation: 'glowPulse 2s ease-in-out infinite', animationDelay: '1.4s' }}>✦</span>
+                <svg width="110" height="110" viewBox="0 0 110 110" fill="none">
+                  <defs>
+                    <linearGradient id="ig1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#8B0000"/><stop offset="100%" stopColor="#E01E1E"/></linearGradient>
+                    <linearGradient id="ig2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#5a0000"/><stop offset="100%" stopColor="#8B0000"/></linearGradient>
+                    <linearGradient id="ig3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#3a0000"/><stop offset="100%" stopColor="#5a0000"/></linearGradient>
+                  </defs>
+                  <rect x="18" y="30" width="60" height="52" rx="8" fill="url(#ig1)"/>
+                  <path d="M18 30 L38 14 L98 14 L78 30 Z" fill="url(#ig2)"/>
+                  <path d="M78 30 L98 14 L98 66 L78 82 Z" fill="url(#ig3)"/>
+                  <circle cx="38" cy="50" r="7" fill="rgba(255,255,255,0.25)"/>
+                  <path d="M22 74 L36 56 L50 68 L62 54 L76 74 Z" fill="rgba(255,255,255,0.18)"/>
+                </svg>
+              </div>
+              <h1 style={{ fontFamily: 'Anton, sans-serif', fontSize: 'clamp(48px, 7vw, 88px)', color: '#fff', lineHeight: 1, margin: '0 0 12px 0', textTransform: 'uppercase' }}>
+                {selectedModel.name}
+              </h1>
+              <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 15, color: '#666', margin: 0 }}>
+                {MODEL_SUBTITLES[selectedModel.name] || 'Create stunning images in seconds'}
+              </p>
+            </div>
+          )}
+
+          {/* Generating state */}
+          {isGenerating && (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '0 16px' }}>
+              <div style={{ position: 'relative', width: 100, height: 100, marginBottom: 32, animation: 'pulse 1.5s ease-in-out infinite' }}>
+                <svg width="100" height="100" viewBox="0 0 110 110" fill="none">
+                  <defs>
+                    <linearGradient id="ig1b" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#8B0000"/><stop offset="100%" stopColor="#E01E1E"/></linearGradient>
+                    <linearGradient id="ig2b" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#5a0000"/><stop offset="100%" stopColor="#8B0000"/></linearGradient>
+                    <linearGradient id="ig3b" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#3a0000"/><stop offset="100%" stopColor="#5a0000"/></linearGradient>
+                  </defs>
+                  <rect x="18" y="30" width="60" height="52" rx="8" fill="url(#ig1b)"/>
+                  <path d="M18 30 L38 14 L98 14 L78 30 Z" fill="url(#ig2b)"/>
+                  <path d="M78 30 L98 14 L98 66 L78 82 Z" fill="url(#ig3b)"/>
+                  <circle cx="38" cy="50" r="7" fill="rgba(255,255,255,0.25)"/>
+                  <path d="M22 74 L36 56 L50 68 L62 54 L76 74 Z" fill="rgba(255,255,255,0.18)"/>
+                </svg>
+              </div>
+              <h1 style={{ fontFamily: 'Anton, sans-serif', fontSize: 'clamp(48px, 7vw, 88px)', color: '#fff', lineHeight: 1, margin: '0 0 12px 0', textTransform: 'uppercase' }}>
+                {selectedModel.name}
+              </h1>
+              <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 15, color: '#666', margin: 0 }}>
+                Generating your image...
+              </p>
+            </div>
+          )}
+
+          {/* After first generation — show model name smaller */}
+          {!isGenerating && images.length > 0 && (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '0 16px' }}>
+              <h2 style={{ fontFamily: 'Anton, sans-serif', fontSize: 'clamp(32px, 4vw, 56px)', color: 'rgba(255,255,255,0.15)', lineHeight: 1, margin: 0, textTransform: 'uppercase' }}>
+                {selectedModel.name}
+              </h2>
+              <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 13, color: '#444', marginTop: 8 }}>
+                {MODEL_SUBTITLES[selectedModel.name] || 'Create stunning images in seconds'}
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Prompt bar */}
+        <ImagePromptBar
+          prompt={prompt}
+          onPromptChange={setPrompt}
+          onGenerate={handleGenerate}
+          isGenerating={isGenerating}
+          selectedModel={selectedModel}
+          onModelChange={setSelectedModel}
+          imageCount={imageCount}
+          onCountChange={setImageCount}
+        />
       </div>
 
-      {/* Main Content Area */}
-      <div className="flex flex-col items-center justify-center" style={{ minHeight: 'calc(100vh - 140px)', paddingBottom: 140 }}>
-
-        {/* === EMPTY STATE === */}
-        {!isGenerating && !results && (
-          <div className="flex flex-col items-center text-center px-4 animate-fade-in-up">
-            {/* 3D Image Icon with sparkles */}
-            <div className="relative mb-8" style={{ width: 110, height: 110 }}>
-              {/* Sparkles */}
-              <span className="absolute animate-glow-pulse" style={{ top: -8, right: -4, fontSize: 18, color: '#E01E1E', animationDelay: '0s' }}>✦</span>
-              <span className="absolute animate-glow-pulse" style={{ top: 20, right: -18, fontSize: 11, color: '#ff5555', animationDelay: '0.7s' }}>✦</span>
-              <span className="absolute animate-glow-pulse" style={{ bottom: 0, left: -10, fontSize: 14, color: '#8B0000', animationDelay: '1.4s' }}>✦</span>
-
-              {/* Icon */}
-              <svg width="110" height="110" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <linearGradient id="imgGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#8B0000" />
-                    <stop offset="100%" stopColor="#E01E1E" />
-                  </linearGradient>
-                  <linearGradient id="imgGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#5a0000" />
-                    <stop offset="100%" stopColor="#8B0000" />
-                  </linearGradient>
-                  <linearGradient id="imgGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#3a0000" />
-                    <stop offset="100%" stopColor="#5a0000" />
-                  </linearGradient>
-                </defs>
-                {/* 3D box front face */}
-                <rect x="18" y="30" width="60" height="52" rx="8" fill="url(#imgGrad1)" />
-                {/* top face */}
-                <path d="M18 30 L38 14 L98 14 L78 30 Z" fill="url(#imgGrad2)" />
-                {/* right face */}
-                <path d="M78 30 L98 14 L98 66 L78 82 Z" fill="url(#imgGrad3)" />
-                {/* Mountain / image icon */}
-                <circle cx="38" cy="50" r="7" fill="rgba(255,255,255,0.25)" />
-                <path d="M22 74 L36 56 L50 68 L62 54 L76 74 Z" fill="rgba(255,255,255,0.18)" />
-              </svg>
-            </div>
-
-            {/* Model name - huge */}
-            <h1
-              className="font-display uppercase text-white mb-3 leading-none"
-              style={{ fontSize: 'clamp(52px, 8vw, 96px)', lineHeight: 1 }}
-            >
-              {selectedModel.name}
-            </h1>
-
-            {/* Subtitle */}
-            <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 15, color: '#666' }}>
-              {MODEL_SUBTITLES[selectedModel.name] || 'Create stunning images in seconds'}
-            </p>
-          </div>
-        )}
-
-        {/* === GENERATING STATE === */}
-        {isGenerating && (
-          <div className="flex flex-col items-center text-center px-4">
-            {/* Pulsing icon */}
-            <div className="relative mb-8 animate-pulse" style={{ width: 100, height: 100 }}>
-              <svg width="100" height="100" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <linearGradient id="imgGrad1b" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#8B0000" />
-                    <stop offset="100%" stopColor="#E01E1E" />
-                  </linearGradient>
-                  <linearGradient id="imgGrad2b" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#5a0000" />
-                    <stop offset="100%" stopColor="#8B0000" />
-                  </linearGradient>
-                  <linearGradient id="imgGrad3b" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#3a0000" />
-                    <stop offset="100%" stopColor="#5a0000" />
-                  </linearGradient>
-                </defs>
-                <rect x="18" y="30" width="60" height="52" rx="8" fill="url(#imgGrad1b)" />
-                <path d="M18 30 L38 14 L98 14 L78 30 Z" fill="url(#imgGrad2b)" />
-                <path d="M78 30 L98 14 L98 66 L78 82 Z" fill="url(#imgGrad3b)" />
-                <circle cx="38" cy="50" r="7" fill="rgba(255,255,255,0.25)" />
-                <path d="M22 74 L36 56 L50 68 L62 54 L76 74 Z" fill="rgba(255,255,255,0.18)" />
-              </svg>
-            </div>
-            <h1 className="font-display uppercase text-white mb-3 leading-none" style={{ fontSize: 'clamp(52px, 8vw, 96px)', lineHeight: 1 }}>
-              {selectedModel.name}
-            </h1>
-            <p style={{ fontFamily: 'DM Sans, sans-serif', fontSize: 15, color: '#666' }}>
-              Generating your image...
-            </p>
-
-
-            {/* Progress bar at bottom of page */}
-            <div
-              className="fixed bottom-0 left-0 right-0 overflow-hidden"
-              style={{ height: 2, zIndex: 60 }}
-            >
-              <div
-                className="h-full"
-                style={{
-                  background: '#E01E1E',
-                  width: '100%',
-                  animation: 'progress-sweep 3s linear forwards',
-                }}
-              />
-            </div>
-            <style>{`
-              @keyframes progress-sweep {
-                from { transform: scaleX(0); transform-origin: left; }
-                to { transform: scaleX(1); transform-origin: left; }
-              }
-            `}</style>
-          </div>
-        )}
-
-        {/* === RESULTS STATE === */}
-        {!isGenerating && results && (
-          <div className="w-full flex flex-col items-center px-6" style={{ paddingTop: 40 }}>
-            {results.length === 1 ? (
-              /* Single image */
-              <div
-                className="relative rounded-2xl overflow-hidden cursor-pointer"
-                style={{
-                  width: 'min(480px, 80vw)',
-                  aspectRatio: '4/5',
-                  background: results[0].gradient,
-                  animation: 'fadeInScale 0.5s ease forwards',
-                }}
-                onClick={() => setExpandedImage(results[0])}
-              >
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: 14 }}>Generated Image</span>
-                </div>
-              </div>
-            ) : (
-              /* 2×2 grid */
-              <div className="grid grid-cols-2 gap-4" style={{ width: 'min(640px, 90vw)' }}>
-                {results.map((r) => (
-                  <div
-                    key={r.id}
-                    className="relative rounded-xl overflow-hidden cursor-pointer hover:-translate-y-1 transition-transform"
-                    style={{
-                      aspectRatio: '4/5',
-                      background: r.gradient,
-                      animation: `fadeInScale 0.5s ease ${r.id * 0.1}s forwards`,
-                      opacity: 0,
-                    }}
-                    onClick={() => setExpandedImage(r)}
-                  >
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: 12 }}>Image {r.id + 1}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Action row */}
-            <div className="flex items-center gap-3 mt-6">
-              {[
-                { icon: Download, label: 'Download' },
-                { icon: Heart, label: 'Save' },
-                { icon: RefreshCw, label: 'Variations' },
-                { icon: Maximize2, label: 'Upscale 4K' },
-              ].map(({ icon: Icon, label }) => (
-                <button
-                  key={label}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm transition-colors"
-                  style={{ background: '#1A1A1A', border: '1px solid #2A2A2A', color: '#aaa' }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = '#444'; e.currentTarget.style.color = '#fff'; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#2A2A2A'; e.currentTarget.style.color = '#aaa'; }}
-                >
-                  <Icon className="w-4 h-4" />
-                  {label}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Fixed Prompt Bar */}
-      <ImagePromptBar
-        prompt={prompt}
-        onPromptChange={setPrompt}
-        onGenerate={handleGenerate}
+      {/* ── Right panel ── */}
+      <ImageRightArea
+        images={images}
         isGenerating={isGenerating}
-        selectedModel={selectedModel}
-        onModelChange={handleModelChange}
-        imageCount={imageCount}
-        onCountChange={setImageCount}
+        durationMs={3000}
       />
 
-      {/* Expanded image lightbox */}
-      {expandedImage && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center"
-          style={{ background: 'rgba(0,0,0,0.95)' }}
-          onClick={() => setExpandedImage(null)}
-        >
-          <div
-            className="rounded-2xl overflow-hidden"
-            style={{
-              width: 'min(600px, 90vw)',
-              aspectRatio: '4/5',
-              background: expandedImage.gradient,
-            }}
-            onClick={e => e.stopPropagation()}
-          />
-        </div>
-      )}
-
-      {/* Template Modal */}
       {selectedTemplate && (
         <TemplateModal
           template={selectedTemplate}
@@ -307,10 +185,9 @@ export default function Image() {
       )}
 
       <style>{`
-        @keyframes fadeInScale {
-          from { opacity: 0; transform: scale(0.96); }
-          to { opacity: 1; transform: scale(1); }
-        }
+        @keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes glowPulse { 0%,100%{opacity:0.5} 50%{opacity:1} }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
       `}</style>
     </div>
   );
