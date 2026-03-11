@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowLeft, ChevronRight, ChevronDown, Minus, Plus, Sparkles, Zap, Video, ArrowLeftRight } from 'lucide-react';
+import VideoGenerationProgress from '@/components/video/VideoGenerationProgress';
 
 const CAMERA_MOTIONS = [
   { id: 'zoom-in',   icon: '🔍+', label: 'Zoom In'   },
