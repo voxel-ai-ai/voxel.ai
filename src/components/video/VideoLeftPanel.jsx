@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, ChevronRight, ChevronDown, Minus, Plus, Sparkles, Zap, RotateCcw, Video } from 'lucide-react';
+import { ArrowLeft, ChevronRight, ChevronDown, Minus, Plus, Sparkles, Zap, Video, ArrowLeftRight } from 'lucide-react';
 
 const DEFAULT_MODEL = { id: 'kling-2-6', name: 'Kling 2.6', brand: 'Kling', color: '#1B7FE4' };
 
@@ -27,7 +27,6 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
   const [cameraMotion, setCameraMotion] = useState(null);
   const [showCameraDrop, setShowCameraDrop] = useState(false);
   const [audioOn, setAudioOn] = useState(false);
-  const [output, setOutput] = useState('5s | 1080p');
   const [showDurationDrop, setShowDurationDrop] = useState(false);
   const [showResDrop, setShowResDrop] = useState(false);
   const [duration, setDuration] = useState('5s');
@@ -43,6 +42,12 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
     else setEndFrame(url);
   };
 
+  const handleSwapFrames = () => {
+    const tmp = startFrame;
+    setStartFrame(endFrame);
+    setEndFrame(tmp);
+  };
+
   const handleCameraSelect = (m) => {
     const next = cameraMotion === m.id ? null : m.id;
     setCameraMotion(next);
@@ -52,6 +57,13 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
   };
 
   const selectedMotion = CAMERA_MOTIONS.find(m => m.id === cameraMotion);
+
+  // Small box shared style (same as model box)
+  const smallBoxStyle = {
+    display:'flex', alignItems:'center', gap:8, padding:'9px 12px',
+    background:'#252525', border:'1px solid #383838',
+    borderRadius:12, cursor:'pointer', transition:'all 0.18s',
+  };
 
   return (
     <div style={{
@@ -63,7 +75,7 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
       position: 'fixed',
       left: 0, top: 60,
       display: 'flex', flexDirection: 'column',
-      paddingBottom: 80,
+      paddingBottom: 20,
       scrollbarWidth: 'none',
     }}>
       <style>{`
@@ -71,6 +83,7 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
         .vl-ta:focus { border-color: rgba(224,30,30,0.4) !important; outline: none; }
         .vl-cam-opt:hover { background: #222 !important; border-color: rgba(224,30,30,0.3) !important; color: #fff !important; }
         .vl-output-opt:hover { background: rgba(255,255,255,0.05); }
+        .vl-small-box:hover { background: #2E2E2E !important; border-color: rgba(224,30,30,0.35) !important; }
       `}</style>
 
       {/* ① Header */}
@@ -81,30 +94,29 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
         <span style={{ color:'#fff', fontSize:16, fontWeight:600, fontFamily:S.font }}>Frame to Video</span>
       </div>
 
-      {/* Main content box */}
-      <div style={{ margin:'0 12px', background:'#181818', border:'1px solid #2A2A2A', borderRadius:20, padding:'16px 12px', display:'flex', flexDirection:'column', gap:12 }}>
+      {/* Main content box — wraps everything including generate */}
+      <div style={{ margin:'0 12px 12px 12px', background:'#181818', border:'1px solid #2A2A2A', borderRadius:20, padding:'16px 12px', display:'flex', flexDirection:'column', gap:12 }}>
 
-      {/* ② Mode tabs */}
-      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
-        {[{ id:'frame', icon:'🎞', label:'Start/End Frame' }, { id:'text', icon:'📝', label:'Text' }].map(tab => (
-          <button key={tab.id} onClick={() => setMode(tab.id)} style={{
-            display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
-            gap:8, padding:'14px 10px', borderRadius:12, cursor:'pointer', border:'none',
-            background: mode===tab.id ? 'linear-gradient(135deg, #7A0000 0%, #C01010 40%, #E01E1E 100%)' : '#161616',
-            borderWidth:1, borderStyle:'solid',
-            borderColor: mode===tab.id ? 'rgba(224,30,30,0.6)' : '#262626',
-            color: mode===tab.id ? '#fff' : 'rgba(255,255,255,0.5)',
-            fontFamily:S.font, fontSize:14, transition:'all 0.2s',
-            boxShadow: mode===tab.id ? 'inset 0 1px 0 rgba(255,255,255,0.1), 0 2px 12px rgba(224,30,30,0.3)' : 'none',
-          }}>
-            <span style={{ fontSize:22 }}>{tab.icon}</span>
-            {tab.label}
-          </button>
-        ))}
-      </div>
+        {/* ② Mode tabs */}
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
+          {[{ id:'frame', icon:'🎞', label:'Start/End Frame' }, { id:'text', icon:'📝', label:'Text' }].map(tab => (
+            <button key={tab.id} onClick={() => setMode(tab.id)} style={{
+              display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+              gap:8, padding:'14px 10px', borderRadius:12, cursor:'pointer', border:'none',
+              background: mode===tab.id ? 'linear-gradient(135deg, #7A0000 0%, #C01010 40%, #E01E1E 100%)' : '#161616',
+              borderWidth:1, borderStyle:'solid',
+              borderColor: mode===tab.id ? 'rgba(224,30,30,0.6)' : '#262626',
+              color: mode===tab.id ? '#fff' : 'rgba(255,255,255,0.5)',
+              fontFamily:S.font, fontSize:14, transition:'all 0.2s',
+              boxShadow: mode===tab.id ? 'inset 0 1px 0 rgba(255,255,255,0.1), 0 2px 12px rgba(224,30,30,0.3)' : 'none',
+            }}>
+              <span style={{ fontSize:22 }}>{tab.icon}</span>
+              {tab.label}
+            </button>
+          ))}
+        </div>
 
-      {/* ③ Model row */}
-      <div style={{ padding:'0' }}>
+        {/* ③ Model row */}
         <button onClick={onModelClick} style={{
           width:'100%', display:'flex', alignItems:'center', gap:12,
           padding:'13px 16px', background:'#252525', border:'1px solid #383838',
@@ -122,230 +134,250 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
           </div>
           <ChevronRight className="w-4 h-4" style={{ color:'rgba(255,255,255,0.3)' }} />
         </button>
-      </div>
 
-      {/* ④ Start & End Frame */}
-      {mode === 'frame' && (
-        <div style={{ padding:'0' }}>
-          <div style={{ fontSize:13, fontWeight:600, color:'#fff', fontFamily:S.font, marginBottom:10 }}>Set start &amp; end frame</div>
-          {/* Outer container */}
-          <div style={{ background:'#141414', border:'1px solid #252525', borderRadius:12, padding:12, display:'flex', alignItems:'center', gap:10 }}>
-            {['start', 'end'].map((type, i) => {
-              const frameUrl = i === 0 ? startFrame : endFrame;
-              return (
-                <React.Fragment key={type}>
-                  {i === 1 && (
-                    <button style={{ width:32, height:32, flexShrink:0, background:'#1E1E1E', border:'1px solid #2A2A2A', borderRadius:8, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'rgba(255,255,255,0.45)', fontSize:15, transition:'all 0.15s' }}
-                      onClick={() => { const tmp = startFrame; setStartFrame(endFrame); setEndFrame(tmp); }}
-                      onMouseEnter={e => { e.currentTarget.style.background='#2A2A2A'; e.currentTarget.style.color='#fff'; }}
-                      onMouseLeave={e => { e.currentTarget.style.background='#1E1E1E'; e.currentTarget.style.color='rgba(255,255,255,0.45)'; }}
-                    >⇄</button>
-                  )}
-                  <div
-                    style={{ flex:1, minHeight:120, position:'relative' }}
-                    onMouseEnter={e => { const btn = e.currentTarget.querySelector('.frame-x-btn'); if (btn) btn.style.opacity='1'; }}
-                    onMouseLeave={e => { const btn = e.currentTarget.querySelector('.frame-x-btn'); if (btn) btn.style.opacity='0'; }}
-                  >
-                    <label style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:8, cursor:'pointer', padding:'16px 10px', transition:'all 0.2s', opacity: i===1 && !frameUrl ? 0.55 : 1, position:'relative', overflow:'hidden', height:'100%', minHeight:120, background:'#0F0F0F', border:'1.5px solid #303030', borderRadius:10 }}
-                      onMouseEnter={e => { if (!frameUrl) { e.currentTarget.style.borderColor='rgba(224,30,30,0.5)'; e.currentTarget.style.background='rgba(224,30,30,0.05)'; e.currentTarget.style.opacity='1'; }}}
-                      onMouseLeave={e => { if (!frameUrl) { e.currentTarget.style.borderColor='#303030'; e.currentTarget.style.background='#0F0F0F'; e.currentTarget.style.opacity= i===1 ? '0.55' : '1'; }}}
-                    >
-                      <input type="file" accept="image/*" style={{ display:'none' }} onChange={e => handleFrameUpload(type, e)} />
-                      {frameUrl ? (
-                        <img src={frameUrl} alt={`${type} frame`} style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', borderRadius:10 }} />
-                      ) : (
-                        <>
-                          <div style={{ width:32, height:32, borderRadius:'50%', background:'#E01E1E', display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontSize:18, fontWeight:700 }}>+</div>
-                          <span style={{ fontSize:12, color:'rgba(255,255,255,0.4)', fontFamily:S.font, textAlign:'center', lineHeight:1.4 }}>Add a {type}<br/>frame</span>
-                        </>
-                      )}
-                    </label>
-                    {frameUrl && (
+        {/* ④ Start & End Frame */}
+        {mode === 'frame' && (
+          <div>
+            <div style={{ fontSize:13, fontWeight:600, color:'#fff', fontFamily:S.font, marginBottom:10 }}>Set start &amp; end frame</div>
+            <div style={{ background:'#141414', border:'1px solid #252525', borderRadius:12, padding:12, display:'flex', alignItems:'center', gap:10 }}>
+              {['start', 'end'].map((type, i) => {
+                const frameUrl = i === 0 ? startFrame : endFrame;
+                return (
+                  <React.Fragment key={type}>
+                    {i === 1 && (
                       <button
-                        className="frame-x-btn"
-                        onClick={e => { e.stopPropagation(); if (type === 'start') setStartFrame(null); else setEndFrame(null); }}
-                        style={{ position:'absolute', top:6, right:6, width:24, height:24, borderRadius:'50%', background:'rgba(30,30,30,0.85)', border:'1.5px solid rgba(255,255,255,0.25)', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', color:'#fff', fontSize:12, zIndex:10, opacity:0, transition:'opacity 0.18s, background 0.15s' }}
-                        onMouseEnter={e => e.currentTarget.style.background='rgba(180,0,0,0.9)'}
-                        onMouseLeave={e => e.currentTarget.style.background='rgba(30,30,30,0.85)'}
-                      >✕</button>
+                        onClick={handleSwapFrames}
+                        title="Swap frames"
+                        style={{
+                          width:34, height:34, flexShrink:0,
+                          background: (startFrame && endFrame) ? '#2A2A2A' : '#1E1E1E',
+                          border:`1px solid ${(startFrame && endFrame) ? 'rgba(224,30,30,0.5)' : '#2A2A2A'}`,
+                          borderRadius:8, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center',
+                          color: (startFrame && endFrame) ? '#FF4444' : 'rgba(255,255,255,0.35)',
+                          transition:'all 0.15s',
+                        }}
+                        onMouseEnter={e => { e.currentTarget.style.background='#2A2A2A'; e.currentTarget.style.color='#fff'; e.currentTarget.style.borderColor='rgba(224,30,30,0.6)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.background=(startFrame && endFrame) ? '#2A2A2A' : '#1E1E1E'; e.currentTarget.style.color=(startFrame && endFrame) ? '#FF4444' : 'rgba(255,255,255,0.35)'; e.currentTarget.style.borderColor=(startFrame && endFrame) ? 'rgba(224,30,30,0.5)' : '#2A2A2A'; }}
+                      >
+                        <ArrowLeftRight className="w-3.5 h-3.5" />
+                      </button>
                     )}
-                  </div>
-                </React.Fragment>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* ⑤ Describe textarea */}
-      <div style={{ padding:'0' }}>
-        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:10 }}>
-          <span style={{ fontSize:13, fontWeight:600, color:'#fff', fontFamily:S.font }}>Describe your video</span>
-          <button style={{ width:28, height:28, background:'#1E1E1E', border:'1px solid #2A2A2A', borderRadius:7, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'rgba(255,255,255,0.5)', transition:'all 0.18s' }}
-            onMouseEnter={e => { e.currentTarget.style.background='#2A2A2A'; e.currentTarget.style.color='#fff'; }}
-            onMouseLeave={e => { e.currentTarget.style.background='#1E1E1E'; e.currentTarget.style.color='rgba(255,255,255,0.5)'; }}
-          ><Zap className="w-3.5 h-3.5" /></button>
-        </div>
-        <div style={{ position:'relative' }}>
-          <textarea
-            value={prompt}
-            onChange={e => onPromptChange && onPromptChange(e.target.value)}
-            placeholder="Describe scene transitions, camera movement trajectories, or character actions with text to precisely control the entire video from beginning to end."
-            rows={5}
-            className="vl-ta"
-            style={{ width:'100%', background:'#111111', border:'1px solid #222222', borderRadius:10, padding:'12px 14px', color:'rgba(255,255,255,0.8)', fontSize:13, lineHeight:1.6, fontFamily:S.font, resize:'none', boxSizing:'border-box', transition:'border-color 0.2s' }}
-          />
-          <RotateCcw className="w-3 h-3" style={{ position:'absolute', bottom:10, left:12, color:'rgba(255,255,255,0.3)', pointerEvents:'none' }} />
-        </div>
-      </div>
-
-      {/* ⑥ Camera Motion button + dropdown */}
-      <div style={{ padding:'0', position:'relative' }}>
-        <button
-          onClick={() => setShowCameraDrop(v => !v)}
-          style={{
-            width:'100%', padding:'12px 16px', background:'#161616', border:'1px solid #2A2A2A',
-            borderRadius:10, display:'flex', alignItems:'center', justifyContent:'space-between',
-            cursor:'pointer', color: selectedMotion ? '#FF4444' : 'rgba(255,255,255,0.7)',
-            fontSize:13, fontFamily:S.font, transition:'all 0.18s',
-          }}
-          onMouseEnter={e => { e.currentTarget.style.background='#1E1E1E'; }}
-          onMouseLeave={e => { e.currentTarget.style.background='#161616'; }}
-        >
-          <span style={{ display:'flex', alignItems:'center', gap:8 }}>
-            <Video className="w-4 h-4" />
-            {selectedMotion ? `Camera Motion: ${selectedMotion.label}` : 'Camera Motion'}
-          </span>
-          <ChevronDown className="w-4 h-4" style={{ transform: showCameraDrop ? 'rotate(180deg)' : 'none', transition:'transform 0.2s', color:'rgba(255,255,255,0.4)' }} />
-        </button>
-
-        {showCameraDrop && (
-          <div style={{ marginTop:4, background:'#161616', border:'1px solid #2A2A2A', borderRadius:10, padding:10, display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:8 }}>
-            {CAMERA_MOTIONS.map(m => {
-              const isActive = cameraMotion === m.id;
-              return (
-                <button key={m.id} onClick={() => handleCameraSelect(m)} className="vl-cam-opt"
-                  style={{
-                    padding:'10px 8px', background: isActive ? 'rgba(224,30,30,0.1)' : '#1A1A1A',
-                    border:`1px solid ${isActive ? '#E01E1E' : '#2A2A2A'}`,
-                    borderRadius:8, display:'flex', flexDirection:'column', alignItems:'center',
-                    gap:5, cursor:'pointer', fontSize:11, color: isActive ? '#FF4444' : 'rgba(255,255,255,0.6)',
-                    fontFamily:S.font, transition:'all 0.15s',
-                  }}
-                >
-                  <span style={{ fontSize:18 }}>{m.icon}</span>
-                  {m.label}
-                </button>
-              );
-            })}
+                    <div
+                      style={{ flex:1, minHeight:120, position:'relative' }}
+                      onMouseEnter={e => { const btn = e.currentTarget.querySelector('.frame-x-btn'); if (btn) btn.style.opacity='1'; }}
+                      onMouseLeave={e => { const btn = e.currentTarget.querySelector('.frame-x-btn'); if (btn) btn.style.opacity='0'; }}
+                    >
+                      <label style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:8, cursor:'pointer', padding:'16px 10px', transition:'all 0.2s', opacity: i===1 && !frameUrl ? 0.55 : 1, position:'relative', overflow:'hidden', height:'100%', minHeight:120, background:'#0F0F0F', border:'1.5px solid #303030', borderRadius:10 }}
+                        onMouseEnter={e => { if (!frameUrl) { e.currentTarget.style.borderColor='rgba(224,30,30,0.5)'; e.currentTarget.style.background='rgba(224,30,30,0.05)'; e.currentTarget.style.opacity='1'; }}}
+                        onMouseLeave={e => { if (!frameUrl) { e.currentTarget.style.borderColor='#303030'; e.currentTarget.style.background='#0F0F0F'; e.currentTarget.style.opacity= i===1 ? '0.55' : '1'; }}}
+                      >
+                        <input type="file" accept="image/*" style={{ display:'none' }} onChange={e => handleFrameUpload(type, e)} />
+                        {frameUrl ? (
+                          <img src={frameUrl} alt={`${type} frame`} style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', borderRadius:10 }} />
+                        ) : (
+                          <>
+                            <div style={{ width:32, height:32, borderRadius:'50%', background:'#E01E1E', display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontSize:18, fontWeight:700 }}>+</div>
+                            <span style={{ fontSize:12, color:'rgba(255,255,255,0.4)', fontFamily:S.font, textAlign:'center', lineHeight:1.4 }}>Add a {type}<br/>frame</span>
+                          </>
+                        )}
+                      </label>
+                      {frameUrl && (
+                        <button
+                          className="frame-x-btn"
+                          onClick={e => { e.stopPropagation(); if (type === 'start') setStartFrame(null); else setEndFrame(null); }}
+                          style={{ position:'absolute', top:6, right:6, width:24, height:24, borderRadius:'50%', background:'rgba(30,30,30,0.85)', border:'1.5px solid rgba(255,255,255,0.25)', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', color:'#fff', fontSize:12, zIndex:10, opacity:0, transition:'opacity 0.18s, background 0.15s' }}
+                          onMouseEnter={e => e.currentTarget.style.background='rgba(180,0,0,0.9)'}
+                          onMouseLeave={e => e.currentTarget.style.background='rgba(30,30,30,0.85)'}
+                        >✕</button>
+                      )}
+                    </div>
+                  </React.Fragment>
+                );
+              })}
+            </div>
           </div>
         )}
-      </div>
 
-      {/* ⑦ Audio + Output */}
-      <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:10 }}>
-        {/* Audio */}
-        <div style={{ display:'flex', alignItems:'center', gap:10, padding:'12px 14px', background:'#161616', border:'1px solid #222222', borderRadius:10, cursor:'pointer' }}
-          onMouseEnter={e => { e.currentTarget.style.background='#1C1C1C'; e.currentTarget.style.borderColor='#2E2E2E'; }}
-          onMouseLeave={e => { e.currentTarget.style.background='#161616'; e.currentTarget.style.borderColor='#222222'; }}
-        >
-          <span style={{ fontSize:16, color:'rgba(255,255,255,0.5)' }}>🎵</span>
-          <div style={{ flex:1 }}>
-            <div style={{ fontSize:12, color:'rgba(255,255,255,0.5)', fontFamily:S.font }}>Audio</div>
-            <div style={{ fontSize:13, fontWeight:600, color:'#fff', fontFamily:S.font }}>{audioOn ? 'On' : 'Off'}</div>
+        {/* ⑤ Describe textarea */}
+        <div>
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:10 }}>
+            <span style={{ fontSize:13, fontWeight:600, color:'#fff', fontFamily:S.font }}>Describe your video</span>
+            <button style={{ width:28, height:28, background:'#1E1E1E', border:'1px solid #2A2A2A', borderRadius:7, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'rgba(255,255,255,0.5)', transition:'all 0.18s' }}
+              onMouseEnter={e => { e.currentTarget.style.background='#2A2A2A'; e.currentTarget.style.color='#fff'; }}
+              onMouseLeave={e => { e.currentTarget.style.background='#1E1E1E'; e.currentTarget.style.color='rgba(255,255,255,0.5)'; }}
+            ><Zap className="w-3.5 h-3.5" /></button>
           </div>
-          <div onClick={e => { e.stopPropagation(); setAudioOn(v => !v); }}
-            style={{ width:36, height:20, background: audioOn ? '#E01E1E' : '#333', borderRadius:999, cursor:'pointer', position:'relative', transition:'background 0.2s', flexShrink:0 }}>
-            <div style={{ position:'absolute', width:16, height:16, background:'#fff', borderRadius:'50%', top:2, left: audioOn ? 18 : 2, transition:'left 0.2s' }} />
+          <div style={{ position:'relative' }}>
+            <textarea
+              value={prompt}
+              onChange={e => onPromptChange && onPromptChange(e.target.value)}
+              placeholder="Describe scene transitions, camera movement trajectories, or character actions with text to precisely control the entire video from beginning to end."
+              rows={5}
+              className="vl-ta"
+              style={{ width:'100%', background:'#111111', border:'1px solid #222222', borderRadius:10, padding:'12px 14px 36px 14px', color:'rgba(255,255,255,0.8)', fontSize:13, lineHeight:1.6, fontFamily:S.font, resize:'none', boxSizing:'border-box', transition:'border-color 0.2s' }}
+            />
+            {/* Prompt enhancer icon inside textarea bottom-left */}
+            <button
+              title="Enhance prompt"
+              style={{ position:'absolute', bottom:10, left:10, width:26, height:26, background:'rgba(224,30,30,0.12)', border:'1px solid rgba(224,30,30,0.3)', borderRadius:7, display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', color:'rgba(255,100,100,0.8)', transition:'all 0.18s' }}
+              onMouseEnter={e => { e.currentTarget.style.background='rgba(224,30,30,0.25)'; e.currentTarget.style.color='#FF4444'; }}
+              onMouseLeave={e => { e.currentTarget.style.background='rgba(224,30,30,0.12)'; e.currentTarget.style.color='rgba(255,100,100,0.8)'; }}
+            >
+              <Zap className="w-3 h-3" />
+            </button>
           </div>
         </div>
 
-        {/* Resolution */}
+        {/* ⑥ Camera Motion button + dropdown */}
         <div style={{ position:'relative' }}>
-          <div style={{ display:'flex', alignItems:'center', gap:10, padding:'12px 14px', background:'#161616', border:'1px solid #222222', borderRadius:10, cursor:'pointer' }}
-            onClick={() => { setShowResDrop(v => !v); setShowDurationDrop(false); }}
-            onMouseEnter={e => { e.currentTarget.style.background='#1C1C1C'; e.currentTarget.style.borderColor='#2E2E2E'; }}
-            onMouseLeave={e => { e.currentTarget.style.background='#161616'; e.currentTarget.style.borderColor='#222222'; }}
+          <button
+            onClick={() => setShowCameraDrop(v => !v)}
+            style={{
+              width:'100%', padding:'12px 16px', background:'#161616', border:'1px solid #2A2A2A',
+              borderRadius:10, display:'flex', alignItems:'center', justifyContent:'space-between',
+              cursor:'pointer', color: selectedMotion ? '#FF4444' : 'rgba(255,255,255,0.7)',
+              fontSize:13, fontFamily:S.font, transition:'all 0.18s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background='#1E1E1E'; }}
+            onMouseLeave={e => { e.currentTarget.style.background='#161616'; }}
           >
-            <span style={{ fontSize:16, color:'rgba(255,255,255,0.5)' }}>🖥</span>
-            <div style={{ flex:1 }}>
-              <div style={{ fontSize:12, color:'rgba(255,255,255,0.5)', fontFamily:S.font }}>Resolution</div>
-              <div style={{ fontSize:13, fontWeight:600, color:'#fff', fontFamily:S.font }}>{resolution}</div>
-            </div>
-            <ChevronRight className="w-3.5 h-3.5" style={{ color:'rgba(255,255,255,0.3)' }} />
-          </div>
-          {showResDrop && (
-            <div style={{ position:'absolute', bottom:'calc(100% + 4px)', left:0, right:0, background:'#161616', border:'1px solid #2A2A2A', borderRadius:10, overflow:'hidden', zIndex:20 }}>
-              {RESOLUTION_OPTIONS.map(opt => (
-                <div key={opt} className="vl-output-opt" onClick={() => { setResolution(opt); setShowResDrop(false); }}
-                  style={{ padding:'10px 14px', fontSize:13, fontFamily:S.font, color: resolution===opt ? '#fff':'rgba(255,255,255,0.6)', background: resolution===opt ? 'rgba(224,30,30,0.08)':'transparent', cursor:'pointer', transition:'background 0.15s' }}>
-                  {opt}
-                </div>
-              ))}
+            <span style={{ display:'flex', alignItems:'center', gap:8 }}>
+              <Video className="w-4 h-4" />
+              {selectedMotion ? `Camera Motion: ${selectedMotion.label}` : 'Camera Motion'}
+            </span>
+            <ChevronDown className="w-4 h-4" style={{ transform: showCameraDrop ? 'rotate(180deg)' : 'none', transition:'transform 0.2s', color:'rgba(255,255,255,0.4)' }} />
+          </button>
+
+          {showCameraDrop && (
+            <div style={{ marginTop:4, background:'#161616', border:'1px solid #2A2A2A', borderRadius:10, padding:10, display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:8 }}>
+              {CAMERA_MOTIONS.map(m => {
+                const isActive = cameraMotion === m.id;
+                return (
+                  <button key={m.id} onClick={() => handleCameraSelect(m)} className="vl-cam-opt"
+                    style={{
+                      padding:'10px 8px', background: isActive ? 'rgba(224,30,30,0.1)' : '#1A1A1A',
+                      border:`1px solid ${isActive ? '#E01E1E' : '#2A2A2A'}`,
+                      borderRadius:8, display:'flex', flexDirection:'column', alignItems:'center',
+                      gap:5, cursor:'pointer', fontSize:11, color: isActive ? '#FF4444' : 'rgba(255,255,255,0.6)',
+                      fontFamily:S.font, transition:'all 0.15s',
+                    }}
+                  >
+                    <span style={{ fontSize:18 }}>{m.icon}</span>
+                    {m.label}
+                  </button>
+                );
+              })}
             </div>
           )}
         </div>
 
-        {/* Duration */}
-        <div style={{ position:'relative' }}>
-          <div style={{ display:'flex', alignItems:'center', gap:10, padding:'12px 14px', background:'#161616', border:'1px solid #222222', borderRadius:10, cursor:'pointer' }}
-            onClick={() => { setShowDurationDrop(v => !v); setShowResDrop(false); }}
-            onMouseEnter={e => { e.currentTarget.style.background='#1C1C1C'; e.currentTarget.style.borderColor='#2E2E2E'; }}
-            onMouseLeave={e => { e.currentTarget.style.background='#161616'; e.currentTarget.style.borderColor='#222222'; }}
+        {/* ⑦ Audio + Resolution + Duration — compact, model-box style */}
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:8 }}>
+          {/* Audio */}
+          <div className="vl-small-box" style={{ ...smallBoxStyle }}
+            onMouseEnter={e => { e.currentTarget.style.background='#2E2E2E'; e.currentTarget.style.borderColor='rgba(224,30,30,0.35)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background='#252525'; e.currentTarget.style.borderColor='#383838'; }}
           >
-            <span style={{ fontSize:16, color:'rgba(255,255,255,0.5)' }}>⏱</span>
-            <div style={{ flex:1 }}>
-              <div style={{ fontSize:12, color:'rgba(255,255,255,0.5)', fontFamily:S.font }}>Duration</div>
-              <div style={{ fontSize:13, fontWeight:600, color:'#fff', fontFamily:S.font }}>{duration}</div>
+            <span style={{ fontSize:13 }}>🎵</span>
+            <div style={{ flex:1, minWidth:0 }}>
+              <div style={{ fontSize:10, color:'rgba(255,255,255,0.4)', fontFamily:S.font }}>Audio</div>
+              <div style={{ fontSize:12, fontWeight:600, color:'#fff', fontFamily:S.font }}>{audioOn ? 'On' : 'Off'}</div>
             </div>
-            <ChevronRight className="w-3.5 h-3.5" style={{ color:'rgba(255,255,255,0.3)' }} />
+            <div onClick={e => { e.stopPropagation(); setAudioOn(v => !v); }}
+              style={{ width:28, height:16, background: audioOn ? '#E01E1E' : '#444', borderRadius:999, cursor:'pointer', position:'relative', transition:'background 0.2s', flexShrink:0 }}>
+              <div style={{ position:'absolute', width:12, height:12, background:'#fff', borderRadius:'50%', top:2, left: audioOn ? 14 : 2, transition:'left 0.2s' }} />
+            </div>
           </div>
-          {showDurationDrop && (
-            <div style={{ position:'absolute', bottom:'calc(100% + 4px)', left:0, right:0, background:'#161616', border:'1px solid #2A2A2A', borderRadius:10, overflow:'hidden', zIndex:20 }}>
-              {DURATION_OPTIONS.map(opt => (
-                <div key={opt} className="vl-output-opt" onClick={() => { setDuration(opt); setShowDurationDrop(false); }}
-                  style={{ padding:'10px 14px', fontSize:13, fontFamily:S.font, color: duration===opt ? '#fff':'rgba(255,255,255,0.6)', background: duration===opt ? 'rgba(224,30,30,0.08)':'transparent', cursor:'pointer', transition:'background 0.15s' }}>
-                  {opt}
-                </div>
-              ))}
+
+          {/* Resolution */}
+          <div style={{ position:'relative' }}>
+            <div className="vl-small-box" style={{ ...smallBoxStyle }}
+              onClick={() => { setShowResDrop(v => !v); setShowDurationDrop(false); }}
+              onMouseEnter={e => { e.currentTarget.style.background='#2E2E2E'; e.currentTarget.style.borderColor='rgba(224,30,30,0.35)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background='#252525'; e.currentTarget.style.borderColor='#383838'; }}
+            >
+              <span style={{ fontSize:13 }}>🖥</span>
+              <div style={{ flex:1, minWidth:0 }}>
+                <div style={{ fontSize:10, color:'rgba(255,255,255,0.4)', fontFamily:S.font }}>Res</div>
+                <div style={{ fontSize:12, fontWeight:600, color:'#fff', fontFamily:S.font }}>{resolution}</div>
+              </div>
+              <ChevronDown className="w-3 h-3" style={{ color:'rgba(255,255,255,0.3)', transform: showResDrop ? 'rotate(180deg)' : 'none', transition:'transform 0.2s' }} />
             </div>
-          )}
+            {showResDrop && (
+              <div style={{ position:'absolute', bottom:'calc(100% + 4px)', left:0, right:0, background:'#252525', border:'1px solid #383838', borderRadius:10, overflow:'hidden', zIndex:20 }}>
+                {RESOLUTION_OPTIONS.map(opt => (
+                  <div key={opt} className="vl-output-opt" onClick={() => { setResolution(opt); setShowResDrop(false); }}
+                    style={{ padding:'9px 12px', fontSize:12, fontFamily:S.font, color: resolution===opt ? '#fff':'rgba(255,255,255,0.6)', background: resolution===opt ? 'rgba(224,30,30,0.08)':'transparent', cursor:'pointer', transition:'background 0.15s' }}>
+                    {opt}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Duration */}
+          <div style={{ position:'relative' }}>
+            <div className="vl-small-box" style={{ ...smallBoxStyle }}
+              onClick={() => { setShowDurationDrop(v => !v); setShowResDrop(false); }}
+              onMouseEnter={e => { e.currentTarget.style.background='#2E2E2E'; e.currentTarget.style.borderColor='rgba(224,30,30,0.35)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background='#252525'; e.currentTarget.style.borderColor='#383838'; }}
+            >
+              <span style={{ fontSize:13 }}>⏱</span>
+              <div style={{ flex:1, minWidth:0 }}>
+                <div style={{ fontSize:10, color:'rgba(255,255,255,0.4)', fontFamily:S.font }}>Duration</div>
+                <div style={{ fontSize:12, fontWeight:600, color:'#fff', fontFamily:S.font }}>{duration}</div>
+              </div>
+              <ChevronDown className="w-3 h-3" style={{ color:'rgba(255,255,255,0.3)', transform: showDurationDrop ? 'rotate(180deg)' : 'none', transition:'transform 0.2s' }} />
+            </div>
+            {showDurationDrop && (
+              <div style={{ position:'absolute', bottom:'calc(100% + 4px)', left:0, right:0, background:'#252525', border:'1px solid #383838', borderRadius:10, overflow:'hidden', zIndex:20 }}>
+                {DURATION_OPTIONS.map(opt => (
+                  <div key={opt} className="vl-output-opt" onClick={() => { setDuration(opt); setShowDurationDrop(false); }}
+                    style={{ padding:'9px 12px', fontSize:12, fontFamily:S.font, color: duration===opt ? '#fff':'rgba(255,255,255,0.6)', background: duration===opt ? 'rgba(224,30,30,0.08)':'transparent', cursor:'pointer', transition:'background 0.15s' }}>
+                    {opt}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+
+        {/* ⑧ Divider */}
+        <div style={{ height:1, background:'#2A2A2A', margin:'0 -12px' }} />
+
+        {/* ⑨ Count + Generate — inside the box */}
+        <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+          <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+            <button onClick={() => onCountChange && onCountChange(Math.max(1, count - 1))}
+              style={{ width:28, height:28, background:'#1A1A1A', border:'1px solid #2A2A2A', borderRadius:7, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', transition:'all 0.15s' }}
+              onMouseEnter={e => e.currentTarget.style.background='#2A2A2A'}
+              onMouseLeave={e => e.currentTarget.style.background='#1A1A1A'}
+            ><Minus className="w-3 h-3" /></button>
+            <span style={{ fontSize:14, fontWeight:600, color:'#fff', fontFamily:S.font, minWidth:36, textAlign:'center' }}>
+              {count}<span style={{ color:'rgba(255,255,255,0.35)' }}>/4</span>
+            </span>
+            <button onClick={() => onCountChange && onCountChange(Math.min(4, count + 1))}
+              style={{ width:28, height:28, background:'#1A1A1A', border:'1px solid #2A2A2A', borderRadius:7, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', transition:'all 0.15s' }}
+              onMouseEnter={e => e.currentTarget.style.background='#2A2A2A'}
+              onMouseLeave={e => e.currentTarget.style.background='#1A1A1A'}
+            ><Plus className="w-3 h-3" /></button>
+          </div>
+          <button onClick={() => onGenerate && onGenerate()} disabled={isGenerating}
+            style={{
+              flex:1, height:48,
+              background: isGenerating ? 'rgba(139,0,0,0.5)' : 'linear-gradient(90deg, #CC0000 0%, #FF2222 50%, #E01E1E 100%)',
+              border:'none', borderRadius:14, color:'#fff', fontSize:15, fontWeight:700, fontFamily:S.font,
+              cursor: isGenerating ? 'not-allowed' : 'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:8, transition:'all 0.2s',
+              boxShadow: isGenerating ? 'none' : '0 2px 20px rgba(224,30,30,0.35)',
+            }}
+            onMouseEnter={e => { if (!isGenerating) { e.currentTarget.style.background='linear-gradient(90deg, #DD0000 0%, #FF3333 50%, #FF2020 100%)'; e.currentTarget.style.boxShadow='0 4px 28px rgba(224,30,30,0.55)'; e.currentTarget.style.transform='translateY(-1px)'; }}}
+            onMouseLeave={e => { if (!isGenerating) { e.currentTarget.style.background='linear-gradient(90deg, #CC0000 0%, #FF2222 50%, #E01E1E 100%)'; e.currentTarget.style.boxShadow='0 2px 20px rgba(224,30,30,0.35)'; e.currentTarget.style.transform='none'; }}}
+          >
+            {isGenerating ? 'Generating...' : <><span>Generate</span><Sparkles className="w-4 h-4" style={{ opacity:0.9 }} /><span style={{ fontSize:14, fontWeight:700, opacity:0.9 }}>100</span></>}
+          </button>
+        </div>
 
       </div>{/* end main content box */}
-
-      {/* ⑧ Count + Generate (sticky bottom) */}
-      <div style={{ position:'sticky', bottom:0, display:'flex', alignItems:'center', gap:10, padding:'14px 16px', background:'linear-gradient(to top, #0A0A0A 70%, transparent)', marginTop:16 }}>
-        <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-          <button onClick={() => onCountChange && onCountChange(Math.max(1, count - 1))}
-            style={{ width:28, height:28, background:'#1A1A1A', border:'1px solid #2A2A2A', borderRadius:7, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', transition:'all 0.15s' }}
-            onMouseEnter={e => e.currentTarget.style.background='#2A2A2A'}
-            onMouseLeave={e => e.currentTarget.style.background='#1A1A1A'}
-          ><Minus className="w-3 h-3" /></button>
-          <span style={{ fontSize:14, fontWeight:600, color:'#fff', fontFamily:S.font, minWidth:36, textAlign:'center' }}>
-            {count}<span style={{ color:'rgba(255,255,255,0.35)' }}>/4</span>
-          </span>
-          <button onClick={() => onCountChange && onCountChange(Math.min(4, count + 1))}
-            style={{ width:28, height:28, background:'#1A1A1A', border:'1px solid #2A2A2A', borderRadius:7, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', transition:'all 0.15s' }}
-            onMouseEnter={e => e.currentTarget.style.background='#2A2A2A'}
-            onMouseLeave={e => e.currentTarget.style.background='#1A1A1A'}
-          ><Plus className="w-3 h-3" /></button>
-        </div>
-        <button onClick={() => onGenerate && onGenerate()} disabled={isGenerating}
-          style={{
-            flex:1, height:48,
-            background: isGenerating ? 'rgba(139,0,0,0.5)' : 'linear-gradient(90deg, #CC0000 0%, #FF2222 50%, #E01E1E 100%)',
-            border:'none', borderRadius:14, color:'#fff', fontSize:15, fontWeight:700, fontFamily:S.font,
-            cursor: isGenerating ? 'not-allowed' : 'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:8, transition:'all 0.2s',
-            boxShadow: isGenerating ? 'none' : '0 2px 20px rgba(224,30,30,0.35)',
-          }}
-          onMouseEnter={e => { if (!isGenerating) { e.currentTarget.style.background='linear-gradient(90deg, #DD0000 0%, #FF3333 50%, #FF2020 100%)'; e.currentTarget.style.boxShadow='0 4px 28px rgba(224,30,30,0.55)'; e.currentTarget.style.transform='translateY(-1px)'; }}}
-          onMouseLeave={e => { if (!isGenerating) { e.currentTarget.style.background='linear-gradient(90deg, #CC0000 0%, #FF2222 50%, #E01E1E 100%)'; e.currentTarget.style.boxShadow='0 2px 20px rgba(224,30,30,0.35)'; e.currentTarget.style.transform='none'; }}}
-        >
-          {isGenerating ? 'Generating...' : <><span>Generate</span><Sparkles className="w-4 h-4" style={{ opacity:0.9 }} /><span style={{ fontSize:14, fontWeight:700, opacity:0.9 }}>100</span></>}
-        </button>
-      </div>
     </div>
   );
 }
