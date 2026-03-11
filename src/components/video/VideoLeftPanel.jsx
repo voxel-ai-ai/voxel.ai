@@ -257,6 +257,32 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
           </div>
         </div>
 
+        {/* Resolution */}
+        <div style={{ position:'relative' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:10, padding:'12px 14px', background:'#161616', border:'1px solid #222222', borderRadius:10, cursor:'pointer' }}
+            onClick={() => { setShowResDrop(v => !v); setShowDurationDrop(false); }}
+            onMouseEnter={e => { e.currentTarget.style.background='#1C1C1C'; e.currentTarget.style.borderColor='#2E2E2E'; }}
+            onMouseLeave={e => { e.currentTarget.style.background='#161616'; e.currentTarget.style.borderColor='#222222'; }}
+          >
+            <span style={{ fontSize:16, color:'rgba(255,255,255,0.5)' }}>🖥</span>
+            <div style={{ flex:1 }}>
+              <div style={{ fontSize:12, color:'rgba(255,255,255,0.5)', fontFamily:S.font }}>Resolution</div>
+              <div style={{ fontSize:13, fontWeight:600, color:'#fff', fontFamily:S.font }}>{resolution}</div>
+            </div>
+            <ChevronRight className="w-3.5 h-3.5" style={{ color:'rgba(255,255,255,0.3)' }} />
+          </div>
+          {showResDrop && (
+            <div style={{ position:'absolute', bottom:'calc(100% + 4px)', left:0, right:0, background:'#161616', border:'1px solid #2A2A2A', borderRadius:10, overflow:'hidden', zIndex:20 }}>
+              {RESOLUTION_OPTIONS.map(opt => (
+                <div key={opt} className="vl-output-opt" onClick={() => { setResolution(opt); setShowResDrop(false); }}
+                  style={{ padding:'10px 14px', fontSize:13, fontFamily:S.font, color: resolution===opt ? '#fff':'rgba(255,255,255,0.6)', background: resolution===opt ? 'rgba(224,30,30,0.08)':'transparent', cursor:'pointer', transition:'background 0.15s' }}>
+                  {opt}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         {/* Duration */}
         <div style={{ position:'relative' }}>
           <div style={{ display:'flex', alignItems:'center', gap:10, padding:'12px 14px', background:'#161616', border:'1px solid #222222', borderRadius:10, cursor:'pointer' }}
