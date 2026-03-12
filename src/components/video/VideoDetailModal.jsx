@@ -128,6 +128,18 @@ function VideoPlayer({ gradient, durationSec = 5 }) {
   );
 }
 
+// ── Aspect ratio helper ───────────────────────────────────────────────────────
+function getRatioStyle(ratio) {
+  const ratioMap = {
+    '16:9':  { width: '100%', aspectRatio: '16/9', maxWidth: 900, maxHeight: 'calc(100vh - 300px)' },
+    '9:16':  { width: 'auto', height: 'min(70vh, 560px)', aspectRatio: '9/16', maxWidth: 340 },
+    '1:1':   { width: 'min(60vh, 480px)', aspectRatio: '1/1', maxWidth: 480 },
+    '4:3':   { width: '100%', aspectRatio: '4/3', maxWidth: 700, maxHeight: 'calc(100vh - 300px)' },
+    '21:9':  { width: '100%', aspectRatio: '21/9', maxWidth: 1000, maxHeight: 'calc(100vh - 300px)' },
+  };
+  return ratioMap[ratio] || { width: '100%', aspectRatio: '16/9', maxWidth: 900, maxHeight: 'calc(100vh - 300px)' };
+}
+
 // ── Main modal ────────────────────────────────────────────────────────────────
 export default function VideoDetailModal({ video, videos = [], onClose, onNavigate }) {
   const [liked, setLiked] = useState(false);
