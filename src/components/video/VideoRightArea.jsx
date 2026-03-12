@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronDown, Star, Filter, Grid, Search, SlidersHorizontal, MessageSquare, Video, Music, Sparkles } from 'lucide-react';
-import VideoLightbox from '@/components/video/VideoLightbox';
 
 const font = '"DM Sans", sans-serif';
 
@@ -71,9 +70,8 @@ function LoadingVideoCard({ durationMs = 3000 }) {
   );
 }
 
-export default function VideoRightArea({ videos = [], isGenerating = false, durationMs = 3000 }) {
+export default function VideoRightArea({ videos = [], isGenerating = false, durationMs = 3000, onVideoClick }) {
   const [activeTab, setActiveTab] = useState('creations');
-  const [expandedVideo, setExpandedVideo] = useState(null);
 
   return (
     <div style={{ marginLeft:450, height:'calc(100vh - 60px)', overflowY:'auto', background:'#0D0D0D', borderLeft:'1px solid #1E1E1E', display:'flex', flexDirection:'column' }}>
@@ -132,35 +130,37 @@ export default function VideoRightArea({ videos = [], isGenerating = false, dura
           {/* Loading card — shown first while generating */}
           {isGenerating && <LoadingVideoCard durationMs={durationMs} />}
           {/* Completed videos */}
-          {videos.map((v, i) => (
-            <div
-              key={v.id || i}
-              style={{ background:'#161616', borderRadius:14, border:'1px solid #1E1E1E', overflow:'hidden', display:'flex', flexDirection:'column', cursor:'pointer', transition:'transform 0.18s, border-color 0.18s' }}
-              onClick={() => setExpandedVideo(v)}
-              onMouseEnter={e => { e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.borderColor='rgba(255,255,255,0.15)'; }}
-              onMouseLeave={e => { e.currentTarget.style.transform='none'; e.currentTarget.style.borderColor='#1E1E1E'; }}
-            >
-              <div style={{ aspectRatio:'16/9', background:'linear-gradient(135deg, #1a1a1a 0%, #222 100%)', display:'flex', alignItems:'center', justifyContent:'center', position:'relative' }}>
-                <div style={{ width:44, height:44, borderRadius:'50%', background:'rgba(255,255,255,0.07)', display:'flex', alignItems:'center', justifyContent:'center' }}>
-                  <span style={{ color:'rgba(255,255,255,0.6)', fontSize:20, marginLeft:3 }}>▶</span>
+          {videos.map((v, i) => {
+            const grads = [
+              'linear-gradient(135deg,#0a0a1a 0%,#1a0a2a 50%,#2a0a0a 100%)',
+              'linear-gradient(135deg,#1a0000 0%,#8B0000 50%,#1a1a1a 100%)',
+              'linear-gradient(135deg,#0d0d0d 0%,#2a0000 60%,#111 100%)',
+              'linear-gradient(135deg,#1a1a0a 0%,#3a1a00 50%,#0a0a0a 100%)',
+            ];
+            const grad = v.gradient || grads[i % grads.length];
+            return (
+              <div key={v.id || i}
+                onClick={() => onVideoClick && onVideoClick({ ...v, gradient: grad })}
+                style={{ background:'#161616', borderRadius:14, border:'1px solid #1E1E1E', overflow:'hidden', display:'flex', flexDirection:'column', cursor:'pointer', transition:'all 0.18s' }}
+                onMouseEnter={e => { e.currentTarget.style.border='1px solid rgba(224,30,30,0.4)'; e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.querySelector('.vplay').style.opacity='1'; }}
+                onMouseLeave={e => { e.currentTarget.style.border='1px solid #1E1E1E'; e.currentTarget.style.transform='none'; e.currentTarget.querySelector('.vplay').style.opacity='0'; }}
+              >
+                <div style={{ aspectRatio:'16/9', background:grad, display:'flex', alignItems:'center', justifyContent:'center', position:'relative', overflow:'hidden' }}>
+                  <div className="vplay" style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.3)', display:'flex', alignItems:'center', justifyContent:'center', opacity:0, transition:'opacity 0.18s' }}>
+                    <div style={{ width:44, height:44, borderRadius:'50%', background:'rgba(0,0,0,0.6)', backdropFilter:'blur(8px)', border:'2px solid rgba(255,255,255,0.3)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                      <span style={{ color:'#fff', fontSize:18, marginLeft:3 }}>▶</span>
+                    </div>
+                  </div>
+                  {/* Duration badge */}
+                  <span style={{ position:'absolute', bottom:8, right:8, fontSize:10, color:'rgba(255,255,255,0.7)', background:'rgba(0,0,0,0.55)', padding:'2px 7px', borderRadius:6, fontFamily:font }}>0:10</span>
+                </div>
+                <div style={{ padding:'10px 12px' }}>
+                  <p style={{ fontSize:12, color:'rgba(255,255,255,0.5)', fontFamily:font, margin:0, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{v.prompt}</p>
                 </div>
               </div>
-              <div style={{ padding:'10px 12px' }}>
-                <p style={{ fontSize:12, color:'rgba(255,255,255,0.45)', fontFamily:font, margin:0, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{v.prompt}</p>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
-      )}
-
-      {/* Video Lightbox */}
-      {expandedVideo && (
-        <VideoLightbox
-          video={expandedVideo}
-          videos={videos}
-          onClose={() => setExpandedVideo(null)}
-          onNavigate={setExpandedVideo}
-        />
       )}
     </div>
   );
