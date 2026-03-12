@@ -70,8 +70,20 @@ function LoadingVideoCard({ durationMs = 3000 }) {
   );
 }
 
-export default function VideoRightArea({ videos = [], isGenerating = false, durationMs = 3000, onVideoClick }) {
+const RATIO_OPTIONS = ['Auto', '16:9', '9:16', '1:1', '4:3', '21:9'];
+
+const RATIO_STYLES = {
+  'Auto':  { width: '100%', aspectRatio: '16/9', maxWidth: 900 },
+  '16:9':  { width: '100%', aspectRatio: '16/9', maxWidth: 900 },
+  '9:16':  { width: 'auto', height: 'min(70vh, 600px)', aspectRatio: '9/16', maxWidth: 340 },
+  '1:1':   { width: 'min(60vh, 500px)', aspectRatio: '1/1', maxWidth: 500 },
+  '4:3':   { width: '100%', aspectRatio: '4/3', maxWidth: 700 },
+  '21:9':  { width: '100%', aspectRatio: '21/9', maxWidth: 1000 },
+};
+
+export default function VideoRightArea({ videos = [], isGenerating = false, durationMs = 3000, onVideoClick, duration = '5s', ratio = '16:9', onRatioChange }) {
   const [activeTab, setActiveTab] = useState('creations');
+  const [showRatioDrop, setShowRatioDrop] = useState(false);
 
   return (
     <div style={{ marginLeft:450, height:'calc(100vh - 60px)', overflowY:'auto', background:'#0D0D0D', borderLeft:'1px solid #1E1E1E', display:'flex', flexDirection:'column' }}>
