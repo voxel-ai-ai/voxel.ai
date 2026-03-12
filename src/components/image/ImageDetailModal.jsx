@@ -48,10 +48,13 @@ export default function ImageDetailModal({ image, images = [], onClose, onNaviga
         className="img-detail-panel"
         onClick={e => e.stopPropagation()}
         style={{
-          display: 'flex', width: 'min(1100px, 96vw)', height: 'min(700px, 92vh)',
-          background: '#111', borderRadius: 20, overflow: 'hidden',
-          border: '1px solid rgba(255,255,255,0.08)',
-          boxShadow: '0 32px 80px rgba(0,0,0,0.8)',
+          display: 'flex', width: 'min(1400px, 98vw)', height: 'min(860px, 95vh)',
+          background: 'rgba(10,10,10,0.55)',
+          backdropFilter: 'blur(48px) saturate(1.8)',
+          WebkitBackdropFilter: 'blur(48px) saturate(1.8)',
+          borderRadius: 28, overflow: 'hidden',
+          border: '1px solid rgba(255,255,255,0.1)',
+          boxShadow: '0 0 100px rgba(224,30,30,0.1), 0 40px 100px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.07)',
         }}
       >
         {/* ── LEFT: Image ── */}
