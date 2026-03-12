@@ -81,35 +81,21 @@ function LoadingCard({ index = 0 }) {
 
 // Single image card
 function ImageCard({ img, index, onExpand }) {
+  const [hovered, setHovered] = useState(false);
   const h = HEIGHTS[index % HEIGHTS.length];
   return (
     <div
-      style={{ borderRadius: 14, overflow: 'hidden', background: img.gradient, cursor: 'pointer', position: 'relative', height: h, transition: 'transform 0.2s', flexShrink: 0 }}
-      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.querySelector('.img-actions').style.opacity = '1'; }}
-      onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.querySelector('.img-actions').style.opacity = '0'; }}
+      style={{ borderRadius: 14, overflow: 'hidden', background: img.gradient, cursor: 'pointer', position: 'relative', height: h, transform: hovered ? 'translateY(-2px)' : 'none', transition: 'transform 0.2s' }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       onClick={() => onExpand(img)}
     >
-      {/* Hover overlay */}
-      <div
-        className="img-actions"
-        style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 50%)', opacity: 0, transition: 'opacity 0.2s', display: 'flex', alignItems: 'flex-end', padding: 10, gap: 6, pointerEvents: 'none' }}
-      >
-        {[
-          { icon: Heart, title: 'Save' },
-          { icon: Download, title: 'Download' },
-          { icon: RefreshCw, title: 'Variations' },
-          { icon: Maximize2, title: 'Upscale' },
-        ].map(({ icon: Icon, title }) => (
-          <button
-            key={title}
-            title={title}
-            style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#fff', transition: 'background 0.15s', pointerEvents: 'all' }}
-            onMouseEnter={e => e.currentTarget.style.background = 'rgba(224,30,30,0.6)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'rgba(0,0,0,0.5)'}
-            onClick={e => e.stopPropagation()}
-          >
+      {/* Hover overlay — pointer-events none so clicks pass through to card */}
+      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 50%)', opacity: hovered ? 1 : 0, transition: 'opacity 0.2s', display: 'flex', alignItems: 'flex-end', padding: 10, gap: 6, pointerEvents: 'none' }}>
+        {[Heart, Download, RefreshCw, Maximize2].map((Icon, i) => (
+          <div key={i} style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
             <Icon style={{ width: 13, height: 13 }} />
-          </button>
+          </div>
         ))}
       </div>
     </div>
