@@ -206,7 +206,7 @@ export default function VideoDetailModal({ video, videos = [], onClose, onNaviga
           </div>
 
           {/* Info panel */}
-          <div style={{ width:270, flexShrink:0, background:'#0C0C0C', borderLeft:'1px solid rgba(255,255,255,0.06)', overflowY:'auto' }}
+          <div style={{ width:300, flexShrink:0, background:'rgba(8,8,8,0.6)', backdropFilter:'blur(32px)', WebkitBackdropFilter:'blur(32px)', borderLeft:'1px solid rgba(255,255,255,0.08)', overflowY:'auto' }}
             className="hide-scrollbar">
             <div style={{ padding:16, display:'flex', flexDirection:'column', gap:14 }}>
 
