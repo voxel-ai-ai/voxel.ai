@@ -191,8 +191,8 @@ export default function VideoDetailModal({ video, videos = [], onClose, onNaviga
         {/* Body */}
         <div style={{ display:'flex', flex:1, overflow:'hidden', minHeight:0 }}>
           {/* Video player */}
-          <div style={{ flex:1, display:'flex', flexDirection:'column', background:'#000', minWidth:0 }}>
-            <div style={{ flex:1, minHeight:0 }}>
+          <div style={{ flex:1, display:'flex', flexDirection:'column', background:'#000', minWidth:0, alignItems:'center', justifyContent:'center' }}>
+            <div style={{ ...getRatioStyle(video.ratio), transition:'all 0.3s ease', position:'relative' }}>
               <VideoPlayer gradient={grad} durationSec={parseInt(video.duration) || 5} />
             </div>
 
