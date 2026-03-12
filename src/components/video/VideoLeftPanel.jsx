@@ -19,13 +19,14 @@ const RESOLUTION_OPTIONS = ['480p', '720p', '1080p', '4K'];
 const ASPECT_RATIO_OPTIONS = ['Auto', '16:9', '9:16', '1:1', '4:3', '21:9'];
 const S = { font: '"DM Sans", sans-serif' };
 
-export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isGenerating, count, onCountChange, model, onModelClick, duration, onDurationChange, resolution, onResolutionChange }) {
+export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isGenerating, count, onCountChange, model, onModelClick, duration, onDurationChange, resolution, onResolutionChange, aspectRatio, onAspectRatioChange }) {
   const [mode, setMode] = useState('frame');
   const [cameraMotion, setCameraMotion] = useState(null);
   const [showCameraDrop, setShowCameraDrop] = useState(false);
   const [audioOn, setAudioOn] = useState(false);
   const [showDurationDrop, setShowDurationDrop] = useState(false);
   const [showResDrop, setShowResDrop] = useState(false);
+  const [showRatioDrop, setShowRatioDrop] = useState(false);
   const [startFrame, setStartFrame] = useState(null);
   const [endFrame, setEndFrame] = useState(null);
 
