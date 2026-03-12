@@ -110,25 +110,16 @@ export default function LiquidBackground() {
       drawBlob(blobs[2]);
       ctx.restore();
 
-      // Liquid trail
+      // Fixed hot-spot at top-center
       ctx.save();
-      ctx.filter = 'blur(18px)';
-      ctx.globalCompositeOperation = 'screen';
-      drawTrail();
-      ctx.restore();
-
-      // Extra sharp hot-spot at cursor
-      ctx.save();
-      ctx.filter = 'blur(8px)';
-      ctx.globalAlpha = 1.0;
-      const hw = canvas.width;
-      const hh = canvas.height;
-      const hx = mouse.x * hw;
-      const hy = mouse.y * hh;
-      const hr = 0.05 * Math.min(hw, hh);
+      ctx.filter = 'blur(10px)';
+      ctx.globalAlpha = 0.9;
+      const hx = canvas.width * 0.5;
+      const hy = canvas.height * 0.14;
+      const hr = 0.06 * Math.min(canvas.width, canvas.height);
       const hg = ctx.createRadialGradient(hx, hy, 0, hx, hy, hr);
-      hg.addColorStop(0, 'rgba(255,80,80,0.85)');
-      hg.addColorStop(0.5, 'rgba(220,20,20,0.45)');
+      hg.addColorStop(0, 'rgba(255,80,80,0.95)');
+      hg.addColorStop(0.5, 'rgba(220,20,20,0.5)');
       hg.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = hg;
       ctx.beginPath();
