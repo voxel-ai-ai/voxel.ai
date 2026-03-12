@@ -16,12 +16,12 @@ export default function LiquidBackground() {
 
     // Blobs: first 3 follow mouse, rest ambient
     const blobs = [
-      { x: 0.5, y: 0.45, tx: 0.5, ty: 0.45, r: 0.42, color: 'rgba(180,0,0,0.72)',   speed: 0.09  },
-      { x: 0.5, y: 0.5,  tx: 0.5, ty: 0.5,  r: 0.26, color: 'rgba(230,20,20,0.65)', speed: 0.13  },
-      { x: 0.5, y: 0.42, tx: 0.5, ty: 0.42, r: 0.14, color: 'rgba(255,50,50,0.75)', speed: 0.18  },
+      { x: 0.5, y: 0.45, tx: 0.5, ty: 0.45, r: 0.42, color: 'rgba(220,0,0,0.90)',   speed: 0.09  },
+      { x: 0.5, y: 0.5,  tx: 0.5, ty: 0.5,  r: 0.26, color: 'rgba(255,40,40,0.82)', speed: 0.13  },
+      { x: 0.5, y: 0.42, tx: 0.5, ty: 0.42, r: 0.14, color: 'rgba(255,80,80,0.92)', speed: 0.18  },
       // ambient
-      { x: 0.25, y: 0.65, tx: 0.25, ty: 0.65, r: 0.20, color: 'rgba(100,0,0,0.35)', speed: 0.022, ambient: true },
-      { x: 0.75, y: 0.30, tx: 0.75, ty: 0.30, r: 0.18, color: 'rgba(130,5,5,0.30)', speed: 0.027, ambient: true },
+      { x: 0.25, y: 0.65, tx: 0.25, ty: 0.65, r: 0.20, color: 'rgba(160,0,0,0.55)', speed: 0.022, ambient: true },
+      { x: 0.75, y: 0.30, tx: 0.75, ty: 0.30, r: 0.18, color: 'rgba(180,10,10,0.50)', speed: 0.027, ambient: true },
     ];
 
     let mouse = { x: 0.5, y: 0.45 };
