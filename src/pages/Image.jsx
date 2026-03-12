@@ -93,7 +93,6 @@ function ImageCard({ img, index, onExpand }) {
       <div
         className="img-actions"
         style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 50%)', opacity: 0, transition: 'opacity 0.2s', display: 'flex', alignItems: 'flex-end', padding: 10, gap: 6 }}
-        onClick={e => e.stopPropagation()}
       >
         {[
           { icon: Heart, title: 'Save' },
@@ -104,6 +103,7 @@ function ImageCard({ img, index, onExpand }) {
           <button
             key={title}
             title={title}
+            onClick={e => e.stopPropagation()}
             style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#fff', transition: 'background 0.15s' }}
             onMouseEnter={e => e.currentTarget.style.background = 'rgba(224,30,30,0.6)'}
             onMouseLeave={e => e.currentTarget.style.background = 'rgba(0,0,0,0.5)'}
