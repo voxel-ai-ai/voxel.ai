@@ -286,7 +286,7 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
             {showResDrop && (
               <div style={{ position:'absolute', bottom:'calc(100% + 4px)', left:0, right:0, background:'#252525', border:'1px solid #383838', borderRadius:10, overflow:'hidden', zIndex:20 }}>
                 {RESOLUTION_OPTIONS.map(opt => (
-                  <div key={opt} className="vl-drop-opt" onClick={() => { setResolution(opt); setShowResDrop(false); }}
+                  <div key={opt} className="vl-drop-opt" onClick={() => { onResolutionChange && onResolutionChange(opt); setShowResDrop(false); }}
                     style={{ padding:'9px 12px', fontSize:12, fontFamily:S.font, color: resolution===opt ? '#fff':'rgba(255,255,255,0.6)', background: resolution===opt ? 'rgba(224,30,30,0.1)':'transparent', cursor:'pointer', transition:'background 0.15s' }}>
                     {opt}
                   </div>
@@ -312,7 +312,7 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
             {showDurationDrop && (
               <div style={{ position:'absolute', bottom:'calc(100% + 4px)', left:0, right:0, background:'#252525', border:'1px solid #383838', borderRadius:10, overflow:'hidden', zIndex:20 }}>
                 {DURATION_OPTIONS.map(opt => (
-                  <div key={opt} className="vl-drop-opt" onClick={() => { setDuration(opt); setShowDurationDrop(false); }}
+                  <div key={opt} className="vl-drop-opt" onClick={() => { onDurationChange && onDurationChange(opt); setShowDurationDrop(false); }}
                     style={{ padding:'9px 12px', fontSize:12, fontFamily:S.font, color: duration===opt ? '#fff':'rgba(255,255,255,0.6)', background: duration===opt ? 'rgba(224,30,30,0.1)':'transparent', cursor:'pointer', transition:'background 0.15s' }}>
                     {opt}
                   </div>
