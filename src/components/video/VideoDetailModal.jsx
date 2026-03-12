@@ -20,10 +20,11 @@ function VideoPlayer({ gradient, durationSec = 10 }) {
 
   useEffect(() => {
     if (playing) {
+      const step = 100 / ((durationSec * 1000) / 80);
       timerRef.current = setInterval(() => {
         setProgress(p => {
           if (p >= 100) { setPlaying(false); clearInterval(timerRef.current); return 0; }
-          return p + 0.4;
+          return p + step;
         });
       }, 80);
     } else clearInterval(timerRef.current);
