@@ -252,8 +252,8 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
           )}
         </div>
 
-        {/* Audio + Resolution + Duration — compact, model-box color */}
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:8 }}>
+        {/* Audio + Resolution + Duration + Ratio */}
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr', gap:8 }}>
 
           {/* Audio */}
           <div className="vl-small-box" style={{ display:'flex', alignItems:'center', gap:7, padding:'9px 10px', background:'#252525', border:'1px solid #383838', borderRadius:12, cursor:'pointer', transition:'all 0.18s' }}
