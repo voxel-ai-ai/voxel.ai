@@ -60,7 +60,7 @@ export default function Video() {
           video={selectedVideo}
           videos={videos}
           onClose={() => setSelectedVideo(null)}
-          onNavigate={(v) => setSelectedVideo(v)}
+          onNavigate={setSelectedVideo}
         />
       )}
     </div>
