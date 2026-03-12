@@ -244,7 +244,7 @@ export default function VideoDetailModal({ video, videos = [], onClose, onNaviga
               <div>
                 <span style={{ fontSize:10, fontWeight:700, color:'rgba(255,255,255,0.3)', fontFamily:font, textTransform:'uppercase', letterSpacing:'0.08em', display:'block', marginBottom:8 }}>Details</span>
                 <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:6 }}>
-                  {[{label:'Duration',value:'10s'},{label:'Model',value:'Kling 2.6'},{label:'Resolution',value:'1080p'},{label:'FPS',value:'24'}].map(({label,value})=>(
+                  {[{label:'Duration',value:'10s'},{label:'Model',value:video.model||'Kling 2.6'},{label:'Resolution',value:'1080p'},{label:'FPS',value:'24'}].map(({label,value})=>(
                     <div key={label} style={{ background:'rgba(255,255,255,0.03)', borderRadius:10, padding:'8px 10px', border:'1px solid rgba(255,255,255,0.06)' }}>
                       <p style={{ margin:0, fontSize:9, color:'rgba(255,255,255,0.28)', fontFamily:font, textTransform:'uppercase', letterSpacing:'0.06em' }}>{label}</p>
                       <p style={{ margin:'3px 0 0', fontSize:13, color:'#fff', fontFamily:font, fontWeight:600 }}>{value}</p>
