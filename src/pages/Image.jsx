@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ImagePromptBar from '@/components/image/ImagePromptBar';
-import ImageLightbox from '@/components/image/ImageLightbox';
 import TemplateModal from '@/components/common/TemplateModal';
-import { History, Globe, Heart, Download, RefreshCw, Maximize2, Sparkles } from 'lucide-react';
+import { History, Globe, Heart, Download, RefreshCw, Maximize2, Sparkles, X, Copy, Share2, ChevronLeft, ChevronRight, Wand2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 const MODEL_SUBTITLES = {
@@ -111,6 +110,163 @@ function ImageCard({ img, index, onExpand }) {
             <Icon style={{ width: 13, height: 13 }} />
           </button>
         ))}
+      </div>
+    </div>
+  );
+}
+
+// ── Full-screen image detail modal ──────────────────────────────────────────
+function ImageModal({ image, images, onClose, onNavigate }) {
+  const idx = images.findIndex(img => img.id === image.id);
+  const [copied, setCopied] = React.useState(false);
+  const [liked, setLiked] = React.useState(false);
+
+  React.useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowLeft' && idx > 0) onNavigate(images[idx - 1]);
+      if (e.key === 'ArrowRight' && idx < images.length - 1) onNavigate(images[idx + 1]);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [idx]);
+
+  const copyPrompt = () => {
+    navigator.clipboard.writeText(image.prompt || '');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const actionBtns = [
+    { icon: Heart, label: liked ? 'Liked' : 'Like', active: liked, onClick: () => setLiked(v => !v) },
+    { icon: Download, label: 'Download', onClick: () => {} },
+    { icon: RefreshCw, label: 'Variations', onClick: () => {} },
+    { icon: Maximize2, label: 'Upscale', onClick: () => {} },
+    { icon: Share2, label: 'Share', onClick: () => {} },
+  ];
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, zIndex: 400, background: 'rgba(0,0,0,0.92)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'imgModalBg 0.2s ease' }}
+      onClick={onClose}>
+      <style>{`@keyframes imgModalBg{from{opacity:0}to{opacity:1}} @keyframes imgModalSlide{from{opacity:0;transform:scale(0.96) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}`}</style>
+
+      {/* Nav arrows */}
+      {idx > 0 && (
+        <button onClick={e => { e.stopPropagation(); onNavigate(images[idx-1]); }}
+          style={{ position:'absolute', left:16, top:'50%', transform:'translateY(-50%)', zIndex:10, width:44, height:44, borderRadius:'50%', background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.15)', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', color:'#fff' }}>
+          <ChevronLeft style={{ width:20, height:20 }} />
+        </button>
+      )}
+      {idx < images.length-1 && (
+        <button onClick={e => { e.stopPropagation(); onNavigate(images[idx+1]); }}
+          style={{ position:'absolute', right:16, top:'50%', transform:'translateY(-50%)', zIndex:10, width:44, height:44, borderRadius:'50%', background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.15)', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', color:'#fff' }}>
+          <ChevronRight style={{ width:20, height:20 }} />
+        </button>
+      )}
+
+      {/* Panel */}
+      <div onClick={e => e.stopPropagation()}
+        style={{ display:'flex', width:'min(1100px,95vw)', height:'min(700px,92vh)', borderRadius:20, overflow:'hidden', boxShadow:'0 40px 100px rgba(0,0,0,0.9)', border:'1px solid rgba(255,255,255,0.07)', animation:'imgModalSlide 0.25s ease' }}>
+
+        {/* Image */}
+        <div style={{ flex:1, background: image.gradient || '#161616', display:'flex', alignItems:'center', justifyContent:'center', position:'relative', minWidth:0 }}>
+          {image.url
+            ? <img src={image.url} alt="" style={{ width:'100%', height:'100%', objectFit:'contain' }} />
+            : <div style={{ width:'100%', height:'100%', background:image.gradient }} />
+          }
+          {/* Image counter badge */}
+          {images.length > 1 && (
+            <div style={{ position:'absolute', bottom:14, left:'50%', transform:'translateX(-50%)', background:'rgba(0,0,0,0.6)', backdropFilter:'blur(8px)', border:'1px solid rgba(255,255,255,0.12)', borderRadius:999, padding:'4px 14px', fontSize:12, color:'rgba(255,255,255,0.6)', fontFamily:font }}>
+              {idx+1} / {images.length}
+            </div>
+          )}
+        </div>
+
+        {/* Info sidebar */}
+        <div style={{ width:300, flexShrink:0, background:'#111', borderLeft:'1px solid rgba(255,255,255,0.07)', display:'flex', flexDirection:'column', overflowY:'auto' }}>
+          {/* Header */}
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'16px 18px', borderBottom:'1px solid rgba(255,255,255,0.06)' }}>
+            <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+              <div style={{ width:30, height:30, borderRadius:'50%', background:'linear-gradient(135deg,#E01E1E,#8B0000)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:12, fontWeight:700, color:'#fff', fontFamily:font }}>V</div>
+              <div>
+                <p style={{ margin:0, fontSize:13, color:'#fff', fontWeight:600, fontFamily:font }}>You</p>
+                <p style={{ margin:0, fontSize:11, color:'#555', fontFamily:font }}>Just now</p>
+              </div>
+            </div>
+            <button onClick={onClose} style={{ width:30, height:30, borderRadius:8, background:'rgba(255,255,255,0.05)', border:'1px solid rgba(255,255,255,0.08)', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', color:'rgba(255,255,255,0.5)' }}>
+              <X style={{ width:14, height:14 }} />
+            </button>
+          </div>
+
+          {/* Action row */}
+          <div style={{ display:'flex', gap:6, padding:'14px 18px', borderBottom:'1px solid rgba(255,255,255,0.06)' }}>
+            {actionBtns.map(({ icon: Icon, label, active, onClick }) => (
+              <button key={label} onClick={onClick}
+                style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:5, padding:'9px 4px', borderRadius:10, background: active ? 'rgba(224,30,30,0.1)' : 'rgba(255,255,255,0.04)', border:`1px solid ${active ? 'rgba(224,30,30,0.35)' : 'rgba(255,255,255,0.07)'}`, cursor:'pointer', transition:'all 0.15s' }}
+                onMouseEnter={e => { if(!active) e.currentTarget.style.background='rgba(255,255,255,0.09)'; }}
+                onMouseLeave={e => { if(!active) e.currentTarget.style.background='rgba(255,255,255,0.04)'; }}
+              >
+                <Icon style={{ width:14, height:14, color: active ? '#FF4444' : 'rgba(255,255,255,0.5)', fill: active && label==='Liked' ? '#FF4444' : 'none' }} />
+                <span style={{ fontSize:9, color: active ? '#FF4444' : 'rgba(255,255,255,0.35)', fontFamily:font }}>{label}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Prompt */}
+          <div style={{ padding:'14px 18px', borderBottom:'1px solid rgba(255,255,255,0.06)' }}>
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:8 }}>
+              <span style={{ fontSize:10, fontWeight:700, color:'rgba(255,255,255,0.3)', fontFamily:font, textTransform:'uppercase', letterSpacing:'0.08em' }}>Prompt</span>
+              <button onClick={copyPrompt} style={{ display:'flex', alignItems:'center', gap:4, fontSize:11, color: copied ? '#4CAF50' : 'rgba(255,255,255,0.4)', fontFamily:font, background:'none', border:'none', cursor:'pointer' }}>
+                <Copy style={{ width:11, height:11 }} />{copied ? 'Copied!' : 'Copy'}
+              </button>
+            </div>
+            <p style={{ margin:0, fontSize:13, color:'rgba(255,255,255,0.75)', fontFamily:font, lineHeight:1.6, background:'rgba(255,255,255,0.03)', borderRadius:10, padding:'10px 12px', border:'1px solid rgba(255,255,255,0.06)' }}>
+              {image.prompt || 'No prompt provided'}
+            </p>
+          </div>
+
+          {/* Meta */}
+          <div style={{ padding:'14px 18px', borderBottom:'1px solid rgba(255,255,255,0.06)' }}>
+            <span style={{ fontSize:10, fontWeight:700, color:'rgba(255,255,255,0.3)', fontFamily:font, textTransform:'uppercase', letterSpacing:'0.08em', display:'block', marginBottom:10 }}>Details</span>
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:8 }}>
+              {[
+                { label:'Model', value:'Nano Banana Pro' },
+                { label:'Aspect', value:'16:9' },
+                { label:'Quality', value:'2K' },
+                { label:'Style', value:'Default' },
+              ].map(({ label, value }) => (
+                <div key={label} style={{ background:'rgba(255,255,255,0.03)', borderRadius:10, padding:'8px 10px', border:'1px solid rgba(255,255,255,0.06)' }}>
+                  <p style={{ margin:0, fontSize:9, color:'rgba(255,255,255,0.28)', fontFamily:font, textTransform:'uppercase', letterSpacing:'0.07em' }}>{label}</p>
+                  <p style={{ margin:'3px 0 0', fontSize:13, color:'#fff', fontFamily:font, fontWeight:600 }}>{value}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Quick actions */}
+          <div style={{ padding:'14px 18px' }}>
+            <span style={{ fontSize:10, fontWeight:700, color:'rgba(255,255,255,0.3)', fontFamily:font, textTransform:'uppercase', letterSpacing:'0.08em', display:'block', marginBottom:10 }}>Actions</span>
+            {[
+              { icon: Wand2, label:'Generate Variations', desc:'Create similar images' },
+              { icon: Maximize2, label:'Upscale to 4K', desc:'Enhance resolution' },
+              { icon: RefreshCw, label:'Regenerate', desc:'Same prompt, new result' },
+            ].map(({ icon: Icon, label, desc }) => (
+              <button key={label}
+                style={{ display:'flex', alignItems:'center', gap:10, padding:'10px 12px', borderRadius:12, background:'rgba(255,255,255,0.03)', border:'1px solid rgba(255,255,255,0.06)', cursor:'pointer', textAlign:'left', width:'100%', marginBottom:8, transition:'all 0.15s' }}
+                onMouseEnter={e => { e.currentTarget.style.background='rgba(255,255,255,0.07)'; e.currentTarget.style.borderColor='rgba(255,255,255,0.12)'; }}
+                onMouseLeave={e => { e.currentTarget.style.background='rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor='rgba(255,255,255,0.06)'; }}
+              >
+                <div style={{ width:30, height:30, borderRadius:8, background:'rgba(224,30,30,0.12)', border:'1px solid rgba(224,30,30,0.2)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                  <Icon style={{ width:13, height:13, color:'#FF4444' }} />
+                </div>
+                <div>
+                  <p style={{ margin:0, fontSize:12, color:'#fff', fontFamily:font, fontWeight:500 }}>{label}</p>
+                  <p style={{ margin:0, fontSize:10, color:'rgba(255,255,255,0.3)', fontFamily:font }}>{desc}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -240,23 +396,14 @@ export default function Image() {
         onCountChange={setImageCount}
       />
 
-      {/* Lightbox */}
+      {/* Lightbox Modal */}
       {expandedImage && (
-        <div
-          style={{ position: 'fixed', inset: 0, zIndex: 300, background: 'rgba(0,0,0,0.95)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-          onClick={() => setExpandedImage(null)}
-        >
-          <button
-            onClick={() => setExpandedImage(null)}
-            style={{ position: 'absolute', top: 20, right: 20, width: 36, height: 36, borderRadius: '50%', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#fff' }}
-          >
-            <X style={{ width: 16, height: 16 }} />
-          </button>
-          <div
-            style={{ width: 'min(600px, 90vw)', aspectRatio: '4/5', borderRadius: 20, background: expandedImage.gradient, boxShadow: '0 32px 80px rgba(0,0,0,0.8)' }}
-            onClick={e => e.stopPropagation()}
-          />
-        </div>
+        <ImageModal
+          image={expandedImage}
+          images={images}
+          onClose={() => setExpandedImage(null)}
+          onNavigate={setExpandedImage}
+        />
       )}
 
       {selectedTemplate && (
