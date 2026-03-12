@@ -147,7 +147,7 @@ export default function Image() {
       `}</style>
 
       {/* Tabs row */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px', borderBottom: '1px solid #1A1A1A', background: '#0A0A0A', position: 'sticky', top: 0, zIndex: 10 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px', borderBottom: '1px solid #1A1A1A', background: '#141414', position: 'sticky', top: 0, zIndex: 10 }}>
         <button
           onClick={() => setActiveTab('history')}
           style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 999, fontSize: 13, color: activeTab === 'history' ? '#fff' : '#666', border: `1px solid ${activeTab === 'history' ? 'rgba(255,255,255,0.2)' : '#2A2A2A'}`, background: activeTab === 'history' ? 'rgba(255,255,255,0.08)' : 'transparent', cursor: 'pointer', fontFamily: font, transition: 'all 0.15s', fontWeight: activeTab === 'history' ? 600 : 400 }}
