@@ -164,7 +164,7 @@ export default function VideoDetailModal({ video, videos = [], onClose, onNaviga
       )}
 
       <div onClick={e=>e.stopPropagation()}
-        style={{ display:'flex', flexDirection:'column', width:'min(1000px,96vw)', maxHeight:'94vh', background:'#0E0E0E', borderRadius:20, overflow:'hidden', border:'1px solid rgba(255,255,255,0.07)', boxShadow:'0 40px 100px rgba(0,0,0,0.95)', animation:'vdPanelIn 0.25s ease' }}>
+        style={{ display:'flex', flexDirection:'column', width:'min(1300px,98vw)', maxHeight:'96vh', background:'rgba(10,10,10,0.55)', backdropFilter:'blur(48px) saturate(1.8)', WebkitBackdropFilter:'blur(48px) saturate(1.8)', borderRadius:28, overflow:'hidden', border:'1px solid rgba(255,255,255,0.1)', boxShadow:'0 0 100px rgba(224,30,30,0.1), 0 40px 100px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.07)', animation:'vdPanelIn 0.25s ease' }}>
 
         {/* Top bar */}
         <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'12px 16px', borderBottom:'1px solid rgba(255,255,255,0.06)', flexShrink:0 }}>
