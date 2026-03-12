@@ -70,20 +70,18 @@ function LoadingVideoCard({ durationMs = 3000 }) {
   );
 }
 
-const RATIO_OPTIONS = ['Auto', '16:9', '9:16', '1:1', '4:3', '21:9'];
-
-const RATIO_STYLES = {
-  'Auto':  { width: '100%', aspectRatio: '16/9', maxWidth: 900 },
-  '16:9':  { width: '100%', aspectRatio: '16/9', maxWidth: 900 },
-  '9:16':  { width: 'auto', height: 'min(70vh, 600px)', aspectRatio: '9/16', maxWidth: 340 },
-  '1:1':   { width: 'min(60vh, 500px)', aspectRatio: '1/1', maxWidth: 500 },
-  '4:3':   { width: '100%', aspectRatio: '4/3', maxWidth: 700 },
-  '21:9':  { width: '100%', aspectRatio: '21/9', maxWidth: 1000 },
+const RATIO_MAP = {
+  'Auto': '16/9',
+  '16:9': '16/9',
+  '9:16': '9/16',
+  '1:1':  '1/1',
+  '4:3':  '4/3',
+  '21:9': '21/9',
 };
 
-export default function VideoRightArea({ videos = [], isGenerating = false, durationMs = 3000, onVideoClick, duration = '5s', ratio = '16:9', onRatioChange }) {
+export default function VideoRightArea({ videos = [], isGenerating = false, durationMs = 3000, aspectRatio = 'Auto', onVideoClick }) {
+  const ratio = RATIO_MAP[aspectRatio] || '16/9';
   const [activeTab, setActiveTab] = useState('creations');
-  const [showRatioDrop, setShowRatioDrop] = useState(false);
 
   return (
     <div style={{ marginLeft:450, height:'calc(100vh - 60px)', overflowY:'auto', background:'#0D0D0D', borderLeft:'1px solid #1E1E1E', display:'flex', flexDirection:'column' }}>
@@ -111,28 +109,6 @@ export default function VideoRightArea({ videos = [], isGenerating = false, dura
               onMouseLeave={e => e.currentTarget.style.color='rgba(255,255,255,0.3)'}
             ><Icon className="w-4 h-4" /></button>
           ))}
-          {/* Ratio chip */}
-          <div style={{ position:'relative' }}>
-            <button
-              onClick={() => setShowRatioDrop(v => !v)}
-              style={{ display:'flex', alignItems:'center', gap:5, padding:'5px 10px', background:'rgba(255,255,255,0.07)', border:'1px solid rgba(255,255,255,0.15)', borderRadius:999, fontSize:12, color:'#fff', fontFamily:font, cursor:'pointer', fontWeight:500 }}
-            >
-              <span style={{ fontSize:11 }}>⊕</span> {ratio === 'Auto' ? 'Auto' : ratio}
-              <ChevronDown className="w-3 h-3" style={{ transform: showRatioDrop ? 'rotate(180deg)' : 'none', transition:'transform 0.2s' }} />
-            </button>
-            {showRatioDrop && (
-              <div style={{ position:'absolute', top:'calc(100% + 6px)', right:0, background:'#1A1A1A', border:'1px solid #333', borderRadius:10, overflow:'hidden', zIndex:30, minWidth:100 }}>
-                {RATIO_OPTIONS.map(opt => (
-                  <div key={opt}
-                    onClick={() => { onRatioChange && onRatioChange(opt === 'Auto' ? '16:9' : opt); setShowRatioDrop(false); }}
-                    style={{ padding:'8px 14px', fontSize:12, fontFamily:font, cursor:'pointer', color: (opt === 'Auto' ? '16:9' : opt) === ratio ? '#fff' : 'rgba(255,255,255,0.55)', background: (opt === 'Auto' ? '16:9' : opt) === ratio ? 'rgba(224,30,30,0.12)' : 'transparent', transition:'background 0.15s' }}
-                    onMouseEnter={e => { if ((opt === 'Auto' ? '16:9' : opt) !== ratio) e.currentTarget.style.background='rgba(255,255,255,0.06)'; }}
-                    onMouseLeave={e => { if ((opt === 'Auto' ? '16:9' : opt) !== ratio) e.currentTarget.style.background='transparent'; }}
-                  >{opt}</div>
-                ))}
-              </div>
-            )}
-          </div>
           <button style={{ padding:'5px 12px', background:'rgba(255,255,255,0.1)', border:'1px solid rgba(255,255,255,0.15)', borderRadius:999, fontSize:12, color:'#fff', fontWeight:600, fontFamily:font, cursor:'pointer' }}>All</button>
           {[Star, Filter, Grid, Search].map((Icon, i) => (
             <button key={i} style={{ width:30, height:30, background:'transparent', border:'none', cursor:'pointer', color:'rgba(255,255,255,0.3)', display:'flex', alignItems:'center', justifyContent:'center', borderRadius:6 }}
@@ -145,37 +121,19 @@ export default function VideoRightArea({ videos = [], isGenerating = false, dura
 
       {/* Creations area */}
       {videos.length === 0 && !isGenerating ? (
-        <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:20, padding:40 }}>
-          <div style={{
-            ...RATIO_STYLES[ratio] || RATIO_STYLES['16:9'],
-            margin:'0 auto',
-            maxHeight:'calc(100vh - 300px)',
-            background:'#111',
-            borderRadius:10,
-            overflow:'hidden',
-            transition:'all 0.3s ease',
-            display:'flex',
-            alignItems:'center',
-            justifyContent:'center',
-            flexDirection:'column',
-            gap:12,
-            border:'1px solid #1E1E1E',
-          }}>
-            <svg width="60" height="60" viewBox="0 0 72 72" fill="none">
-              <rect x="6" y="18" width="60" height="42" rx="5" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.09)" strokeWidth="1.5"/>
-              <rect x="6" y="18" width="60" height="10" rx="3" fill="rgba(255,255,255,0.08)"/>
-              <line x1="14" y1="18" x2="10" y2="10" stroke="rgba(255,255,255,0.12)" strokeWidth="2" strokeLinecap="round"/>
-              <line x1="26" y1="18" x2="22" y2="10" stroke="rgba(255,255,255,0.12)" strokeWidth="2" strokeLinecap="round"/>
-              <line x1="38" y1="18" x2="34" y2="10" stroke="rgba(255,255,255,0.12)" strokeWidth="2" strokeLinecap="round"/>
-              <line x1="50" y1="18" x2="46" y2="10" stroke="rgba(255,255,255,0.12)" strokeWidth="2" strokeLinecap="round"/>
-              <line x1="62" y1="18" x2="58" y2="10" stroke="rgba(255,255,255,0.12)" strokeWidth="2" strokeLinecap="round"/>
-              <circle cx="36" cy="43" r="10" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.1)" strokeWidth="1.5"/>
-              <polygon points="33,38 33,48 43,43" fill="rgba(255,255,255,0.15)"/>
-            </svg>
-            <p style={{ fontSize:12, color:'rgba(255,255,255,0.18)', fontFamily:font, margin:0, textAlign:'center' }}>
-              {ratio} · 0:00 / 0:{String(parseInt(duration)||5).padStart(2,'0')}
-            </p>
-          </div>
+        <div style={{ flex:1, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:12, minHeight:500, background:'transparent' }}>
+          <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
+            <rect x="6" y="18" width="60" height="42" rx="5" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.09)" strokeWidth="1.5"/>
+            <rect x="6" y="18" width="60" height="10" rx="3" fill="rgba(255,255,255,0.08)"/>
+            <line x1="14" y1="18" x2="10" y2="10" stroke="rgba(255,255,255,0.12)" strokeWidth="2" strokeLinecap="round"/>
+            <line x1="26" y1="18" x2="22" y2="10" stroke="rgba(255,255,255,0.12)" strokeWidth="2" strokeLinecap="round"/>
+            <line x1="38" y1="18" x2="34" y2="10" stroke="rgba(255,255,255,0.12)" strokeWidth="2" strokeLinecap="round"/>
+            <line x1="50" y1="18" x2="46" y2="10" stroke="rgba(255,255,255,0.12)" strokeWidth="2" strokeLinecap="round"/>
+            <line x1="62" y1="18" x2="58" y2="10" stroke="rgba(255,255,255,0.12)" strokeWidth="2" strokeLinecap="round"/>
+            <circle cx="36" cy="43" r="10" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.1)" strokeWidth="1.5"/>
+            <polygon points="33,38 33,48 43,43" fill="rgba(255,255,255,0.15)"/>
+          </svg>
+          <p style={{ fontSize:14, color:'rgba(255,255,255,0.25)', fontFamily:font }}>No items to display</p>
         </div>
       ) : (
         <div style={{ padding:20, display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(220px,1fr))', gap:14 }}>
@@ -190,7 +148,6 @@ export default function VideoRightArea({ videos = [], isGenerating = false, dura
               'linear-gradient(135deg,#1a1a0a 0%,#3a1a00 50%,#0a0a0a 100%)',
             ];
             const grad = v.gradient || grads[i % grads.length];
-            const durSec = parseInt(v.duration) || 5;
             return (
               <div key={v.id || i}
                 onClick={() => onVideoClick && onVideoClick({ ...v, gradient: grad })}
@@ -204,7 +161,8 @@ export default function VideoRightArea({ videos = [], isGenerating = false, dura
                       <span style={{ color:'#fff', fontSize:18, marginLeft:3 }}>▶</span>
                     </div>
                   </div>
-                  <span style={{ position:'absolute', bottom:8, right:8, fontSize:10, color:'rgba(255,255,255,0.7)', background:'rgba(0,0,0,0.55)', padding:'2px 7px', borderRadius:6, fontFamily:font }}>0:{String(durSec).padStart(2,'0')}</span>
+                  {/* Duration badge */}
+                  <span style={{ position:'absolute', bottom:8, right:8, fontSize:10, color:'rgba(255,255,255,0.7)', background:'rgba(0,0,0,0.55)', padding:'2px 7px', borderRadius:6, fontFamily:font }}>0:{String(parseInt(v.duration)||5).padStart(2,'0')}</span>
                 </div>
                 <div style={{ padding:'10px 12px' }}>
                   <p style={{ fontSize:12, color:'rgba(255,255,255,0.5)', fontFamily:font, margin:0, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{v.prompt}</p>
