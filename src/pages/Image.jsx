@@ -103,9 +103,10 @@ function ImageCard({ img, index, onExpand }) {
           <button
             key={title}
             title={title}
-            style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#fff', transition: 'background 0.15s' }}
+            style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#fff', transition: 'background 0.15s', pointerEvents: 'all' }}
             onMouseEnter={e => e.currentTarget.style.background = 'rgba(224,30,30,0.6)'}
             onMouseLeave={e => e.currentTarget.style.background = 'rgba(0,0,0,0.5)'}
+            onClick={e => e.stopPropagation()}
           >
             <Icon style={{ width: 13, height: 13 }} />
           </button>
