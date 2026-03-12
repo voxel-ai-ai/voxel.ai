@@ -85,25 +85,11 @@ export default function LiquidBackground() {
       frame++;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+      // blobs stay fixed at top-center — gentle breathing only
       if (!prefersReducedMotion) {
-        // Update blob targets
-        blobs[0].tx = mouse.x;
-        blobs[0].ty = mouse.y;
-        blobs[1].tx = mouse.x + Math.sin(frame * 0.012) * 0.05;
-        blobs[1].ty = mouse.y + Math.cos(frame * 0.010) * 0.04;
-        blobs[2].tx = mouse.x + Math.cos(frame * 0.018) * 0.03;
-        blobs[2].ty = mouse.y + Math.sin(frame * 0.015) * 0.03;
-
-        blobs[3].tx = 0.25 + Math.sin(frame * 0.007) * 0.14;
-        blobs[3].ty = 0.65 + Math.cos(frame * 0.005) * 0.1;
-        blobs[4].tx = 0.75 + Math.cos(frame * 0.009) * 0.12;
-        blobs[4].ty = 0.30 + Math.sin(frame * 0.006) * 0.1;
-
-        // Shift trail
-        const mx = mouse.x * canvas.width;
-        const my = mouse.y * canvas.height;
-        trail.unshift({ x: mx, y: my });
-        trail.pop();
+        blobs[0].ty = 0.18 + Math.sin(frame * 0.008) * 0.015;
+        blobs[1].ty = 0.16 + Math.cos(frame * 0.010) * 0.012;
+        blobs[2].ty = 0.14 + Math.sin(frame * 0.013) * 0.008;
       }
 
       blobs.forEach(b => {
