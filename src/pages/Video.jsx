@@ -27,7 +27,7 @@ export default function Video() {
     setIsGenerating(true);
     setTimeout(() => {
       setIsGenerating(false);
-      setVideos(prev => [...prev, { id: Date.now(), prompt, model: model.name, duration, resolution }]);
+      setVideos(prev => [...prev, { id: Date.now(), prompt, model: model.name, duration, resolution, ratio }]);
       toast.success('Video generated!');
     }, 3000);
   };
@@ -54,9 +54,6 @@ export default function Video() {
         durationMs={3000}
         onRecreate={(t) => setPrompt(t.prompt)}
         onVideoClick={(v) => setSelectedVideo(v)}
-        duration={duration}
-        ratio={ratio}
-        onRatioChange={setRatio}
       />
       {showModelModal && (
         <VideoModelModal
