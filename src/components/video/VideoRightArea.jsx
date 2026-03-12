@@ -138,7 +138,7 @@ export default function VideoRightArea({ videos = [], isGenerating = false, dura
       ) : (
         <div style={{ padding:20, display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(220px,1fr))', gap:14 }}>
           {/* Loading card — shown first while generating */}
-          {isGenerating && <LoadingVideoCard durationMs={durationMs} />}
+          {isGenerating && <LoadingVideoCard durationMs={durationMs} ratio={ratio} />}
           {/* Completed videos */}
           {videos.map((v, i) => {
             const grads = [
