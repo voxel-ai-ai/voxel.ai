@@ -47,6 +47,8 @@ export default function Video() {
         onDurationChange={setDuration}
         resolution={resolution}
         onResolutionChange={setResolution}
+        ratio={ratio}
+        onRatioChange={setRatio}
       />
       <VideoRightArea
         videos={videos}
