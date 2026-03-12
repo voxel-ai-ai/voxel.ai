@@ -16,17 +16,16 @@ const CAMERA_MOTIONS = [
 
 const DURATION_OPTIONS = ['5s', '10s', '15s'];
 const RESOLUTION_OPTIONS = ['480p', '720p', '1080p', '4K'];
-const RATIO_OPTIONS = ['16:9', '9:16', '1:1', '4:3', '21:9'];
+const ASPECT_RATIO_OPTIONS = ['Auto', '16:9', '9:16', '1:1', '4:3', '21:9'];
 const S = { font: '"DM Sans", sans-serif' };
 
-export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isGenerating, count, onCountChange, model, onModelClick, duration, onDurationChange, resolution, onResolutionChange, ratio, onRatioChange }) {
+export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isGenerating, count, onCountChange, model, onModelClick, duration, onDurationChange, resolution, onResolutionChange }) {
   const [mode, setMode] = useState('frame');
   const [cameraMotion, setCameraMotion] = useState(null);
   const [showCameraDrop, setShowCameraDrop] = useState(false);
   const [audioOn, setAudioOn] = useState(false);
   const [showDurationDrop, setShowDurationDrop] = useState(false);
   const [showResDrop, setShowResDrop] = useState(false);
-  const [showRatioDrop, setShowRatioDrop] = useState(false);
   const [startFrame, setStartFrame] = useState(null);
   const [endFrame, setEndFrame] = useState(null);
 
@@ -252,8 +251,8 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
           )}
         </div>
 
-        {/* Audio + Resolution + Duration + Ratio */}
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr 1fr', gap:8 }}>
+        {/* Audio + Resolution + Duration — compact, model-box color */}
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:8 }}>
 
           {/* Audio */}
           <div className="vl-small-box" style={{ display:'flex', alignItems:'center', gap:7, padding:'9px 10px', background:'#252525', border:'1px solid #383838', borderRadius:12, cursor:'pointer', transition:'all 0.18s' }}
@@ -274,7 +273,7 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
           {/* Resolution */}
           <div style={{ position:'relative' }}>
             <div className="vl-small-box" style={{ display:'flex', alignItems:'center', gap:7, padding:'9px 10px', background:'#252525', border:'1px solid #383838', borderRadius:12, cursor:'pointer', transition:'all 0.18s' }}
-              onClick={() => { setShowResDrop(v => !v); setShowDurationDrop(false); setShowRatioDrop(false); }}
+              onClick={() => { setShowResDrop(v => !v); setShowDurationDrop(false); }}
               onMouseEnter={e => { e.currentTarget.style.background='#2E2E2E'; e.currentTarget.style.borderColor='rgba(224,30,30,0.4)'; }}
               onMouseLeave={e => { e.currentTarget.style.background='#252525'; e.currentTarget.style.borderColor='#383838'; }}
             >
@@ -300,7 +299,7 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
           {/* Duration */}
           <div style={{ position:'relative' }}>
             <div className="vl-small-box" style={{ display:'flex', alignItems:'center', gap:7, padding:'9px 10px', background:'#252525', border:'1px solid #383838', borderRadius:12, cursor:'pointer', transition:'all 0.18s' }}
-              onClick={() => { setShowDurationDrop(v => !v); setShowResDrop(false); setShowRatioDrop(false); }}
+              onClick={() => { setShowDurationDrop(v => !v); setShowResDrop(false); }}
               onMouseEnter={e => { e.currentTarget.style.background='#2E2E2E'; e.currentTarget.style.borderColor='rgba(224,30,30,0.4)'; }}
               onMouseLeave={e => { e.currentTarget.style.background='#252525'; e.currentTarget.style.borderColor='#383838'; }}
             >
@@ -316,32 +315,6 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
                 {DURATION_OPTIONS.map(opt => (
                   <div key={opt} className="vl-drop-opt" onClick={() => { onDurationChange && onDurationChange(opt); setShowDurationDrop(false); }}
                     style={{ padding:'9px 12px', fontSize:12, fontFamily:S.font, color: duration===opt ? '#fff':'rgba(255,255,255,0.6)', background: duration===opt ? 'rgba(224,30,30,0.1)':'transparent', cursor:'pointer', transition:'background 0.15s' }}>
-                    {opt}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Ratio */}
-          <div style={{ position:'relative' }}>
-            <div className="vl-small-box" style={{ display:'flex', alignItems:'center', gap:7, padding:'9px 10px', background:'#252525', border:'1px solid #383838', borderRadius:12, cursor:'pointer', transition:'all 0.18s' }}
-              onClick={() => { setShowRatioDrop(v => !v); setShowResDrop(false); setShowDurationDrop(false); }}
-              onMouseEnter={e => { e.currentTarget.style.background='#2E2E2E'; e.currentTarget.style.borderColor='rgba(224,30,30,0.4)'; }}
-              onMouseLeave={e => { e.currentTarget.style.background='#252525'; e.currentTarget.style.borderColor='#383838'; }}
-            >
-              <span style={{ fontSize:13 }}>⊡</span>
-              <div style={{ flex:1, minWidth:0 }}>
-                <div style={{ fontSize:10, color:'rgba(255,255,255,0.4)', fontFamily:S.font, lineHeight:1.2 }}>Ratio</div>
-                <div style={{ fontSize:12, fontWeight:600, color:'#fff', fontFamily:S.font }}>{ratio || '16:9'}</div>
-              </div>
-              <ChevronDown className="w-3 h-3" style={{ color:'rgba(255,255,255,0.3)', flexShrink:0, transform: showRatioDrop ? 'rotate(180deg)' : 'none', transition:'transform 0.2s' }} />
-            </div>
-            {showRatioDrop && (
-              <div style={{ position:'absolute', bottom:'calc(100% + 4px)', left:0, right:0, background:'#252525', border:'1px solid #383838', borderRadius:10, overflow:'hidden', zIndex:20 }}>
-                {RATIO_OPTIONS.map(opt => (
-                  <div key={opt} className="vl-drop-opt" onClick={() => { onRatioChange && onRatioChange(opt); setShowRatioDrop(false); }}
-                    style={{ padding:'9px 12px', fontSize:12, fontFamily:S.font, color: (ratio||'16:9')===opt ? '#fff':'rgba(255,255,255,0.6)', background: (ratio||'16:9')===opt ? 'rgba(224,30,30,0.1)':'transparent', cursor:'pointer', transition:'background 0.15s' }}>
                     {opt}
                   </div>
                 ))}
