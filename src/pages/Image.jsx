@@ -222,7 +222,7 @@ export default function Image() {
             {/* Generated images */}
             {images.map((img, i) => (
               <div key={img.id} style={{ breakInside: 'avoid', marginBottom: 10, animation: 'imgFadeIn 0.4s ease forwards' }}>
-                <ImageCard img={img} index={i} onExpand={setExpandedImage} />
+                <ImageCard img={img} index={i} onExpand={setDetailImage} />
               </div>
             ))}
           </div>
