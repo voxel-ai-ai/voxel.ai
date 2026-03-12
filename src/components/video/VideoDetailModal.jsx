@@ -10,13 +10,20 @@ const GRADS = [
 ];
 
 // ── Cinematic video player ────────────────────────────────────────────────────
-function VideoPlayer({ gradient, durationSec = 10 }) {
+function VideoPlayer({ gradient, durationSec = 5 }) {
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showControls, setShowControls] = useState(false);
   const timerRef = useRef(null);
   const hideRef = useRef(null);
+
+  // Reset player when video changes (different duration)
+  useEffect(() => {
+    setPlaying(false);
+    setProgress(0);
+    clearInterval(timerRef.current);
+  }, [durationSec]);
 
   useEffect(() => {
     if (playing) {
@@ -29,7 +36,7 @@ function VideoPlayer({ gradient, durationSec = 10 }) {
       }, 80);
     } else clearInterval(timerRef.current);
     return () => clearInterval(timerRef.current);
-  }, [playing]);
+  }, [playing, durationSec]);
 
   const showCtrl = () => {
     setShowControls(true);
