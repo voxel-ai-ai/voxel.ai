@@ -469,7 +469,7 @@ export default function ImagePromptBar({
         left: '50%',
         transform: 'translateX(-50%)',
         width: 'min(880px, 92vw)',
-        background: 'rgba(18,18,22,0.72)',
+        background: 'rgba(18,18,22,0.45)',
         backdropFilter: 'blur(36px) saturate(1.8)',
         WebkitBackdropFilter: 'blur(36px) saturate(1.8)',
         border: '1px solid rgba(255,255,255,0.1)',
