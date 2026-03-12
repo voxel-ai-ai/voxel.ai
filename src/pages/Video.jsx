@@ -54,6 +54,9 @@ export default function Video() {
         durationMs={3000}
         onRecreate={(t) => setPrompt(t.prompt)}
         onVideoClick={(v) => setSelectedVideo(v)}
+        duration={duration}
+        ratio={ratio}
+        onRatioChange={setRatio}
       />
       {showModelModal && (
         <VideoModelModal
