@@ -45,6 +45,7 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
 
   const handleCameraSelect = (m) => {
     const next = cameraMotion === m.id ? null : m.id;
+    setShowResDrop(false); setShowDurationDrop(false); setShowRatioDrop(false);
     setCameraMotion(next);
     const stripped = (prompt || '').replace(/\nCamera: [^\n]+/g, '').replace(/^Camera: [^\n]+\n?/g, '').trim();
     onPromptChange && onPromptChange(next ? (stripped ? `${stripped}\nCamera: ${m.label}` : `Camera: ${m.label}`) : stripped);
