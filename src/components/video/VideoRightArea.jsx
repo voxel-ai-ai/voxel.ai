@@ -16,7 +16,7 @@ const STAGES = [
   { pct: 97, msg: 'Finalizing video...' },
 ];
 
-function LoadingVideoCard({ durationMs = 3000 }) {
+function LoadingVideoCard({ durationMs = 3000, ratio = '16/9' }) {
   const [pct, setPct] = useState(0);
   const [stageIndex, setStageIndex] = useState(0);
   const intervalRef = useRef(null);
