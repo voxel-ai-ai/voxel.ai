@@ -111,6 +111,28 @@ export default function VideoRightArea({ videos = [], isGenerating = false, dura
               onMouseLeave={e => e.currentTarget.style.color='rgba(255,255,255,0.3)'}
             ><Icon className="w-4 h-4" /></button>
           ))}
+          {/* Ratio chip */}
+          <div style={{ position:'relative' }}>
+            <button
+              onClick={() => setShowRatioDrop(v => !v)}
+              style={{ display:'flex', alignItems:'center', gap:5, padding:'5px 10px', background:'rgba(255,255,255,0.07)', border:'1px solid rgba(255,255,255,0.15)', borderRadius:999, fontSize:12, color:'#fff', fontFamily:font, cursor:'pointer', fontWeight:500 }}
+            >
+              <span style={{ fontSize:11 }}>⊕</span> {ratio === 'Auto' ? 'Auto' : ratio}
+              <ChevronDown className="w-3 h-3" style={{ transform: showRatioDrop ? 'rotate(180deg)' : 'none', transition:'transform 0.2s' }} />
+            </button>
+            {showRatioDrop && (
+              <div style={{ position:'absolute', top:'calc(100% + 6px)', right:0, background:'#1A1A1A', border:'1px solid #333', borderRadius:10, overflow:'hidden', zIndex:30, minWidth:100 }}>
+                {RATIO_OPTIONS.map(opt => (
+                  <div key={opt}
+                    onClick={() => { onRatioChange && onRatioChange(opt === 'Auto' ? '16:9' : opt); setShowRatioDrop(false); }}
+                    style={{ padding:'8px 14px', fontSize:12, fontFamily:font, cursor:'pointer', color: (opt === 'Auto' ? '16:9' : opt) === ratio ? '#fff' : 'rgba(255,255,255,0.55)', background: (opt === 'Auto' ? '16:9' : opt) === ratio ? 'rgba(224,30,30,0.12)' : 'transparent', transition:'background 0.15s' }}
+                    onMouseEnter={e => { if ((opt === 'Auto' ? '16:9' : opt) !== ratio) e.currentTarget.style.background='rgba(255,255,255,0.06)'; }}
+                    onMouseLeave={e => { if ((opt === 'Auto' ? '16:9' : opt) !== ratio) e.currentTarget.style.background='transparent'; }}
+                  >{opt}</div>
+                ))}
+              </div>
+            )}
+          </div>
           <button style={{ padding:'5px 12px', background:'rgba(255,255,255,0.1)', border:'1px solid rgba(255,255,255,0.15)', borderRadius:999, fontSize:12, color:'#fff', fontWeight:600, fontFamily:font, cursor:'pointer' }}>All</button>
           {[Star, Filter, Grid, Search].map((Icon, i) => (
             <button key={i} style={{ width:30, height:30, background:'transparent', border:'none', cursor:'pointer', color:'rgba(255,255,255,0.3)', display:'flex', alignItems:'center', justifyContent:'center', borderRadius:6 }}
