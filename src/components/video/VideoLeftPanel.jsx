@@ -26,6 +26,7 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
   const [audioOn, setAudioOn] = useState(false);
   const [showDurationDrop, setShowDurationDrop] = useState(false);
   const [showResDrop, setShowResDrop] = useState(false);
+  const [showRatioDrop, setShowRatioDrop] = useState(false);
   const [startFrame, setStartFrame] = useState(null);
   const [endFrame, setEndFrame] = useState(null);
 
