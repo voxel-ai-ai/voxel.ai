@@ -131,13 +131,15 @@ export default function VideoRightArea({ videos = [], isGenerating = false, dura
           {isGenerating && <LoadingVideoCard durationMs={durationMs} />}
           {/* Completed videos */}
           {videos.map((v, i) => (
-            <div key={v.id || i} style={{ background:'#161616', borderRadius:14, border:'1px solid #1E1E1E', overflow:'hidden', display:'flex', flexDirection:'column' }}>
-              <div style={{ aspectRatio:'16/9', background:'linear-gradient(135deg, #1a1a1a 0%, #222 100%)', display:'flex', alignItems:'center', justifyContent:'center', position:'relative' }}>
-                <div style={{ width:44, height:44, borderRadius:'50%', background:'rgba(255,255,255,0.07)', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer' }}
-                  onMouseEnter={e => e.currentTarget.style.background='rgba(255,255,255,0.14)'}
-                  onMouseLeave={e => e.currentTarget.style.background='rgba(255,255,255,0.07)'}
-                >
-                  <span style={{ color:'rgba(255,255,255,0.6)', fontSize:20, marginLeft:3 }}>▶</span>
+            <div key={v.id || i}
+              onClick={() => onVideoClick && onVideoClick(v)}
+              style={{ background:'#161616', borderRadius:14, border:'1px solid #1E1E1E', overflow:'hidden', display:'flex', flexDirection:'column', cursor:'pointer', transition:'transform 0.18s, border-color 0.18s' }}
+              onMouseEnter={e => { e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.borderColor='rgba(255,255,255,0.15)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform='none'; e.currentTarget.style.borderColor='#1E1E1E'; }}
+            >
+              <div style={{ aspectRatio:'16/9', background:'linear-gradient(135deg, #1a1a1a 0%, #222 100%)', display:'flex', alignItems:'center', justifyContent:'center', position:'relative', overflow:'hidden' }}>
+                <div style={{ width:44, height:44, borderRadius:'50%', background:'rgba(255,255,255,0.07)', border:'1px solid rgba(255,255,255,0.12)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                  <span style={{ color:'rgba(255,255,255,0.7)', fontSize:18, marginLeft:3 }}>▶</span>
                 </div>
               </div>
               <div style={{ padding:'10px 12px' }}>
