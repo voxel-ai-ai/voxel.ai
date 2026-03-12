@@ -46,6 +46,7 @@ export default function Video() {
         isGenerating={isGenerating}
         durationMs={3000}
         onRecreate={(t) => setPrompt(t.prompt)}
+        onVideoClick={(v) => setSelectedVideo(v)}
       />
       {showModelModal && (
         <VideoModelModal
