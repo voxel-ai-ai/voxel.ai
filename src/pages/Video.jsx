@@ -54,6 +54,7 @@ export default function Video() {
         videos={videos}
         isGenerating={isGenerating}
         durationMs={3000}
+        aspectRatio={aspectRatio}
         onRecreate={(t) => setPrompt(t.prompt)}
         onVideoClick={(v) => setSelectedVideo(v)}
       />
