@@ -16,6 +16,7 @@ const CAMERA_MOTIONS = [
 
 const DURATION_OPTIONS = ['5s', '10s', '15s'];
 const RESOLUTION_OPTIONS = ['480p', '720p', '1080p', '4K'];
+const RATIO_OPTIONS = ['16:9', '9:16', '1:1', '4:3', '21:9'];
 const S = { font: '"DM Sans", sans-serif' };
 
 export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isGenerating, count, onCountChange, model, onModelClick, duration, onDurationChange, resolution, onResolutionChange }) {
