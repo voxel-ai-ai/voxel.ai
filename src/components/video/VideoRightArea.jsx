@@ -155,7 +155,7 @@ export default function VideoRightArea({ videos = [], isGenerating = false, dura
                 onMouseEnter={e => { e.currentTarget.style.border='1px solid rgba(224,30,30,0.4)'; e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.querySelector('.vplay').style.opacity='1'; }}
                 onMouseLeave={e => { e.currentTarget.style.border='1px solid #1E1E1E'; e.currentTarget.style.transform='none'; e.currentTarget.querySelector('.vplay').style.opacity='0'; }}
               >
-                <div style={{ aspectRatio:'16/9', background:grad, display:'flex', alignItems:'center', justifyContent:'center', position:'relative', overflow:'hidden' }}>
+                <div style={{ aspectRatio: RATIO_MAP[v.aspectRatio] || ratio, background:grad, display:'flex', alignItems:'center', justifyContent:'center', position:'relative', overflow:'hidden' }}>
                   <div className="vplay" style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.3)', display:'flex', alignItems:'center', justifyContent:'center', opacity:0, transition:'opacity 0.18s' }}>
                     <div style={{ width:44, height:44, borderRadius:'50%', background:'rgba(0,0,0,0.6)', backdropFilter:'blur(8px)', border:'2px solid rgba(255,255,255,0.3)', display:'flex', alignItems:'center', justifyContent:'center' }}>
                       <span style={{ color:'#fff', fontSize:18, marginLeft:3 }}>▶</span>
