@@ -137,7 +137,7 @@ export default function Image() {
   const hasContent = images.length > 0 || isGenerating;
 
   return (
-    <div style={{ minHeight: 'calc(100vh - 64px)', background: '#0A0A0A', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+    <div style={{ minHeight: 'calc(100vh - 64px)', background: '#141414', display: 'flex', flexDirection: 'column', position: 'relative' }}>
 
       <style>{`
         @keyframes imgShimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
