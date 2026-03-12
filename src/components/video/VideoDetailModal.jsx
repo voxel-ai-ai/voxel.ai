@@ -194,8 +194,10 @@ export default function VideoDetailModal({ video, videos = [], onClose, onNaviga
         <div style={{ display:'flex', flex:1, overflow:'hidden', minHeight:0 }}>
           {/* Video player */}
           <div style={{ flex:1, display:'flex', flexDirection:'column', background:'#000', minWidth:0 }}>
-            <div style={{ flex:1, minHeight:0 }}>
-              <VideoPlayer key={video.id} gradient={grad} durationSec={parseInt(video.duration) || 5} />
+            <div style={{ flex:1, minHeight:0, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
+              <div style={{ ...PLAYER_BOX_STYLES[video.aspectRatio || 'Auto'], borderRadius:12, overflow:'hidden', transition:'all 0.3s ease', flexShrink:0 }}>
+                <VideoPlayer key={video.id} gradient={grad} durationSec={parseInt(video.duration) || 5} />
+              </div>
             </div>
 
             {/* Thumbnail strip */}
