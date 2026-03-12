@@ -186,7 +186,7 @@ export default function VideoDetailModal({ video, videos = [], onClose, onNaviga
           {/* Video player */}
           <div style={{ flex:1, display:'flex', flexDirection:'column', background:'#000', minWidth:0 }}>
             <div style={{ flex:1, minHeight:0 }}>
-              <VideoPlayer gradient={grad} durationSec={parseInt(video.duration)||10} />
+              <VideoPlayer gradient={grad} durationSec={parseInt(video.duration) || 5} />
             </div>
 
             {/* Thumbnail strip */}

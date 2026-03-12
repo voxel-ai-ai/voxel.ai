@@ -152,9 +152,7 @@ export default function VideoRightArea({ videos = [], isGenerating = false, dura
                     </div>
                   </div>
                   {/* Duration badge */}
-                  <span style={{ position:'absolute', bottom:8, right:8, fontSize:10, color:'rgba(255,255,255,0.7)', background:'rgba(0,0,0,0.55)', padding:'2px 7px', borderRadius:6, fontFamily:font }}>
-                    {`0:${String(parseInt(v.duration)||10).padStart(2,'0')}`}
-                  </span>
+                  <span style={{ position:'absolute', bottom:8, right:8, fontSize:10, color:'rgba(255,255,255,0.7)', background:'rgba(0,0,0,0.55)', padding:'2px 7px', borderRadius:6, fontFamily:font }}>0:{String(parseInt(v.duration)||5).padStart(2,'0')}</span>
                 </div>
                 <div style={{ padding:'10px 12px' }}>
                   <p style={{ fontSize:12, color:'rgba(255,255,255,0.5)', fontFamily:font, margin:0, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{v.prompt}</p>
