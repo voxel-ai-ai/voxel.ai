@@ -10,7 +10,7 @@ const GRADS = [
 ];
 
 // ── Cinematic video player ────────────────────────────────────────────────────
-function VideoPlayer({ gradient }) {
+function VideoPlayer({ gradient, durationSec = 10 }) {
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
   const [progress, setProgress] = useState(0);
