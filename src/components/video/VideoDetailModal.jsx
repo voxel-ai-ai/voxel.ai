@@ -36,7 +36,7 @@ function VideoPlayer({ gradient, durationSec = 10 }) {
     hideRef.current = setTimeout(() => setShowControls(false), 2500);
   };
 
-  const duration = 10; // fake 10s
+  const duration = durationSec;
   const currentSec = Math.round((progress / 100) * duration);
   const fmt = s => `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
 
