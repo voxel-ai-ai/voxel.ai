@@ -146,8 +146,8 @@ export default function LiquidBackground() {
       const hy = mouse.y * hh;
       const hr = 0.05 * Math.min(hw, hh);
       const hg = ctx.createRadialGradient(hx, hy, 0, hx, hy, hr);
-      hg.addColorStop(0, 'rgba(255,100,100,1.0)');
-      hg.addColorStop(0.5, 'rgba(240,30,30,0.6)');
+      hg.addColorStop(0, 'rgba(255,80,80,0.85)');
+      hg.addColorStop(0.5, 'rgba(220,20,20,0.45)');
       hg.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = hg;
       ctx.beginPath();
