@@ -15,16 +15,16 @@ export default function LiquidBackground() {
     const trail = Array.from({ length: TRAIL_LEN }, () => ({ x: 0.5, y: 0.45 }));
 
     // Blobs: first 3 follow mouse, rest ambient
+    // All blobs fixed at top-center of the box (no mouse following)
     const blobs = [
-      { x: 0.5, y: 0.45, tx: 0.5, ty: 0.45, r: 0.42, color: 'rgba(200,0,0,0.78)',   speed: 0.09  },
-      { x: 0.5, y: 0.5,  tx: 0.5, ty: 0.5,  r: 0.26, color: 'rgba(240,25,25,0.68)', speed: 0.13  },
-      { x: 0.5, y: 0.42, tx: 0.5, ty: 0.42, r: 0.14, color: 'rgba(255,60,60,0.78)', speed: 0.18  },
-      // ambient
-      { x: 0.25, y: 0.65, tx: 0.25, ty: 0.65, r: 0.20, color: 'rgba(130,0,0,0.42)', speed: 0.022, ambient: true },
-      { x: 0.75, y: 0.30, tx: 0.75, ty: 0.30, r: 0.18, color: 'rgba(150,8,8,0.38)', speed: 0.027, ambient: true },
+      { x: 0.5, y: 0.18, tx: 0.5, ty: 0.18, r: 0.38, color: 'rgba(210,0,0,0.85)',   speed: 1 },
+      { x: 0.5, y: 0.16, tx: 0.5, ty: 0.16, r: 0.22, color: 'rgba(255,30,30,0.75)', speed: 1 },
+      { x: 0.5, y: 0.14, tx: 0.5, ty: 0.14, r: 0.12, color: 'rgba(255,70,70,0.88)', speed: 1 },
+      // ambient corners — subtle, static
+      { x: 0.25, y: 0.55, tx: 0.25, ty: 0.55, r: 0.18, color: 'rgba(120,0,0,0.35)', speed: 1, ambient: true },
+      { x: 0.75, y: 0.55, tx: 0.75, ty: 0.55, r: 0.18, color: 'rgba(120,0,0,0.35)', speed: 1, ambient: true },
     ];
 
-    let mouse = { x: 0.5, y: 0.45 };
     let frame = 0;
 
     const resize = () => {
