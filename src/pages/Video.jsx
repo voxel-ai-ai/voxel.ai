@@ -27,7 +27,7 @@ export default function Video() {
     setIsGenerating(true);
     setTimeout(() => {
       setIsGenerating(false);
-      setVideos(prev => [...prev, { id: Date.now(), prompt, model: model.name, duration, resolution }]);
+      setVideos(prev => [...prev, { id: Date.now(), prompt, model: model.name, duration, resolution, aspectRatio }]);
       toast.success('Video generated!');
     }, 3000);
   };
