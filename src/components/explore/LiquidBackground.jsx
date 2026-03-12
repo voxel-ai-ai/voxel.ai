@@ -74,8 +74,8 @@ export default function LiquidBackground() {
         const alpha = t * 0.55;
 
         const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
-        grad.addColorStop(0, `rgba(255,60,60,${alpha * 1.4})`);
-        grad.addColorStop(0.5, `rgba(220,0,0,${alpha * 0.6})`);
+        grad.addColorStop(0, `rgba(255,50,50,${alpha * 1.1})`);
+        grad.addColorStop(0.5, `rgba(200,0,0,${alpha * 0.45})`);
         grad.addColorStop(1, 'rgba(0,0,0,0)');
 
         ctx.fillStyle = grad;
