@@ -24,7 +24,7 @@ export default function HeroSection() {
           border: '1px solid rgba(255,255,255,0.1)',
           borderRadius: 32,
           padding: 'clamp(40px, 6vw, 80px) clamp(32px, 6vw, 96px)',
-          boxShadow: '0 0 80px rgba(224,30,30,0.08), 0 32px 80px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.07)',
+          boxShadow: '0 0 120px rgba(224,30,30,0.22), 0 32px 80px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.07)',
         }}>
           <div className="flex justify-center mb-8 animate-scale-in">
             <VoxelLogo size="hero" />
