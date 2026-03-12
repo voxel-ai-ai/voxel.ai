@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ImagePromptBar from '@/components/image/ImagePromptBar';
 import TemplateModal from '@/components/common/TemplateModal';
-import { History, Globe, Heart, Download, RefreshCw, Maximize2, Sparkles, X } from 'lucide-react';
+import { History, Globe, Heart, Download, RefreshCw, Maximize2, Sparkles, X, Copy, Share2, ChevronLeft, ChevronRight, Wand2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 const MODEL_SUBTITLES = {

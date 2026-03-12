@@ -55,6 +55,14 @@ export default function Video() {
           onClose={() => setShowModelModal(false)}
         />
       )}
+      {selectedVideo && (
+        <VideoDetailModal
+          video={selectedVideo}
+          videos={videos}
+          onClose={() => setSelectedVideo(null)}
+          onNavigate={(v) => setSelectedVideo(v)}
+        />
+      )}
     </div>
   );
 }
