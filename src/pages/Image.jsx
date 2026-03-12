@@ -167,7 +167,7 @@ export default function Image() {
 
         {/* Empty state */}
         {!hasContent &&
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 200px)', textAlign: 'center', padding: '0 16px' }} className="bg-gray-700">
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 200px)', textAlign: 'center', padding: '0 16px' }} className="bg-gray-900">
             <div style={{ position: 'relative', width: 110, height: 110, marginBottom: 32 }}>
               <span style={{ position: 'absolute', top: -8, right: -4, fontSize: 18, color: '#E01E1E', animation: 'glowPulse2 2s ease-in-out infinite' }}>✦</span>
               <span style={{ position: 'absolute', top: 20, right: -18, fontSize: 11, color: '#ff5555', animation: 'glowPulse2 2s ease-in-out infinite', animationDelay: '0.7s' }}>✦</span>
