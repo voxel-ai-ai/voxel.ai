@@ -139,7 +139,7 @@ export default function LiquidBackground() {
       // Extra sharp hot-spot at cursor
       ctx.save();
       ctx.filter = 'blur(8px)';
-      ctx.globalAlpha = 0.9;
+      ctx.globalAlpha = 1.0;
       const hw = canvas.width;
       const hh = canvas.height;
       const hx = mouse.x * hw;
