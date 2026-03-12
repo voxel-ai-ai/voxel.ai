@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import VideoLeftPanel from '@/components/video/VideoLeftPanel';
 import VideoRightArea from '@/components/video/VideoRightArea';
 import VideoModelModal from '@/components/video/VideoModelModal';
+import VideoDetailModal from '@/components/video/VideoDetailModal';
 import { toast } from 'sonner';
 
 const DEFAULT_MODEL = { id: 'kling-2-6', name: 'Kling 2.6', brand: 'Kling', color: '#1B7FE4' };
