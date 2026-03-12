@@ -15,6 +15,7 @@ export default function Video() {
   const [model, setModel] = useState(DEFAULT_MODEL);
   const [duration, setDuration] = useState('5s');
   const [resolution, setResolution] = useState('1080p');
+  const [ratio, setRatio] = useState('16:9');
   const [showModelModal, setShowModelModal] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
 
