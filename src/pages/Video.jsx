@@ -14,6 +14,7 @@ export default function Video() {
   const [videos, setVideos] = useState([]);
   const [model, setModel] = useState(DEFAULT_MODEL);
   const [showModelModal, setShowModelModal] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState(null);
 
   const handleGenerate = () => {
     if (!prompt.trim()) {
