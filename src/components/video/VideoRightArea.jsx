@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronDown, Star, Filter, Grid, Search, SlidersHorizontal, MessageSquare, Video, Music, Sparkles } from 'lucide-react';
+import VideoLightbox from '@/components/video/VideoLightbox';
 
 const font = '"DM Sans", sans-serif';
 
