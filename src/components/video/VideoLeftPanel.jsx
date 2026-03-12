@@ -274,7 +274,7 @@ export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isG
           {/* Resolution */}
           <div style={{ position:'relative' }}>
             <div className="vl-small-box" style={{ display:'flex', alignItems:'center', gap:7, padding:'9px 10px', background:'#252525', border:'1px solid #383838', borderRadius:12, cursor:'pointer', transition:'all 0.18s' }}
-              onClick={() => { setShowResDrop(v => !v); setShowDurationDrop(false); }}
+              onClick={() => { setShowResDrop(v => !v); setShowDurationDrop(false); setShowRatioDrop(false); }}
               onMouseEnter={e => { e.currentTarget.style.background='#2E2E2E'; e.currentTarget.style.borderColor='rgba(224,30,30,0.4)'; }}
               onMouseLeave={e => { e.currentTarget.style.background='#252525'; e.currentTarget.style.borderColor='#383838'; }}
             >
