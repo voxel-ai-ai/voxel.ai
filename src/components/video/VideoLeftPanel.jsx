@@ -18,15 +18,13 @@ const DURATION_OPTIONS = ['5s', '10s', '15s'];
 const RESOLUTION_OPTIONS = ['480p', '720p', '1080p', '4K'];
 const S = { font: '"DM Sans", sans-serif' };
 
-export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isGenerating, count, onCountChange, model, onModelClick }) {
+export default function VideoLeftPanel({ prompt, onPromptChange, onGenerate, isGenerating, count, onCountChange, model, onModelClick, duration, onDurationChange, resolution, onResolutionChange }) {
   const [mode, setMode] = useState('frame');
   const [cameraMotion, setCameraMotion] = useState(null);
   const [showCameraDrop, setShowCameraDrop] = useState(false);
   const [audioOn, setAudioOn] = useState(false);
   const [showDurationDrop, setShowDurationDrop] = useState(false);
   const [showResDrop, setShowResDrop] = useState(false);
-  const [duration, setDuration] = useState('5s');
-  const [resolution, setResolution] = useState('1080p');
   const [startFrame, setStartFrame] = useState(null);
   const [endFrame, setEndFrame] = useState(null);
 
