@@ -38,12 +38,7 @@ export default function LiquidBackground() {
     resize();
     window.addEventListener('resize', resize);
 
-    const onMove = (e) => {
-      const rect = canvas.getBoundingClientRect();
-      mouse.x = (e.clientX - rect.left) / rect.width;
-      mouse.y = (e.clientY - rect.top)  / rect.height;
-    };
-    window.addEventListener('mousemove', onMove);
+    const onMove = () => {}; // mouse no longer drives the effect
 
     const drawBlob = (blob) => {
       const w = canvas.width;
