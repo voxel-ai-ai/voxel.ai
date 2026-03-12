@@ -13,6 +13,8 @@ export default function Video() {
   const [count, setCount] = useState(1);
   const [videos, setVideos] = useState([]);
   const [model, setModel] = useState(DEFAULT_MODEL);
+  const [duration, setDuration] = useState('5s');
+  const [resolution, setResolution] = useState('1080p');
   const [showModelModal, setShowModelModal] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
 
