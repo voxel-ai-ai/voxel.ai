@@ -15,7 +15,7 @@ export default function Video() {
   const [model, setModel] = useState(DEFAULT_MODEL);
   const [duration, setDuration] = useState('5s');
   const [resolution, setResolution] = useState('1080p');
-  const [ratio, setRatio] = useState('16:9');
+  const [aspectRatio, setAspectRatio] = useState('Auto');
   const [showModelModal, setShowModelModal] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
 
@@ -27,7 +27,7 @@ export default function Video() {
     setIsGenerating(true);
     setTimeout(() => {
       setIsGenerating(false);
-      setVideos(prev => [...prev, { id: Date.now(), prompt, model: model.name, duration, resolution, ratio }]);
+      setVideos(prev => [...prev, { id: Date.now(), prompt, model: model.name, duration, resolution }]);
       toast.success('Video generated!');
     }, 3000);
   };
@@ -47,8 +47,6 @@ export default function Video() {
         onDurationChange={setDuration}
         resolution={resolution}
         onResolutionChange={setResolution}
-        ratio={ratio}
-        onRatioChange={setRatio}
       />
       <VideoRightArea
         videos={videos}
