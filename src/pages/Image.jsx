@@ -241,23 +241,13 @@ export default function Image() {
         onCountChange={setImageCount}
       />
 
-      {/* Lightbox */}
-      {expandedImage && (
-        <div
-          style={{ position: 'fixed', inset: 0, zIndex: 300, background: 'rgba(0,0,0,0.95)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-          onClick={() => setExpandedImage(null)}
-        >
-          <button
-            onClick={() => setExpandedImage(null)}
-            style={{ position: 'absolute', top: 20, right: 20, width: 36, height: 36, borderRadius: '50%', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#fff' }}
-          >
-            <X style={{ width: 16, height: 16 }} />
-          </button>
-          <div
-            style={{ width: 'min(600px, 90vw)', aspectRatio: '4/5', borderRadius: 20, background: expandedImage.gradient, boxShadow: '0 32px 80px rgba(0,0,0,0.8)' }}
-            onClick={e => e.stopPropagation()}
-          />
-        </div>
+      {detailImage && (
+        <ImageDetailModal
+          image={detailImage}
+          images={images}
+          onClose={() => setDetailImage(null)}
+          onNavigate={setDetailImage}
+        />
       )}
 
       {selectedTemplate && (
