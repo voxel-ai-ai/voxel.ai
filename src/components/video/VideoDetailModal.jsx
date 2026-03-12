@@ -47,7 +47,7 @@ function VideoPlayer({ gradient }) {
   };
 
   return (
-    <div style={{ width:'100%', height:'100%', background:gradient||'#1a1a1a', position:'relative', overflow:'hidden', cursor:'none' }}
+    <div style={{ width:'100%', height:'100%', background:gradient||'#1a1a1a', position:'relative', overflow:'hidden', cursor:'default' }}
       onMouseMove={showCtrl}
       onClick={() => { setPlaying(v => !v); showCtrl(); }}
     >
