@@ -10,20 +10,13 @@ const GRADS = [
 ];
 
 // ── Cinematic video player ────────────────────────────────────────────────────
-function VideoPlayer({ gradient, durationSec = 5 }) {
+function VideoPlayer({ gradient, durationSec = 10 }) {
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showControls, setShowControls] = useState(false);
   const timerRef = useRef(null);
   const hideRef = useRef(null);
-
-  // Reset player when video changes (different duration)
-  useEffect(() => {
-    setPlaying(false);
-    setProgress(0);
-    clearInterval(timerRef.current);
-  }, [durationSec]);
 
   useEffect(() => {
     if (playing) {
@@ -36,7 +29,7 @@ function VideoPlayer({ gradient, durationSec = 5 }) {
       }, 80);
     } else clearInterval(timerRef.current);
     return () => clearInterval(timerRef.current);
-  }, [playing, durationSec]);
+  }, [playing]);
 
   const showCtrl = () => {
     setShowControls(true);
@@ -128,18 +121,6 @@ function VideoPlayer({ gradient, durationSec = 5 }) {
   );
 }
 
-// ── Aspect ratio helper ───────────────────────────────────────────────────────
-function getRatioStyle(ratio) {
-  const ratioMap = {
-    '16:9':  { width: '100%', aspectRatio: '16/9', maxWidth: 900, maxHeight: 'calc(100vh - 300px)' },
-    '9:16':  { width: 'auto', height: 'min(70vh, 560px)', aspectRatio: '9/16', maxWidth: 340 },
-    '1:1':   { width: 'min(60vh, 480px)', aspectRatio: '1/1', maxWidth: 480 },
-    '4:3':   { width: '100%', aspectRatio: '4/3', maxWidth: 700, maxHeight: 'calc(100vh - 300px)' },
-    '21:9':  { width: '100%', aspectRatio: '21/9', maxWidth: 1000, maxHeight: 'calc(100vh - 300px)' },
-  };
-  return ratioMap[ratio] || { width: '100%', aspectRatio: '16/9', maxWidth: 900, maxHeight: 'calc(100vh - 300px)' };
-}
-
 // ── Main modal ────────────────────────────────────────────────────────────────
 export default function VideoDetailModal({ video, videos = [], onClose, onNavigate }) {
   const [liked, setLiked] = useState(false);
@@ -203,9 +184,9 @@ export default function VideoDetailModal({ video, videos = [], onClose, onNaviga
         {/* Body */}
         <div style={{ display:'flex', flex:1, overflow:'hidden', minHeight:0 }}>
           {/* Video player */}
-          <div style={{ flex:1, display:'flex', flexDirection:'column', background:'#000', minWidth:0, alignItems:'center', justifyContent:'center' }}>
-            <div style={{ ...getRatioStyle(video.ratio), transition:'all 0.3s ease', position:'relative' }}>
-              <VideoPlayer gradient={grad} durationSec={parseInt(video.duration) || 5} />
+          <div style={{ flex:1, display:'flex', flexDirection:'column', background:'#000', minWidth:0 }}>
+            <div style={{ flex:1, minHeight:0 }}>
+              <VideoPlayer key={video.id} gradient={grad} durationSec={parseInt(video.duration) || 5} />
             </div>
 
             {/* Thumbnail strip */}
