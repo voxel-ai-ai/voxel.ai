@@ -42,6 +42,10 @@ export default function Video() {
         onCountChange={setCount}
         model={model}
         onModelClick={() => setShowModelModal(true)}
+        duration={duration}
+        onDurationChange={setDuration}
+        resolution={resolution}
+        onResolutionChange={setResolution}
       />
       <VideoRightArea
         videos={videos}
