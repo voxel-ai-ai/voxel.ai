@@ -123,6 +123,7 @@ export default function Image() {
   const [images, setImages] = useState([]);
   const [imageCount, setImageCount] = useState(1);
   const [expandedImage, setExpandedImage] = useState(null);
+  const [detailImage, setDetailImage] = useState(null);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [activeTab, setActiveTab] = useState('history');
 
