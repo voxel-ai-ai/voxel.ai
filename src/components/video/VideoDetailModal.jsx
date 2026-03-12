@@ -121,6 +121,15 @@ function VideoPlayer({ gradient, durationSec = 10 }) {
   );
 }
 
+const PLAYER_BOX_STYLES = {
+  'Auto':  { width: '100%', maxWidth: 900, aspectRatio: '16/9' },
+  '16:9':  { width: '100%', maxWidth: 900, aspectRatio: '16/9' },
+  '9:16':  { height: 'min(65vh, 580px)', aspectRatio: '9/16', width: 'auto' },
+  '1:1':   { width: 'min(55vh, 500px)', aspectRatio: '1/1' },
+  '4:3':   { width: '100%', maxWidth: 720, aspectRatio: '4/3' },
+  '21:9':  { width: '100%', maxWidth: 1000, aspectRatio: '21/9' },
+};
+
 // ── Main modal ────────────────────────────────────────────────────────────────
 export default function VideoDetailModal({ video, videos = [], onClose, onNavigate }) {
   const [liked, setLiked] = useState(false);
