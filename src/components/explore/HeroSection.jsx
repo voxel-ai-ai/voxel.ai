@@ -18,7 +18,16 @@ export default function HeroSection() {
       <LiquidBackground />
 
       {/* Content */}
-      <div className="relative z-10 max-w-5xl mx-auto text-center">
+      <div className="relative z-10 max-w-6xl mx-auto text-center">
+        <div style={{
+          background: 'rgba(255,255,255,0.04)',
+          backdropFilter: 'blur(40px) saturate(1.8)',
+          WebkitBackdropFilter: 'blur(40px) saturate(1.8)',
+          border: '1px solid rgba(255,255,255,0.1)',
+          borderRadius: 32,
+          padding: 'clamp(40px, 6vw, 80px) clamp(32px, 6vw, 96px)',
+          boxShadow: '0 0 80px rgba(224,30,30,0.08), 0 32px 80px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.07)',
+        }}>
         {/* Logo */}
         <div className="flex justify-center mb-8 animate-scale-in">
           <VoxelLogo size="hero" />
