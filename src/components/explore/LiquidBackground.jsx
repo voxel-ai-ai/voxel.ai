@@ -155,6 +155,7 @@ export default function LiquidBackground() {
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', resize);
+      canvas.removeEventListener('mousemove', onMove);
     };
   }, []);
 
