@@ -17,9 +17,9 @@ export default function LiquidBackground() {
     // Blobs: first 3 follow mouse, rest ambient
     // All blobs fixed at top-center of the box (no mouse following)
     const blobs = [
-      { x: 0.5, y: 0.18, tx: 0.5, ty: 0.18, r: 0.38, color: 'rgba(210,0,0,0.85)',   speed: 1 },
-      { x: 0.5, y: 0.16, tx: 0.5, ty: 0.16, r: 0.22, color: 'rgba(255,30,30,0.75)', speed: 1 },
-      { x: 0.5, y: 0.14, tx: 0.5, ty: 0.14, r: 0.12, color: 'rgba(255,70,70,0.88)', speed: 1 },
+      { x: 0.5, y: 0.38, tx: 0.5, ty: 0.38, r: 0.38, color: 'rgba(210,0,0,0.85)',   speed: 1 },
+      { x: 0.5, y: 0.36, tx: 0.5, ty: 0.36, r: 0.22, color: 'rgba(255,30,30,0.75)', speed: 1 },
+      { x: 0.5, y: 0.34, tx: 0.5, ty: 0.34, r: 0.12, color: 'rgba(255,70,70,0.88)', speed: 1 },
       // ambient corners — subtle, static
       { x: 0.25, y: 0.55, tx: 0.25, ty: 0.55, r: 0.18, color: 'rgba(120,0,0,0.35)', speed: 1, ambient: true },
       { x: 0.75, y: 0.55, tx: 0.75, ty: 0.55, r: 0.18, color: 'rgba(120,0,0,0.35)', speed: 1, ambient: true },
