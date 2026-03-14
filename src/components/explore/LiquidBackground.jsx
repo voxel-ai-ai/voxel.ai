@@ -49,7 +49,7 @@ export default function LiquidBackground() {
       blobs[2].tx = mx;
       blobs[2].ty = my + 0.04;
     };
-    canvas.addEventListener('mousemove', onMove);
+    window.addEventListener('mousemove', onMove);
 
     const drawBlob = (blob) => {
       const w = canvas.width;
