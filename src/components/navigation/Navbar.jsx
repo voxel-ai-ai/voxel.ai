@@ -25,6 +25,7 @@ export default function Navbar() {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [authModal, setAuthModal] = useState(null); // 'login' | 'signup'
 
   useEffect(() => {
     const handleScroll = () => {
