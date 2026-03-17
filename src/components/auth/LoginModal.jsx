@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Mail, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 
 const font = '"DM Sans", sans-serif';
 
