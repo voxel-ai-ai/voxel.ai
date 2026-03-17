@@ -4,6 +4,7 @@ import { createPageUrl } from '@/utils';
 import VoxelLogo from '../VoxelLogo';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import LoginModal from '../auth/LoginModal';
 
 const primaryNavItems = [
   { name: 'Explore', path: 'Explore' },
