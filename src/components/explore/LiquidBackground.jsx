@@ -88,9 +88,9 @@ export default function LiquidBackground() {
 
       // blobs stay fixed at top-center — gentle breathing only
       if (!prefersReducedMotion) {
-        blobs[0].ty = 0.38 + Math.sin(frame * 0.008) * 0.015;
-        blobs[1].ty = 0.36 + Math.cos(frame * 0.010) * 0.012;
-        blobs[2].ty = 0.34 + Math.sin(frame * 0.013) * 0.008;
+        blobs[0].ty = 0.45 + Math.sin(frame * 0.008) * 0.015;
+        blobs[1].ty = 0.43 + Math.cos(frame * 0.010) * 0.012;
+        blobs[2].ty = 0.41 + Math.sin(frame * 0.013) * 0.008;
       }
 
       blobs.forEach(b => {
