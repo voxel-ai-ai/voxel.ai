@@ -115,8 +115,8 @@ export default function LiquidBackground() {
       ctx.save();
       ctx.filter = 'blur(10px)';
       ctx.globalAlpha = 0.9;
-      const hx = canvas.width * 0.5;
-      const hy = canvas.height * 0.34;
+      const hx = canvas.width * 0.82;
+      const hy = canvas.height * 0.41;
       const hr = 0.06 * Math.min(canvas.width, canvas.height);
       const hg = ctx.createRadialGradient(hx, hy, 0, hx, hy, hr);
       hg.addColorStop(0, 'rgba(255,80,80,0.95)');
