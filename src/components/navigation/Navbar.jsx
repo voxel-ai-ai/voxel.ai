@@ -178,5 +178,12 @@ export default function Navbar() {
         </div>
       )}
     </nav>
+
+    {authModal && (
+      <LoginModal
+        initialMode={authModal}
+        onClose={() => setAuthModal(null)}
+      />
+    )}
   );
 }
