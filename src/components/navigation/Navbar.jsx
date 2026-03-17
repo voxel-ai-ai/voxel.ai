@@ -109,10 +109,10 @@ export default function Navbar() {
 
           {/* Auth Buttons */}
           <div className="hidden lg:flex items-center gap-3">
-            <Button variant="ghost" className="text-foreground-secondary hover:text-white">
+            <Button variant="ghost" className="text-foreground-secondary hover:text-white" onClick={() => setAuthModal('login')}>
               Login
             </Button>
-            <Button className="bg-primary hover:bg-primary-hover text-white">
+            <Button className="bg-primary hover:bg-primary-hover text-white" onClick={() => setAuthModal('signup')}>
               Sign Up →
             </Button>
           </div>
