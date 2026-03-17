@@ -167,10 +167,10 @@ export default function Navbar() {
             <div className="h-px bg-border my-2" />
             
             <div className="flex gap-2 pt-2">
-              <Button variant="outline" className="flex-1 border-border text-white">
+              <Button variant="outline" className="flex-1 border-border text-white" onClick={() => { setMobileOpen(false); setAuthModal('login'); }}>
                 Login
               </Button>
-              <Button className="flex-1 bg-primary hover:bg-primary-hover text-white">
+              <Button className="flex-1 bg-primary hover:bg-primary-hover text-white" onClick={() => { setMobileOpen(false); setAuthModal('signup'); }}>
                 Sign Up
               </Button>
             </div>
