@@ -18,7 +18,7 @@ export default function HeroSection() {
 
       <div className="relative z-10 w-full max-w-6xl mx-auto text-center px-4">
         <div style={{
-          background: 'rgba(255,255,255,0.04)',
+          background: 'linear-gradient(135deg, rgba(139,0,0,0.18) 0%, rgba(255,255,255,0.04) 40%, rgba(80,0,0,0.14) 80%, rgba(224,30,30,0.10) 100%)',
           backdropFilter: 'blur(40px) saturate(1.8)',
           WebkitBackdropFilter: 'blur(40px) saturate(1.8)',
           border: '1px solid rgba(255,255,255,0.1)',
