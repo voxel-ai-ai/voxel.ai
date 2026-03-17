@@ -36,10 +36,18 @@ export default function LoginModal({ onClose, initialMode = 'login' }) {
   const [showPass, setShowPass] = useState(false);
 
   const providers = [
-    { label: 'Continue with Google', icon: <GoogleIcon /> },
-    { label: 'Continue with Apple', icon: <AppleIcon />, dark: true },
-    { label: 'Continue with Microsoft', icon: <MicrosoftIcon /> },
+    { label: 'Continue with Google', icon: <GoogleIcon />, provider: 'google' },
+    { label: 'Continue with Apple', icon: <AppleIcon />, dark: true, provider: 'apple' },
+    { label: 'Continue with Microsoft', icon: <MicrosoftIcon />, provider: 'microsoft' },
   ];
+
+  const handleProviderLogin = (provider) => {
+    base44.auth.redirectToLogin(window.location.href, { provider });
+  };
+
+  const handleEmailLogin = () => {
+    base44.auth.redirectToLogin(window.location.href);
+  };
 
   const isSignup = mode === 'signup';
   const isEmail = mode === 'email';
