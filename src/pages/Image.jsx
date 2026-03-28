@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { base44 } from '@/api/base44Client';
 import ImagePromptBar from '@/components/image/ImagePromptBar';
 import TemplateModal from '@/components/common/TemplateModal';
 import ImageDetailModal from '@/components/image/ImageDetailModal';
@@ -89,6 +90,7 @@ function ImageCard({ img, index, onExpand }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={() => onExpand(img)}>
+      {img.url && <img src={img.url} alt={img.prompt} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />}
 
       {/* Hover overlay — pointer-events none so clicks pass through to card */}
       <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 50%)', opacity: hovered ? 1 : 0, transition: 'opacity 0.2s', display: 'flex', alignItems: 'flex-end', padding: 10, gap: 6, pointerEvents: 'none' }}>
@@ -113,20 +115,31 @@ export default function Image() {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [activeTab, setActiveTab] = useState('history');
 
-  const handleGenerate = () => {
-    if (!prompt.trim()) {toast.error('Please enter a prompt');return;}
+  const handleGenerate = async () => {
+    if (!prompt.trim()) { toast.error('Please enter a prompt'); return; }
     setIsGenerating(true);
     setActiveTab('history');
-    setTimeout(() => {
-      setIsGenerating(false);
-      const newImgs = Array.from({ length: imageCount }, (_, i) => ({
-        id: Date.now() + i,
-        gradient: RESULT_GRADIENTS[(images.length + i) % RESULT_GRADIENTS.length],
-        prompt
-      }));
-      setImages((prev) => [...newImgs, ...prev]);
+    try {
+      const response = await base44.functions.invoke('generate', {
+        type: 'image',
+        model: selectedModel.name,
+        prompt,
+        ratio: '1:1',
+      });
+      const url = response.data?.result_url;
+      const newImg = {
+        id: Date.now(),
+        gradient: RESULT_GRADIENTS[images.length % RESULT_GRADIENTS.length],
+        prompt,
+        url,
+      };
+      setImages((prev) => [newImg, ...prev]);
       toast.success('Image generated!');
-    }, 3000);
+    } catch (err) {
+      toast.error(err.message || 'Generation failed');
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const handleRecreate = (template) => {
