@@ -30,13 +30,24 @@ function ImageModal({ item, onClose }) {
           <X size={18} className="text-white" />
         </button>
 
-        {/* Image */}
+        {/* Media */}
         <div className="w-full relative overflow-hidden" style={{ background: '#1a1a1a' }}>
-          {item.imageUrl ? (
+          {item.videoUrl ? (
+            <video
+              src={item.videoUrl}
+              className="w-full block"
+              controls
+              autoPlay
+              muted
+              loop
+              playsInline
+              style={{ maxHeight: '400px', objectFit: 'cover' }}
+            />
+          ) : item.imageUrl ? (
             <img src={item.imageUrl} alt="" className="w-full h-auto block" />
           ) : (
             <div
-              className="w-full h-full"
+              className="w-full h-48"
               style={{
                 background: [
                   'linear-gradient(135deg, #1a0000 0%, #8B0000 50%, #1a1a1a 100%)',
@@ -125,6 +136,7 @@ export default function DiscoverFeed() {
               likes={item.likes}
               prompt={item.prompt}
               imageUrl={item.imageUrl}
+              videoUrl={item.videoUrl}
               gradientIndex={index}
               className=""
               onClick={() => setSelectedItem(item)}

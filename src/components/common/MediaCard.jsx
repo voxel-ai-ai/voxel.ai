@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Play, Eye, Heart, Wand2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -19,11 +19,22 @@ export default function MediaCard({
   likes,
   prompt,
   imageUrl,
+  videoUrl,
   onClick,
   gradientIndex = 0,
   className,
 }) {
   const [isHovered, setIsHovered] = useState(false);
+  const videoRef = useRef(null);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    if (videoRef.current) videoRef.current.play();
+  };
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    if (videoRef.current) { videoRef.current.pause(); videoRef.current.currentTime = 0; }
+  };
 
   return (
     <div 
@@ -33,8 +44,8 @@ export default function MediaCard({
         className
       )}
       style={{ background: '#111', border: '1px solid #2A2A2A' }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       {/* Thumbnail */}
       <div 
@@ -45,11 +56,25 @@ export default function MediaCard({
           aspectRatio: '4/3'
         }}
       >
-        {imageUrl && (
+        {imageUrl && !videoUrl && (
           <img src={imageUrl} alt={title || model} className="absolute inset-0 w-full h-full object-cover" />
         )}
+        {videoUrl && (
+          <video
+            ref={videoRef}
+            src={videoUrl}
+            className="absolute inset-0 w-full h-full object-cover"
+            muted
+            loop
+            playsInline
+            preload="none"
+          />
+        )}
         {type === 'video' && (
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className={cn(
+            "absolute inset-0 flex items-center justify-center transition-opacity duration-300",
+            isHovered && videoUrl ? "opacity-0" : "opacity-100"
+          )}>
             <div className="w-14 h-14 rounded-full bg-black/50 flex items-center justify-center backdrop-blur-sm border border-white/20">
               <Play className="w-6 h-6 text-white fill-white" />
             </div>
