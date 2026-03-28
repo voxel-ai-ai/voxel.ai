@@ -4,6 +4,66 @@ import { communityFeed } from '@/components/data/siteData';
 import { X, Copy, Wand2 } from 'lucide-react';
 import { toast } from 'sonner';
 
+function ImageModal({ item, onClose }) {
+  const copyPrompt = () => {
+    navigator.clipboard.writeText(item.prompt);
+    toast.success('Prompt copied!');
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-sm" />
+      <div
+        className="relative w-full max-w-2xl rounded-2xl overflow-hidden animate-scale-in"
+        style={{ background: '#111', border: '1px solid #2A2A2A' }}
+        onClick={e => e.stopPropagation()}
+      >
+        <button onClick={onClose} className="absolute top-4 right-4 z-10 p-2 rounded-full" style={{ background: 'rgba(0,0,0,0.6)' }}>
+          <X size={18} className="text-white" />
+        </button>
+        <div className="w-full relative overflow-hidden" style={{ background: '#1a1a1a' }}>
+          {item.videoUrl ? (
+            <video src={item.videoUrl} className="w-full block" controls autoPlay muted loop playsInline style={{ maxHeight: '400px', objectFit: 'cover' }} />
+          ) : item.imageUrl ? (
+            <img src={item.imageUrl} alt="" className="w-full h-auto block" />
+          ) : (
+            <div className="w-full h-48" style={{ background: ['linear-gradient(135deg, #1a0000 0%, #8B0000 50%, #1a1a1a 100%)', 'linear-gradient(135deg, #0a0a1a 0%, #1a0a2a 50%, #2a0a0a 100%)', 'linear-gradient(135deg, #0d0d0d 0%, #2a0000 60%, #111 100%)', 'linear-gradient(135deg, #1a1a0a 0%, #3a1a00 50%, #0a0a0a 100%)'][item.id % 4] }} />
+          )}
+        </div>
+        <div className="p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-1 text-xs font-bold rounded-full" style={{ background: '#E01E1E', color: '#fff' }}>{item.model}</span>
+              <span className="text-sm" style={{ color: '#888' }}>@{item.creator}</span>
+            </div>
+            <span className="text-xs" style={{ color: '#555' }}>{item.type}</span>
+          </div>
+          <div>
+            <p className="text-xs uppercase tracking-wider mb-2" style={{ color: '#555' }}>Prompt</p>
+            <div className="p-4 rounded-xl font-mono text-sm leading-relaxed" style={{ background: '#0d0d0d', border: '1px solid #2A2A2A', color: '#ccc' }}>
+              "{item.prompt}"
+            </div>
+          </div>
+          <div className="flex gap-3">
+            <button
+              onClick={copyPrompt}
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm"
+              style={{ border: '1px solid #2A2A2A', color: '#aaa', background: 'transparent' }}
+            >
+              <Copy className="w-4 h-4" /> Copy Prompt
+            </button>
+            <button
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold text-white"
+              style={{ background: '#E01E1E' }}
+            >
+              <Wand2 className="w-4 h-4" /> Recreate Now →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function DiscoverFeed() {
   const [selectedItem, setSelectedItem] = useState(null);
