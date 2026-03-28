@@ -4,6 +4,7 @@ import { X, Check } from 'lucide-react';
 const VIDEO_MODELS = [
   { id:'kling-3-omni',   name:'Kling 3.0 Omni',          brand:'Kling',     color:'#2563EB', badge:'NEW', desc:'Enhanced multimodal references',              tags:['Reference','Multi-shots','Audio'], res:'720-1080p', dur:'3-15s',  featured:true,  img:'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=400&q=80&fit=crop' },
   { id:'kling-3',        name:'Kling 3.0',                brand:'Kling',     color:'#2563EB', badge:'NEW', desc:'Enhanced audio, consistency & multi-shots',    tags:['Start/End','Multi-shots','Audio'], res:'720-1080p', dur:'3-15s',  featured:true,  img:'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400&q=80&fit=crop' },
+  { id:'seedance-2',     name:'Seedance 2.0',             brand:'Seedance',  color:'#0D9488', badge:'SOON', desc:'Next-gen motion & cinematic dance generation',  tags:['Start/End','Multi-shots','Audio'], res:'720-1080p', dur:'4-12s',  featured:true,  comingSoon:true, img:'https://images.unsplash.com/photo-1518834107812-67b0b7c58434?w=400&q=80&fit=crop' },
   { id:'seedance-1-5',   name:'Seedance 1.5 Pro',         brand:'Seedance',  color:'#0D9488', badge:null,  desc:'Cinematic videos with audio & multi-shots',   tags:['Start/End','Multi-shots','Audio'], res:'480-1080p', dur:'4-12s',  featured:true,  img:'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=400&q=80&fit=crop' },
   { id:'kling-2-6',      name:'Kling 2.6',                brand:'Kling',     color:'#2563EB', badge:null,  desc:'Cinematic videos with audio & voice',          tags:['Start/End','Audio'],              res:'720-1080p', dur:'5-10s',  img:'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=120&q=80&fit=crop' },
   { id:'wan-2-6',        name:'Wan 2.6',                  brand:'Wan',       color:'#7C3AED', badge:null,  desc:'Cinematic videos with audio & multi-shots',   tags:['Start Frame','Multi-shots','Audio'],res:'720-1080p',dur:'5-15s',   img:'https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?w=120&q=80&fit=crop' },
@@ -67,8 +68,9 @@ export default function VideoModelModal({ selectedId, onSelect, onClose }) {
             { id:'kling-3-omni', name:'Kling 3.0 Omni', brand:'Kling', color:'#2563EB', desc:'Enhanced multimodal references',           img:'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/6568d539e_Screenshot2026-03-11at22532AM.png', objPos:'center 55%' },
             { id:'kling-3',      name:'Kling 3.0',       brand:'Kling', color:'#2563EB', desc:'Enhanced audio, consistency & multi-shots', img:'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/592be7b6d_ChatGPTImageMar8202603_02_54AM.png', objPos:'center center' },
             { id:'seedance-1-5', name:'Seedance 1.5 Pro', brand:'Seedance', color:'#0D9488', desc:'Cinematic videos with audio & multi-shots', img:'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/55231ed2c_Screenshot2026-03-11at22510AM.png', objPos:'center top' },
+            { id:'seedance-2', name:'Seedance 2.0', brand:'Seedance', color:'#0D9488', desc:'Next-gen motion & cinematic dance generation', comingSoon:true, img:'https://images.unsplash.com/photo-1518834107812-67b0b7c58434?w=400&q=80&fit=crop', objPos:'center center' },
           ].map(card => (
-            <div key={card.id} onClick={() => { const m = VIDEO_MODELS.find(x => x.id === card.id); if (m) { onSelect(m); onClose(); } }}
+            <div key={card.id} onClick={() => { if (card.comingSoon) return; const m = VIDEO_MODELS.find(x => x.id === card.id); if (m) { onSelect(m); onClose(); } }}
               style={{ minWidth:300, height:145, borderRadius:14, overflow:'hidden', position:'relative', cursor:'pointer', flexShrink:0, border: selectedId===card.id ? '2px solid #E01E1E' : '1px solid #2A2A2A', transition:'border-color 0.2s' }}>
               <img src={card.img} alt={card.name} style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition: card.objPos || 'center', display:'block' }} />
               <div style={{ position:'absolute', inset:0, background:'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 50%, transparent 100%)', display:'flex', flexDirection:'column', justifyContent:'flex-end', padding:'12px 14px' }}>
@@ -76,7 +78,10 @@ export default function VideoModelModal({ selectedId, onSelect, onClose }) {
                 <div style={{ position:'absolute', top:10, left:12, width:32, height:32, borderRadius:'50%', background: card.color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:13, fontWeight:700, color:'#fff', fontFamily:font, boxShadow:'0 2px 8px rgba(0,0,0,0.5)' }}>
                   {card.brand.charAt(0)}
                 </div>
-                <div style={{ fontSize:18, fontWeight:800, color:'#fff', fontFamily:font, lineHeight:1.1, textShadow:'0 1px 4px rgba(0,0,0,0.5)' }}>{card.name}</div>
+                {card.comingSoon && (
+                  <div style={{ position:'absolute', top:10, right:12, padding:'3px 9px', borderRadius:999, background:'rgba(0,0,0,0.7)', border:'1px solid rgba(255,255,255,0.2)', color:'rgba(255,255,255,0.8)', fontSize:11, fontWeight:700, fontFamily:font, backdropFilter:'blur(4px)' }}>COMING SOON</div>
+                )}
+                <div style={{ fontSize:18, fontWeight:800, color: card.comingSoon ? 'rgba(255,255,255,0.5)' : '#fff', fontFamily:font, lineHeight:1.1, textShadow:'0 1px 4px rgba(0,0,0,0.5)' }}>{card.name}</div>
                 <div style={{ fontSize:11, color:'rgba(255,255,255,0.7)', fontFamily:font, marginTop:3 }}>{card.desc}</div>
               </div>
             </div>
@@ -109,7 +114,7 @@ export default function VideoModelModal({ selectedId, onSelect, onClose }) {
             ? { background:'#1A1A1A', border:'1.5px solid #3A3A3A', color:'rgba(255,255,255,0.8)' }
             : { background: m.color, color:'#fff' };
           return (
-            <div key={m.id} className="vm-row" onClick={() => { onSelect(m); onClose(); }}
+            <div key={m.id} className="vm-row" onClick={() => { if (!m.comingSoon) { onSelect(m); onClose(); } }}
               style={{
                 display:'flex', alignItems:'center', gap:14, padding:'14px 16px',
                 borderRadius:12, cursor:'pointer', marginBottom:2, transition:'all 0.15s',
@@ -121,8 +126,12 @@ export default function VideoModelModal({ selectedId, onSelect, onClose }) {
               </div>
               <div style={{ flex:1, minWidth:0 }}>
                 <div style={{ display:'flex', alignItems:'center', gap:7, fontSize:14, fontWeight:600, color:'#fff', fontFamily:font, flexWrap:'wrap' }}>
-                  {m.name}
-                  {m.badge && <span style={{ padding:'2px 6px', borderRadius:5, background:'rgba(224,30,30,0.15)', border:'1px solid rgba(224,30,30,0.35)', color:'#FF5555', fontSize:10, fontWeight:700 }}>{m.badge}</span>}
+                  <span style={{ color: m.comingSoon ? 'rgba(255,255,255,0.4)' : '#fff' }}>{m.name}</span>
+                  {m.badge === 'SOON' ? (
+                    <span style={{ padding:'2px 6px', borderRadius:5, background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.2)', color:'rgba(255,255,255,0.5)', fontSize:10, fontWeight:700 }}>COMING SOON</span>
+                  ) : m.badge ? (
+                    <span style={{ padding:'2px 6px', borderRadius:5, background:'rgba(224,30,30,0.15)', border:'1px solid rgba(224,30,30,0.35)', color:'#FF5555', fontSize:10, fontWeight:700 }}>{m.badge}</span>
+                  ) : null}
                 </div>
                 <div style={{ fontSize:12, color:'rgba(255,255,255,0.4)', fontFamily:font, marginTop:2 }}>{m.desc}</div>
               </div>

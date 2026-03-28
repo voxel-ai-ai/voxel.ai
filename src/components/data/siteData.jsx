@@ -11,6 +11,7 @@ export const imageModels = [
 // Video Models
 export const videoModels = [
   { id: 1, name: 'Kling 2.6', description: 'Cinematic video with audio support' },
+  { id: 7, name: 'Seedance 2.0', description: 'Next-gen dance & motion video generation', comingSoon: true },
   { id: 2, name: 'Kling Motion Control', description: 'Precise character movement control' },
   { id: 3, name: 'Nano Banana Pro Video', description: 'Professional AI video creation' },
   { id: 4, name: 'Sora 2', description: 'Long-form coherent storytelling video' },
@@ -174,6 +175,7 @@ export const apps = [
   { id: 9, name: 'Relight', description: 'Change lighting in any image', category: 'Image', icon: 'Sun' },
   { id: 10, name: '4K Upscaler', description: 'Upscale any image to 4K resolution', category: 'Enhancement', icon: 'Maximize' },
   { id: 11, name: 'Kling 2.6', description: 'Cinematic video with audio support', category: 'Video', icon: 'Video' },
+  { id: 37, name: 'Seedance 2.0', description: 'Next-gen dance & motion video generation', category: 'Video', icon: 'Sparkles', comingSoon: true },
   { id: 12, name: 'Kling Motion Control', description: 'Precise character movement control', category: 'Video', icon: 'Move' },
   { id: 13, name: 'Nano Banana Pro Video', description: 'Professional AI video creation', category: 'Video', icon: 'Film' },
   { id: 14, name: 'Sora 2', description: 'Long-form coherent storytelling video', category: 'Video', icon: 'Clapperboard' },
