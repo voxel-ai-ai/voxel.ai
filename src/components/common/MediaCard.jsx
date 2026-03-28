@@ -99,10 +99,10 @@ export default function MediaCard({
         )}
       </div>
 
-      {/* Hover Overlay - subtle dim */}
+      {/* Hover Overlay - subtle dim, hidden when video is playing */}
       <div className={cn(
         "absolute inset-0 bg-black/20 transition-opacity duration-300 pointer-events-none",
-        isHovered ? "opacity-100" : "opacity-0"
+        isHovered && !videoUrl ? "opacity-100" : "opacity-0"
       )} />
 
       {/* Bottom Info + Try Now Button */}
