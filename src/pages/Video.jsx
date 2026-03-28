@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import VideoLeftPanel from '@/components/video/VideoLeftPanel';
 import VideoRightArea from '@/components/video/VideoRightArea';
 import VideoModelModal from '@/components/video/VideoModelModal';
@@ -6,13 +6,17 @@ import VideoDetailModal from '@/components/video/VideoDetailModal';
 import { toast } from 'sonner';
 
 const DEFAULT_MODEL = { id: 'kling-2-6', name: 'Kling 2.6', brand: 'Kling', color: '#1B7FE4' };
+const SEEDANCE_2 = { id: 'seedance-2', name: 'Seedance 2.0', brand: 'Seedance', color: '#0D9488' };
 
 export default function Video() {
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [count, setCount] = useState(1);
   const [videos, setVideos] = useState([]);
-  const [model, setModel] = useState(DEFAULT_MODEL);
+  const [model, setModel] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('model') === 'seedance-2' ? SEEDANCE_2 : DEFAULT_MODEL;
+  });
   const [duration, setDuration] = useState('5s');
   const [resolution, setResolution] = useState('1080p');
   const [aspectRatio, setAspectRatio] = useState('Auto');

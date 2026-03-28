@@ -89,6 +89,8 @@ export default function FeatureCardsRow() {
               onClick={() => {
               if (card.title === 'Nano Banana Pro') navigate(createPageUrl('Image'));
               else if (card.title === 'Voxel Studio') navigate(createPageUrl('Studio'));
+              else if (card.title === 'Kling 3.0') navigate(createPageUrl('Video'));
+              else if (card.title === 'Seedance 2.0') navigate('/video?model=seedance-2');
             }}
               className="group flex-shrink-0 w-72 rounded-xl border border-border bg-background-secondary overflow-hidden hover:border-primary/50 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
             >
@@ -99,6 +101,10 @@ export default function FeatureCardsRow() {
                 ) : card.title === 'Voxel Studio' ? (
                   <div className="h-56 relative overflow-hidden">
                     <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/35e69567c_hf_20260307_232753_6dc6c935-e9cd-4b00-8112-5d6c16e94805.jpg" alt="Voxel Studio" className="w-full h-full object-cover" />
+                  </div>
+                ) : card.title === 'Seedance 2.0' ? (
+                  <div className="h-40 relative overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1518834107812-67b0b7c58434?w=600&q=80&fit=crop" alt="Seedance 2.0" className="w-full h-full object-cover" />
                   </div>
                 ) : card.title === 'Kling 3.0' ? (
                   <div className="h-40 relative overflow-hidden">
