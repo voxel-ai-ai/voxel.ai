@@ -29,7 +29,7 @@ export default function MediaCard({
 
   const handleMouseEnter = () => {
     setIsHovered(true);
-    if (videoRef.current) videoRef.current.play();
+    if (videoRef.current) videoRef.current.play().catch(() => {});
   };
   const handleMouseLeave = () => {
     setIsHovered(false);
@@ -64,6 +64,8 @@ export default function MediaCard({
           <video
             ref={videoRef}
             src={videoUrl}
+            onError={() => {}}
+            onCanPlay={() => { if (isHovered) videoRef.current?.play().catch(() => {}); }}
             className="absolute inset-0 w-full h-full object-cover"
             muted
             loop
