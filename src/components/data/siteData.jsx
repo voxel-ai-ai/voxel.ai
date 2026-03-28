@@ -231,8 +231,8 @@ export const soundEffects = [
 export const communityFeed = [
   { 
     id: 15, type: 'video', creator: 'you', views: '0', likes: '0', model: 'Seedance 2.0',
-    videoUrl: 'https://drive.google.com/uc?export=download&id=11h8hTMVtwmg2kau4eBJmyJYXUJpaiWes',
-    prompt: 'Coming soon...'
+    videoUrl: 'https://videos.pexels.com/video-files/3015539/3015539-hd_1920_1080_25fps.mp4',
+    prompt: 'Coming soon — your video will be added here once uploaded to a direct host'
   },
   { id: 2, type: 'video', creator: 'filmstudio', views: '8.2K', likes: '1.5K', model: 'Kling 2.6', videoUrl: 'https://videos.pexels.com/video-files/3015539/3015539-hd_1920_1080_25fps.mp4', prompt: 'Cinematic action sequence, hero in black coat runs toward camera in slow motion, debris and fire around them, crash zoom, dramatic score feel, photorealistic 4K' },
   { id: 3, type: 'image', creator: 'artmaster', views: '5.7K', likes: '890', model: 'Seedream 4.5', prompt: 'Abstract 3D render of floating geometric shapes, deep red and black palette, metallic surfaces, caustic lighting, photorealistic render, 8K resolution' },
