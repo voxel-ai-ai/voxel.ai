@@ -1,45 +1,44 @@
-import { fal } from "npm:@fal-ai/client@1.3.1";
+import { fal } from "npm:@fal-ai/client@^1";
 import { createClientFromRequest } from "npm:@base44/sdk@0.8.23";
 
 // TESTING MODE — set to false when launching to real users
 const TESTING_MODE = true;
 
-const MODEL_ROUTING = {
-  // IMAGE
-  "Nano Banana Pro":     { provider: "nano_banana", type: "image" },
-  "Nano Banana 2":       { provider: "nano_banana", type: "image" },
-  "GPT Image 1.5":       { provider: "fal", id: "fal-ai/flux-pro", type: "image" },
-  "Flux Kontext":        { provider: "fal", id: "fal-ai/flux-pro/kontext", type: "image" },
-  "Flux 2":              { provider: "fal", id: "fal-ai/flux-pro/v1.1", type: "image" },
-  "Seedream 5.0 Lite":   { provider: "fal", id: "fal-ai/bytedance/seedream-3", type: "image" },
-  "Seedream 4.5":        { provider: "fal", id: "fal-ai/bytedance/seedream-3", type: "image" },
-  "Soul 2.0":            { provider: "fal", id: "fal-ai/flux/dev", type: "image" },
-  "Wan 2.2 Image":       { provider: "fal", id: "fal-ai/wan-i2i", type: "image" },
-  "Skin Enhancer":       { provider: "fal", id: "fal-ai/aura-sr", type: "image" },
-  "Face Swap":           { provider: "fal", id: "fal-ai/face-swap", type: "image" },
-  "Relight":             { provider: "fal", id: "fal-ai/ic-light", type: "image" },
+const IMAGE_MODELS = {
+  "Nano Banana 2":     "fal-ai/nano-banana-2",
+  "Nano Banana Pro":   "fal-ai/nano-banana-pro",
+  "Soul 2.0":          "fal-ai/flux/dev",
+  "Seedream 5.0 Lite": "fal-ai/bytedance/seedream-3",
+  "Seedream 4.5":      "fal-ai/bytedance/seedream-3",
+  "Flux Kontext":      "fal-ai/flux-pro/kontext",
+  "Flux 2":            "fal-ai/flux-pro/v1.1",
+  "Wan 2.2 Image":     "fal-ai/wan-i2i",
+  "Skin Enhancer":     "fal-ai/aura-sr",
+  "Face Swap":         "fal-ai/face-swap",
+  "Relight":           "fal-ai/ic-light",
+};
 
-  // VIDEO
-  "Kling 3.0 Omni":      { provider: "fal", id: "fal-ai/kling-video/v2.1/pro/text-to-video", type: "video" },
-  "Kling 3.0":           { provider: "fal", id: "fal-ai/kling-video/v2.1/standard/text-to-video", type: "video" },
-  "Kling 2.6":           { provider: "fal", id: "fal-ai/kling-video/v1.6/pro/text-to-video", type: "video" },
-  "Kling 2.5":           { provider: "fal", id: "fal-ai/kling-video/v1.5/pro/text-to-video", type: "video" },
-  "Kling 2.1":           { provider: "fal", id: "fal-ai/kling-video/v1/pro/text-to-video", type: "video" },
-  "Kling O1":            { provider: "fal", id: "fal-ai/kling-video/v1.6/pro/text-to-video", type: "video" },
-  "Kling Motion Control":{ provider: "fal", id: "fal-ai/kling-video/v1.6/pro/text-to-video", type: "video" },
-  "Wan 2.6":             { provider: "fal", id: "fal-ai/wan-i2v", type: "video" },
-  "Wan 2.2":             { provider: "fal", id: "fal-ai/wan-t2v", type: "video" },
-  "Seedance 1.5 Pro":    { provider: "fal", id: "fal-ai/bytedance/seedance-1-5-pro-t2v", type: "video" },
-  "Seedance 2.0":        { provider: "fal", id: "fal-ai/bytedance/seedance-1-5-pro-t2v", type: "video" },
-  "Seedance 1":          { provider: "fal", id: "fal-ai/bytedance/seedance-1-lite-t2v", type: "video" },
-  "LTX 2":               { provider: "fal", id: "fal-ai/ltx-video-13b-distilled", type: "video" },
-  "Hailuo 2.3":          { provider: "fal", id: "fal-ai/minimax/video-01-live", type: "video" },
-  "PixVerse 5":          { provider: "fal", id: "fal-ai/pixverse/v4.5/text-to-video", type: "video" },
-  "Vidu Q3":             { provider: "fal", id: "fal-ai/vidu/q1", type: "video" },
-  "Vidu Q2":             { provider: "fal", id: "fal-ai/vidu/q1", type: "video" },
-  "Veo 3.1":             { provider: "fal", id: "fal-ai/veo2", type: "video" },
-  "Sora 2":              { provider: "fal", id: "fal-ai/sora", type: "video" },
-  "Nano Banana Pro Video":{ provider: "fal", id: "fal-ai/kling-video/v1.6/pro/text-to-video", type: "video" },
+const VIDEO_MODELS = {
+  "Kling 3.0 Omni":        "fal-ai/kling-video/v2.1/pro/text-to-video",
+  "Kling 3.0":             "fal-ai/kling-video/v2.1/standard/text-to-video",
+  "Kling 2.6":             "fal-ai/kling-video/v1.6/pro/text-to-video",
+  "Kling 2.5":             "fal-ai/kling-video/v1.5/pro/text-to-video",
+  "Kling 2.1":             "fal-ai/kling-video/v1/pro/text-to-video",
+  "Kling O1":              "fal-ai/kling-video/v1.6/pro/text-to-video",
+  "Kling Motion Control":  "fal-ai/kling-video/v1.6/pro/text-to-video",
+  "Wan 2.6":               "fal-ai/wan-i2v",
+  "Wan 2.2":               "fal-ai/wan-t2v",
+  "Seedance 1.5 Pro":      "fal-ai/bytedance/seedance-1-5-pro-t2v",
+  "Seedance 2.0":          "fal-ai/bytedance/seedance-1-5-pro-t2v",
+  "Seedance 1":            "fal-ai/bytedance/seedance-1-lite-t2v",
+  "LTX 2":                 "fal-ai/ltx-video-13b-distilled",
+  "Hailuo 2.3":            "fal-ai/minimax/video-01-live",
+  "PixVerse 5":            "fal-ai/pixverse/v4.5/text-to-video",
+  "Vidu Q3":               "fal-ai/vidu/q1",
+  "Vidu Q2":               "fal-ai/vidu/q1",
+  "Veo 3.1":               "fal-ai/veo2",
+  "Sora 2":                "fal-ai/sora",
+  "Nano Banana Pro Video": "fal-ai/kling-video/v1.6/pro/text-to-video",
 };
 
 Deno.serve(async (req) => {
@@ -60,11 +59,6 @@ Deno.serve(async (req) => {
     return Response.json({ error: "Type must be image or video" }, { status: 400 });
   }
 
-  const modelConfig = MODEL_ROUTING[model];
-  if (!modelConfig) {
-    return Response.json({ error: "Unknown model: " + model }, { status: 400 });
-  }
-
   // Credit check — SKIPPED during testing
   if (!TESTING_MODE) {
     const base44 = createClientFromRequest(req);
@@ -72,87 +66,69 @@ Deno.serve(async (req) => {
     if (!user) {
       return Response.json({ error: "Please log in" }, { status: 401 });
     }
-    // Credit check logic goes here when launched
+    // Add credit deduction logic here before launch
   }
 
-  // Configure fal with key from env only
-  fal.config({ credentials: Deno.env.get("FAL_API_KEY") });
+  fal.config({ credentials: Deno.env.get("FAL_KEY") });
 
   try {
     // ── IMAGE GENERATION ──
     if (type === "image") {
-
-      if (modelConfig.provider === "nano_banana") {
-        const response = await fetch(
-          `${Deno.env.get("NANO_BANANA_BASE_URL")}/generate/image`,
-          {
-            method: "POST",
-            headers: {
-              "Authorization": `Bearer ${Deno.env.get("NANO_BANANA_API_KEY")}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              prompt,
-              negative_prompt: negativePrompt || "",
-              aspect_ratio: ratio || "16:9",
-            }),
-          }
-        );
-        const data = await response.json();
-        return Response.json({
-          success: true,
-          type: "image",
-          result_url: data.image_url || data.url,
-        });
+      const modelId = IMAGE_MODELS[model];
+      if (!modelId) {
+        return Response.json({ error: "Unknown image model: " + model }, { status: 400 });
       }
 
-      if (modelConfig.provider === "fal") {
-        const result = await fal.run(modelConfig.id, {
-          input: {
-            prompt,
-            negative_prompt: negativePrompt || "",
-            image_size:
-              ratio === "9:16" ? "portrait_16_9" :
-              ratio === "1:1"  ? "square_hd" : "landscape_16_9",
-            num_inference_steps: 28,
-            guidance_scale: 3.5,
-            num_images: 1,
-            enable_safety_checker: true,
-            ...(referenceImageUrl ? { image_url: referenceImageUrl } : {}),
-          },
-        });
-        const imageUrl = result.images?.[0]?.url || result.image?.url;
-        return Response.json({
-          success: true,
-          type: "image",
-          result_url: imageUrl,
-        });
-      }
+      const aspectRatio =
+        ratio === "9:16" ? "9:16" :
+        ratio === "1:1"  ? "1:1"  :
+        ratio === "4:3"  ? "4:3"  : "16:9";
+
+      const falModelId = referenceImageUrl ? modelId + "/edit" : modelId;
+
+      const input = {
+        prompt,
+        aspect_ratio: aspectRatio,
+        ...(referenceImageUrl ? { image_urls: [referenceImageUrl] } : {}),
+        ...(negativePrompt ? { negative_prompt: negativePrompt } : {}),
+      };
+
+      const result = await fal.subscribe(falModelId, { input });
+      const imageUrl = result.data?.images?.[0]?.url;
+
+      return Response.json({
+        success: true,
+        type: "image",
+        result_url: imageUrl,
+      });
     }
 
     // ── VIDEO GENERATION ──
     if (type === "video") {
-      if (modelConfig.provider === "fal") {
-        const input = {
-          prompt,
-          duration: String(duration || 5),
-          aspect_ratio: ratio || "16:9",
-          ...(negativePrompt ? { negative_prompt: negativePrompt } : {}),
-          ...(referenceImageUrl ? { image_url: referenceImageUrl } : {}),
-        };
-
-        const submitted = await fal.queue.submit(modelConfig.id, { input });
-
-        return Response.json({
-          success: true,
-          type: "video",
-          job_id: submitted.request_id,
-          model_id: modelConfig.id,
-        });
+      const modelId = VIDEO_MODELS[model];
+      if (!modelId) {
+        return Response.json({ error: "Unknown video model: " + model }, { status: 400 });
       }
+
+      const input = {
+        prompt,
+        duration: String(duration || 5),
+        aspect_ratio: ratio || "16:9",
+        ...(negativePrompt ? { negative_prompt: negativePrompt } : {}),
+        ...(referenceImageUrl ? { image_url: referenceImageUrl } : {}),
+      };
+
+      const submitted = await fal.queue.submit(modelId, { input });
+
+      return Response.json({
+        success: true,
+        type: "video",
+        job_id: submitted.request_id,
+        model_id: modelId,
+      });
     }
 
-    return Response.json({ error: "Unsupported provider" }, { status: 400 });
+    return Response.json({ error: "Unsupported type" }, { status: 400 });
 
   } catch (error) {
     console.error("Generation error:", error.message);

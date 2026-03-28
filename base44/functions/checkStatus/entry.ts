@@ -1,4 +1,4 @@
-import { fal } from "npm:@fal-ai/client@1.3.1";
+import { fal } from "npm:@fal-ai/client@^1";
 
 Deno.serve(async (req) => {
   if (req.method !== "POST") {
@@ -15,8 +15,7 @@ Deno.serve(async (req) => {
     return Response.json({ error: "Invalid model_id" }, { status: 400 });
   }
 
-  // Key from env only — never from frontend
-  fal.config({ credentials: Deno.env.get("FAL_API_KEY") });
+  fal.config({ credentials: Deno.env.get("FAL_KEY") });
 
   try {
     const status = await fal.queue.status(model_id, {
