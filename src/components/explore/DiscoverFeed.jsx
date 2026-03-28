@@ -1,8 +1,71 @@
 import React, { useState, useRef } from 'react';
 import MediaCard from '@/components/common/MediaCard';
 import { communityFeed } from '@/components/data/siteData';
-import { X, Copy, Wand2, Upload } from 'lucide-react';
+import { X, Copy, Wand2, Upload, Video } from 'lucide-react';
 import { toast } from 'sonner';
+
+function AddVideoModal({ videoUrl, onConfirm, onClose }) {
+  const [prompt, setPrompt] = useState('');
+  const [model, setModel] = useState('');
+
+  return (
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-sm" />
+      <div
+        className="relative w-full max-w-lg rounded-2xl overflow-hidden animate-scale-in"
+        style={{ background: '#111', border: '1px solid #2A2A2A' }}
+        onClick={e => e.stopPropagation()}
+      >
+        <button onClick={onClose} className="absolute top-4 right-4 z-10 p-2 rounded-full" style={{ background: 'rgba(0,0,0,0.6)' }}>
+          <X size={18} className="text-white" />
+        </button>
+
+        {/* Video preview */}
+        <video src={videoUrl} className="w-full block" style={{ maxHeight: '240px', objectFit: 'cover' }} muted controls />
+
+        <div className="p-5 space-y-4">
+          <h3 className="text-white font-semibold text-lg">Add Video Details</h3>
+
+          <div>
+            <label className="text-xs uppercase tracking-wider mb-2 block" style={{ color: '#555' }}>Prompt / Description</label>
+            <textarea
+              value={prompt}
+              onChange={e => setPrompt(e.target.value)}
+              placeholder="Describe what's in this video..."
+              rows={3}
+              className="w-full rounded-xl p-3 text-sm resize-none"
+              style={{ background: '#0d0d0d', border: '1px solid #2A2A2A', color: '#ccc', fontFamily: 'inherit', outline: 'none' }}
+            />
+          </div>
+
+          <div>
+            <label className="text-xs uppercase tracking-wider mb-2 block" style={{ color: '#555' }}>Model (optional)</label>
+            <input
+              value={model}
+              onChange={e => setModel(e.target.value)}
+              placeholder="e.g. Kling 2.6, Sora..."
+              className="w-full rounded-xl p-3 text-sm"
+              style={{ background: '#0d0d0d', border: '1px solid #2A2A2A', color: '#ccc', fontFamily: 'inherit', outline: 'none' }}
+            />
+          </div>
+
+          <div className="flex gap-3 pt-1">
+            <button onClick={onClose} className="flex-1 py-2.5 rounded-xl text-sm" style={{ border: '1px solid #2A2A2A', color: '#aaa', background: 'transparent' }}>
+              Cancel
+            </button>
+            <button
+              onClick={() => { if (!prompt.trim()) { toast.error('Please add a description'); return; } onConfirm(prompt, model); }}
+              className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-white flex items-center justify-center gap-2"
+              style={{ background: '#E01E1E' }}
+            >
+              <Video className="w-4 h-4" /> Add to Feed
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function ImageModal({ item, onClose }) {
   const copyPrompt = () => {
@@ -111,24 +174,31 @@ function ImageModal({ item, onClose }) {
 export default function DiscoverFeed() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [uploadedVideos, setUploadedVideos] = useState([]);
+  const [pendingVideo, setPendingVideo] = useState(null);
   const uploadRef = useRef(null);
 
   const handleVideoUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
     const url = URL.createObjectURL(file);
+    setPendingVideo(url);
+    e.target.value = '';
+  };
+
+  const handleConfirmVideo = (prompt, model) => {
     const newItem = {
       id: Date.now(),
       type: 'video',
-      videoUrl: url,
+      videoUrl: pendingVideo,
       creator: 'you',
-      model: 'Uploaded',
+      model: model || 'Uploaded',
       views: '0',
       likes: '0',
-      prompt: file.name,
+      prompt,
     };
     setUploadedVideos(prev => [newItem, ...prev]);
-    e.target.value = '';
+    setPendingVideo(null);
+    toast.success('Video added to feed!');
   };
 
   return (
@@ -191,6 +261,13 @@ export default function DiscoverFeed() {
 
       {selectedItem && (
         <ImageModal item={selectedItem} onClose={() => setSelectedItem(null)} />
+      )}
+      {pendingVideo && (
+        <AddVideoModal
+          videoUrl={pendingVideo}
+          onConfirm={handleConfirmVideo}
+          onClose={() => setPendingVideo(null)}
+        />
       )}
     </section>
   );
