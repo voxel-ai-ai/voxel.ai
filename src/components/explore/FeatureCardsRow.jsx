@@ -103,8 +103,8 @@ export default function FeatureCardsRow() {
                     <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/35e69567c_hf_20260307_232753_6dc6c935-e9cd-4b00-8112-5d6c16e94805.jpg" alt="Voxel Studio" className="w-full h-full object-cover" />
                   </div>
                 ) : card.title === 'Seedance 2.0' ? (
-                  <div className="h-40 relative overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1518834107812-67b0b7c58434?w=600&q=80&fit=crop" alt="Seedance 2.0" className="w-full h-full object-cover" />
+                  <div className="h-40 relative overflow-hidden flex items-center justify-center" style={{ background: '#1a1a1a' }}>
+                    <span className="text-2xl font-bold tracking-widest" style={{ color: '#E01E1E' }}>COMING SOON</span>
                   </div>
                 ) : card.title === 'Kling 3.0' ? (
                   <div className="h-40 relative overflow-hidden">
