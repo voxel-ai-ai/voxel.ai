@@ -230,39 +230,9 @@ export const soundEffects = [
 // Community Feed Data
 export const communityFeed = [
   { 
-    id: 1, type: 'image', creator: 'alexcreates', views: '12.4K', likes: '2.1K', model: 'Nano Banana Pro',
-    imageUrl: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/da5cf77de_hf_20260222_124200_44de52ac-0250-45a2-9a84-cc87bdf8524d.jpg',
-    prompt: 'A covered Mercedes-AMG GT revealed under a dramatic single spotlight in a dark smoky studio, white satin cloth draped over the vehicle, cinematic god rays cutting through the fog, wet reflective concrete floor, ultra-cinematic 4K render, dark and moody atmosphere'
-  },
-  { 
-    id: 9, type: 'image', creator: 'darkvision', views: '18.7K', likes: '3.9K', model: 'Nano Banana Pro',
-    imageUrl: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/c186ac8af_1c9f0e5b-96cc-416e-b5a9-a94efbeede19.png',
-    prompt: 'Extreme close-up cinematic portrait of a dark fantasy villain, white long hair, glowing reptilian yellow eyes, purple vein face markings, unsettling grin, ultra-detailed skin texture, dramatic shallow depth of field, photorealistic 4K render'
-  },
-  { 
-    id: 10, type: 'image', creator: 'santaclaus_ai', views: '24.1K', likes: '5.2K', model: 'Nano Banana Pro',
-    imageUrl: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/d28584312_6e354a1a-fa83-4c61-a033-e9755dd40b6a.png',
-    prompt: 'Cinematic action scene, badass Santa Claus in red suit wearing sunglasses carrying a child, running from burning apartment building, debris and fire everywhere, dramatic low angle shot, golden hour fire glow, photorealistic 4K'
-  },
-  { 
-    id: 11, type: 'image', creator: 'cinescene_', views: '11.3K', likes: '2.4K', model: 'Nano Banana Pro',
-    imageUrl: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/bcd4a5cc2_54eeba81-1a47-406c-9f86-f4205743fcf3.png',
-    prompt: 'Cinematic scene of Santa Claus in a convenience store holding a candy cane like a weapon, confronting a frightened store clerk, realistic lighting, moody film noir atmosphere, photorealistic 4K'
-  },
-  { 
-    id: 12, type: 'image', creator: 'postapoc_art', views: '16.8K', likes: '3.1K', model: 'Nano Banana Pro',
-    imageUrl: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/444ab3cfd_45012a5c-99eb-4200-82a6-51d24fbeb439.png',
-    prompt: 'Close-up cinematic portrait of a post-apocalyptic survivor, dirty face, kanji tattoo on forehead, intense stare, dusty desert sandstorm background, gritty realistic skin, backpack, ultra-detailed 4K photorealistic'
-  },
-  { 
-    id: 13, type: 'image', creator: 'epicframe_', views: '31.5K', likes: '6.8K', model: 'Nano Banana Pro',
-    imageUrl: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/46b95dc4f_392575fd-e811-45cd-8dc2-c35667345096.png',
-    prompt: 'Epic cinematic action shot, Santa Claus in red suit sprinting through a massive urban building explosion, fire and debris flying everywhere, dramatic wide angle low camera, intense orange fire light, rubble, photorealistic 4K blockbuster quality'
-  },
-  { 
-    id: 14, type: 'image', creator: 'grittyrealism', views: '9.6K', likes: '1.9K', model: 'Nano Banana Pro',
-    imageUrl: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/69a83da7490a426a3f30f581/e293152ad_b33cd0c0-0766-4f5f-a344-c2e6084e6bd8.png',
-    prompt: 'Cinematic close-up portrait of a battle-worn Santa Claus on a busy city street, weathered skin with ash and soot marks, green eyes, disheveled white beard, looking dazed, winter daylight, ultra-realistic 4K'
+    id: 15, type: 'video', creator: 'you', views: '0', likes: '0', model: 'Seedance 2.0',
+    videoUrl: 'https://drive.google.com/uc?export=download&id=11h8hTMVtwmg2kau4eBJmyJYXUJpaiWes',
+    prompt: 'Coming soon...'
   },
   { id: 2, type: 'video', creator: 'filmstudio', views: '8.2K', likes: '1.5K', model: 'Kling 2.6', videoUrl: 'https://videos.pexels.com/video-files/3015539/3015539-hd_1920_1080_25fps.mp4', prompt: 'Cinematic action sequence, hero in black coat runs toward camera in slow motion, debris and fire around them, crash zoom, dramatic score feel, photorealistic 4K' },
   { id: 3, type: 'image', creator: 'artmaster', views: '5.7K', likes: '890', model: 'Seedream 4.5', prompt: 'Abstract 3D render of floating geometric shapes, deep red and black palette, metallic surfaces, caustic lighting, photorealistic render, 8K resolution' },
