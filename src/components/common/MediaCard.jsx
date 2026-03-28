@@ -46,6 +46,7 @@ export default function MediaCard({
       style={{ background: '#111', border: '1px solid #2A2A2A' }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onClick={onClick}
     >
       {/* Thumbnail */}
       <div 
