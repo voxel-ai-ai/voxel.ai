@@ -69,7 +69,11 @@ Deno.serve(async (req) => {
     // Add credit deduction logic here before launch
   }
 
-  fal.config({ credentials: Deno.env.get("FAL_KEY") });
+  const falKey = (Deno.env.get("FAL_KEY") || "").trim();
+  if (!falKey) {
+    return Response.json({ error: "FAL_KEY not configured" }, { status: 500 });
+  }
+  fal.config({ credentials: falKey });
 
   try {
     // ── IMAGE GENERATION ──
@@ -131,7 +135,7 @@ Deno.serve(async (req) => {
     return Response.json({ error: "Unsupported type" }, { status: 400 });
 
   } catch (error) {
-    console.error("Generation error:", error.message);
-    return Response.json({ error: "Generation failed. Please try again." }, { status: 500 });
+    console.error("Generation error:", error.message, error.stack);
+    return Response.json({ error: error.message || "Generation failed. Please try again." }, { status: 500 });
   }
 });
