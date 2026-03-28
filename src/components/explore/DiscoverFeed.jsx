@@ -21,6 +21,7 @@ function ImageModal({ item, onClose }) {
         <button onClick={onClose} className="absolute top-4 right-4 z-10 p-2 rounded-full" style={{ background: 'rgba(0,0,0,0.6)' }}>
           <X size={18} className="text-white" />
         </button>
+
         <div className="w-full relative overflow-hidden" style={{ background: '#1a1a1a' }}>
           {item.videoUrl ? (
             <video src={item.videoUrl} className="w-full block" controls autoPlay muted loop playsInline style={{ maxHeight: '400px', objectFit: 'cover' }} />
@@ -30,6 +31,7 @@ function ImageModal({ item, onClose }) {
             <div className="w-full h-48" style={{ background: ['linear-gradient(135deg, #1a0000 0%, #8B0000 50%, #1a1a1a 100%)', 'linear-gradient(135deg, #0a0a1a 0%, #1a0a2a 50%, #2a0a0a 100%)', 'linear-gradient(135deg, #0d0d0d 0%, #2a0000 60%, #111 100%)', 'linear-gradient(135deg, #1a1a0a 0%, #3a1a00 50%, #0a0a0a 100%)'][item.id % 4] }} />
           )}
         </div>
+
         <div className="p-5 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -38,23 +40,29 @@ function ImageModal({ item, onClose }) {
             </div>
             <span className="text-xs" style={{ color: '#555' }}>{item.type}</span>
           </div>
+
           <div>
             <p className="text-xs uppercase tracking-wider mb-2" style={{ color: '#555' }}>Prompt</p>
             <div className="p-4 rounded-xl font-mono text-sm leading-relaxed" style={{ background: '#0d0d0d', border: '1px solid #2A2A2A', color: '#ccc' }}>
               "{item.prompt}"
             </div>
           </div>
+
           <div className="flex gap-3">
             <button
               onClick={copyPrompt}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm"
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm transition-colors"
               style={{ border: '1px solid #2A2A2A', color: '#aaa', background: 'transparent' }}
+              onMouseEnter={e => e.currentTarget.style.borderColor = '#444'}
+              onMouseLeave={e => e.currentTarget.style.borderColor = '#2A2A2A'}
             >
               <Copy className="w-4 h-4" /> Copy Prompt
             </button>
             <button
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold text-white"
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold text-white transition-colors"
               style={{ background: '#E01E1E' }}
+              onMouseEnter={e => e.currentTarget.style.background = '#ff2222'}
+              onMouseLeave={e => e.currentTarget.style.background = '#E01E1E'}
             >
               <Wand2 className="w-4 h-4" /> Recreate Now →
             </button>
@@ -71,7 +79,6 @@ export default function DiscoverFeed() {
   return (
     <section className="py-16 px-4">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-12">
           <h2 className="font-heading text-4xl sm:text-5xl tracking-wider text-white mb-4">
             DISCOVER THE PROJECTS, AND RECREATE IT!
@@ -81,7 +88,6 @@ export default function DiscoverFeed() {
           </p>
         </div>
 
-        {/* Masonry Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {communityFeed.map((item, index) => (
             <MediaCard
@@ -95,13 +101,11 @@ export default function DiscoverFeed() {
               imageUrl={item.imageUrl}
               videoUrl={item.videoUrl}
               gradientIndex={index}
-              className=""
               onClick={() => setSelectedItem(item)}
             />
           ))}
         </div>
 
-        {/* Load More */}
         <div className="flex justify-center mt-10">
           <button className="px-8 py-3 text-foreground-secondary hover:text-white border border-border hover:border-primary/50 rounded-full transition-all duration-300">
             Load More
