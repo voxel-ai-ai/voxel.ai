@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import MediaCard from '@/components/common/MediaCard';
 import { communityFeed } from '@/components/data/siteData';
-import { X, Copy, Wand2 } from 'lucide-react';
+import { X, Copy, Wand2, Upload } from 'lucide-react';
 import { toast } from 'sonner';
 
 function ImageModal({ item, onClose }) {
@@ -110,6 +110,26 @@ function ImageModal({ item, onClose }) {
 
 export default function DiscoverFeed() {
   const [selectedItem, setSelectedItem] = useState(null);
+  const [uploadedVideos, setUploadedVideos] = useState([]);
+  const uploadRef = useRef(null);
+
+  const handleVideoUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    const newItem = {
+      id: Date.now(),
+      type: 'video',
+      videoUrl: url,
+      creator: 'you',
+      model: 'Uploaded',
+      views: '0',
+      likes: '0',
+      prompt: file.name,
+    };
+    setUploadedVideos(prev => [newItem, ...prev]);
+    e.target.value = '';
+  };
 
   return (
     <section className="py-16 px-4">
@@ -126,7 +146,24 @@ export default function DiscoverFeed() {
 
         {/* Masonry Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {communityFeed.map((item, index) => (
+          {/* Upload Card */}
+          <div
+            onClick={() => uploadRef.current?.click()}
+            className="relative rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:-translate-y-1 flex flex-col items-center justify-center gap-3"
+            style={{ background: '#111', border: '2px dashed #333', minHeight: '200px', aspectRatio: '4/3' }}
+            onMouseEnter={e => e.currentTarget.style.borderColor = '#E01E1E'}
+            onMouseLeave={e => e.currentTarget.style.borderColor = '#333'}
+          >
+            <input ref={uploadRef} type="file" accept="video/mp4,video/mov,video/webm,video/*" style={{ display: 'none' }} onChange={handleVideoUpload} />
+            <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'rgba(224,30,30,0.15)', border: '1px solid rgba(224,30,30,0.4)' }}>
+              <Upload className="w-5 h-5" style={{ color: '#E01E1E' }} />
+            </div>
+            <div className="text-center px-4">
+              <p className="text-sm font-semibold text-white mb-1">Upload Video</p>
+              <p className="text-xs" style={{ color: '#666' }}>MP4, MOV, WebM</p>
+            </div>
+          </div>
+          {[...uploadedVideos, ...communityFeed].map((item, index) => (
             <MediaCard
               key={item.id}
               type={item.type}
