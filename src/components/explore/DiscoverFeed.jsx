@@ -64,7 +64,7 @@ function ImageModal({ item, onClose, onRecreate }) {
               style={{ background: '#E01E1E' }}
               onMouseEnter={e => e.currentTarget.style.background = '#ff2222'}
               onMouseLeave={e => e.currentTarget.style.background = '#E01E1E'}
-              onClick={() => onRecreate(selectedItem.prompt)}
+              onClick={() => onRecreate(item.prompt)}
             >
               <Wand2 className="w-4 h-4" /> Recreate Now →
             </button>
