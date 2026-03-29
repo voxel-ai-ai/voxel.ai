@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Sparkles, ChevronDown, Minus, Plus, Pencil, Type, X, Check } from 'lucide-react';
 import PageSwitcher from '@/components/common/PageSwitcher';
+import { base44 } from '@/api/base44Client';
 
 // ─── Image Models ────────────────────────────────────────────────────────────
 const IMAGE_MODELS = [
@@ -411,9 +412,7 @@ export default function ImagePromptBar({
     if (!file) return;
     const localUrl = URL.createObjectURL(file);
     setUploadedImage(localUrl);
-    // Upload to get a real URL for the API
-    const { base44: sdk } = await import('@/api/base44Client');
-    const { file_url } = await sdk.integrations.Core.UploadFile({ file });
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
     if (onReferenceImageChange) onReferenceImageChange(file_url);
   };
 
