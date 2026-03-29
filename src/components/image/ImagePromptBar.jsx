@@ -410,10 +410,18 @@ export default function ImagePromptBar({
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    // Show preview immediately
     const localUrl = URL.createObjectURL(file);
     setUploadedImage(localUrl);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    if (onReferenceImageChange) onReferenceImageChange(file_url);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      if (onReferenceImageChange) onReferenceImageChange(file_url);
+    } catch (err) {
+      // Keep preview but use local object URL as fallback
+      if (onReferenceImageChange) onReferenceImageChange(localUrl);
+    }
+    // Reset input so same file can be re-selected
+    e.target.value = '';
   };
 
   const handleSelectModel = (m) => {
