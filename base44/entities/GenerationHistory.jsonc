@@ -38,6 +38,16 @@
     },
     "duration": {
       "type": "number"
+    },
+    "saved": {
+      "type": "boolean",
+      "default": false
+    },
+    "style": {
+      "type": "string"
+    },
+    "quality": {
+      "type": "string"
     }
   },
   "required": [

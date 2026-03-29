@@ -389,6 +389,7 @@ const chipBase = {
 export default function ImagePromptBar({
   prompt, onPromptChange, onGenerate, isGenerating,
   selectedModel, onModelChange, imageCount, onCountChange,
+  onAspectRatioChange, onStyleChange,
 }) {
   const [model, setModel] = useState(IMAGE_MODELS[0]);
   const [aspectRatio, setAspectRatio] = useState('16:9');
@@ -416,6 +417,16 @@ export default function ImagePromptBar({
     if (onModelChange) onModelChange(m);
   };
 
+  const handleAspectRatioChange = (val) => {
+    setAspectRatio(val);
+    if (onAspectRatioChange) onAspectRatioChange(val);
+  };
+
+  const handleStyleChange = (val) => {
+    setStyle(val);
+    if (onStyleChange) onStyleChange(val);
+  };
+
   const closeAll = () => { setShowModelModal(false); setShowAspectDrop(false); setShowQualityDrop(false); setShowStylePop(false); };
 
   useEffect(() => {
@@ -436,10 +447,10 @@ export default function ImagePromptBar({
         <ModelModal selectedId={model.id} onSelect={handleSelectModel} onClose={() => setShowModelModal(false)} />
       )}
       {showStylePop && (
-        <StylePopup selected={style} onSelect={setStyle} onClose={() => setShowStylePop(false)} />
+        <StylePopup selected={style} onSelect={handleStyleChange} onClose={() => setShowStylePop(false)} />
       )}
       {showAspectDrop && (
-        <AspectDropdown selected={aspectRatio} onSelect={setAspectRatio} onClose={() => setShowAspectDrop(false)} />
+        <AspectDropdown selected={aspectRatio} onSelect={handleAspectRatioChange} onClose={() => setShowAspectDrop(false)} />
       )}
       {showQualityDrop && (
         <SimpleDropdown options={QUALITIES} selected={quality} onSelect={setQuality} onClose={() => setShowQualityDrop(false)} label="Quality" />

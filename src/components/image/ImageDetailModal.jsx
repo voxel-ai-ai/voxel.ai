@@ -3,10 +3,33 @@ import { X, Heart, Download, RefreshCw, Maximize2, Copy, Share2, Wand2, ChevronL
 
 const font = '"DM Sans", sans-serif';
 
-export default function ImageDetailModal({ image, images = [], onClose, onNavigate }) {
+export default function ImageDetailModal({ image, images = [], onClose, onNavigate, onSave }) {
   const [liked, setLiked] = useState(false);
-  const [saved, setSaved] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  const saved = image?.saved || false;
+
+  const handleDownload = async () => {
+    if (!image?.url) return;
+    try {
+      const res = await fetch(image.url);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `voxel-image-${image.id || Date.now()}.jpg`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch {
+      window.open(image.url, '_blank');
+    }
+  };
+
+  const handleToggleSave = () => {
+    if (onSave) onSave(image.id, !saved);
+  };
 
   if (!image) return null;
 
@@ -29,7 +52,7 @@ export default function ImageDetailModal({ image, images = [], onClose, onNaviga
     { label: 'Model', value: image.model || 'Nano Banana Pro' },
     { label: 'Aspect', value: image.aspect || '16:9' },
     { label: 'Quality', value: image.quality || '2K' },
-    { label: 'Style', value: image.style || 'Cinematic' },
+    ...(image.style ? [{ label: 'Style', value: image.style }] : []),
   ];
 
   return (
@@ -121,8 +144,8 @@ export default function ImageDetailModal({ image, images = [], onClose, onNaviga
             <div style={{ display: 'flex', gap: 8, marginBottom: 18 }}>
               {[
                 { icon: Heart, label: 'Like', active: liked, color: '#E01E1E', onClick: () => setLiked(v => !v) },
-                { icon: Bookmark, label: 'Save', active: saved, color: '#E01E1E', onClick: () => setSaved(v => !v) },
-                { icon: Download, label: 'Download', active: false, color: null, onClick: () => {} },
+                { icon: Bookmark, label: 'Save', active: saved, color: '#E01E1E', onClick: handleToggleSave },
+                { icon: Download, label: 'Download', active: false, color: null, onClick: handleDownload },
                 { icon: Share2, label: 'Share', active: false, color: null, onClick: () => {} },
               ].map(({ icon: Icon, label, active, color, onClick }) => (
                 <button key={label} onClick={onClick}

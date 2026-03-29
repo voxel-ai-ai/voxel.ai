@@ -2,6 +2,17 @@ import React, { useState, useRef, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 const History_ = base44.entities.GenerationHistory;
 import ImagePromptBar from '@/components/image/ImagePromptBar';
+
+const STYLE_SUFFIXES = {
+  Cinematic:    ', cinematic color grading, anamorphic lens flare, film grain, dramatic lighting, movie still',
+  Realistic:    ', ultra photorealistic, hyperrealistic, 8K detail, photographic quality, natural lighting',
+  Anime:        ', anime style, japanese animation, bold outlines, cel shading, vibrant colors',
+  '3D':         ', 3D render, Unreal Engine 5, volumetric lighting, ray tracing, CGI, octane render',
+  '2D':         ', 2D flat art, clean shapes, vector style, flat design',
+  Illustration: ', detailed illustration, hand-drawn, artistic, ink and watercolor',
+  Pixar:        ', Pixar CGI style, warm expressive lighting, 3D animated, Disney Pixar render',
+  Cartoon:      ', cartoon style, bold outlines, vibrant saturated colors, exaggerated features',
+};
 import TemplateModal from '@/components/common/TemplateModal';
 import ImageDetailModal from '@/components/image/ImageDetailModal';
 import { History, Globe, Heart, Download, RefreshCw, Maximize2, Sparkles, X } from 'lucide-react';
@@ -147,6 +158,9 @@ export default function Image() {
   const [detailImage, setDetailImage] = useState(null);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [activeTab, setActiveTab] = useState('history');
+  const [aspectRatio, setAspectRatio] = useState('16:9');
+  const [style, setStyle] = useState(null);
+  const [quality, setQuality] = useState('2K');
 
   // Pre-fill prompt from URL params (e.g. from Discover page)
   useEffect(() => {
@@ -162,6 +176,11 @@ export default function Image() {
         id: r.id,
         url: r.result_url,
         prompt: r.prompt,
+        model: r.model,
+        aspect: r.ratio,
+        style: r.style,
+        quality: r.quality,
+        saved: r.saved || false,
         gradient: RESULT_GRADIENTS[0],
       }));
       setImages(loaded);
@@ -173,19 +192,25 @@ export default function Image() {
     setIsGenerating(true);
     setActiveTab('history');
     try {
+      const styleSuffix = style ? (STYLE_SUFFIXES[style] || '') : '';
+      const finalPrompt = prompt + styleSuffix;
       const response = await base44.functions.invoke('generate', {
         type: 'image',
         model: selectedModel.name,
-        prompt,
-        ratio: '1:1',
+        prompt: finalPrompt,
+        ratio: aspectRatio,
       });
       const url = response.data?.result_url;
-      // Save to history
-      const saved = await History_.create({ type: 'image', model: selectedModel.name, prompt, result_url: url, status: 'completed' });
+      const savedRecord = await History_.create({ type: 'image', model: selectedModel.name, prompt, result_url: url, status: 'completed', ratio: aspectRatio, style, quality });
       const newImg = {
-        id: saved.id,
+        id: savedRecord.id,
         gradient: RESULT_GRADIENTS[images.length % RESULT_GRADIENTS.length],
         prompt,
+        model: selectedModel.name,
+        aspect: aspectRatio,
+        style,
+        quality,
+        saved: false,
         url,
       };
       setImages((prev) => [newImg, ...prev]);
@@ -197,12 +222,20 @@ export default function Image() {
     }
   };
 
+  const handleSave = async (imgId, newSaved) => {
+    await History_.update(imgId, { saved: newSaved });
+    setImages(prev => prev.map(img => img.id === imgId ? { ...img, saved: newSaved } : img));
+    if (detailImage && detailImage.id === imgId) setDetailImage(prev => ({ ...prev, saved: newSaved }));
+    toast.success(newSaved ? 'Saved!' : 'Removed from saved');
+  };
+
   const handleRecreate = (template) => {
     setPrompt(template.prompt);
     setSelectedTemplate(null);
   };
 
-  const hasContent = images.length > 0 || isGenerating;
+  const displayImages = activeTab === 'saved' ? images.filter(img => img.saved) : images;
+  const hasContent = displayImages.length > 0 || isGenerating;
 
   return (
     <div style={{ minHeight: 'calc(100vh - 64px)', background: '#141414', display: 'flex', flexDirection: 'column', position: 'relative' }}>
@@ -216,18 +249,16 @@ export default function Image() {
 
       {/* Tabs row */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px', borderBottom: '1px solid #1A1A1A', background: '#141414', position: 'sticky', top: 0, zIndex: 10 }}>
-        <button
-          onClick={() => setActiveTab('history')}
-          style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 999, fontSize: 13, color: activeTab === 'history' ? '#fff' : '#666', border: `1px solid ${activeTab === 'history' ? 'rgba(255,255,255,0.2)' : '#2A2A2A'}`, background: activeTab === 'history' ? 'rgba(255,255,255,0.08)' : 'transparent', cursor: 'pointer', fontFamily: font, transition: 'all 0.15s', fontWeight: activeTab === 'history' ? 600 : 400 }}>
-
-          <History style={{ width: 14, height: 14 }} /> History
-        </button>
-        <button
-          onClick={() => setActiveTab('community')}
-          style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 999, fontSize: 13, color: activeTab === 'community' ? '#fff' : '#666', border: `1px solid ${activeTab === 'community' ? 'rgba(255,255,255,0.2)' : '#2A2A2A'}`, background: activeTab === 'community' ? 'rgba(255,255,255,0.08)' : 'transparent', cursor: 'pointer', fontFamily: font, transition: 'all 0.15s', fontWeight: activeTab === 'community' ? 600 : 400 }}>
-
-          <Globe style={{ width: 14, height: 14 }} /> Community
-        </button>
+        {['history', 'saved', 'community'].map(tab => (
+          <button key={tab}
+            onClick={() => setActiveTab(tab)}
+            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 999, fontSize: 13, color: activeTab === tab ? '#fff' : '#666', border: `1px solid ${activeTab === tab ? 'rgba(255,255,255,0.2)' : '#2A2A2A'}`, background: activeTab === tab ? 'rgba(255,255,255,0.08)' : 'transparent', cursor: 'pointer', fontFamily: font, transition: 'all 0.15s', fontWeight: activeTab === tab ? 600 : 400, textTransform: 'capitalize' }}>
+            {tab === 'history' && <History style={{ width: 14, height: 14 }} />}
+            {tab === 'saved' && <Heart style={{ width: 14, height: 14 }} />}
+            {tab === 'community' && <Globe style={{ width: 14, height: 14 }} />}
+            {tab}
+          </button>
+        ))}
       </div>
 
       {/* Main content */}
@@ -274,7 +305,7 @@ export default function Image() {
               </div>
           )}
             {/* Generated images */}
-            {images.map((img, i) =>
+            {displayImages.map((img, i) =>
           <div key={img.id} style={{ breakInside: 'avoid', marginBottom: 10, animation: 'imgFadeIn 0.4s ease forwards' }}>
                 <ImageCard img={img} index={i} onExpand={setDetailImage} onLoaded={() => {}} />
               </div>
@@ -292,15 +323,18 @@ export default function Image() {
         selectedModel={selectedModel}
         onModelChange={setSelectedModel}
         imageCount={imageCount}
-        onCountChange={setImageCount} />
+        onCountChange={setImageCount}
+        onAspectRatioChange={setAspectRatio}
+        onStyleChange={setStyle} />
 
 
       {detailImage &&
       <ImageDetailModal
         image={detailImage}
-        images={images}
+        images={displayImages}
         onClose={() => setDetailImage(null)}
-        onNavigate={setDetailImage} />
+        onNavigate={setDetailImage}
+        onSave={handleSave} />
 
       }
 
