@@ -4,25 +4,21 @@ import { createClientFromRequest } from "npm:@base44/sdk@0.8.23";
 // TESTING MODE — set to false when launching to real users
 const TESTING_MODE = true;
 
-const IMAGE_MODELS = {
-  "Nano Banana Pro":   "fal-ai/nano-banana-pro",
-  "Nano Banana 2":     "fal-ai/nano-banana-2",
-  "Soul 2.0":          "fal-ai/flux/dev",
-  "Seedream 5.0 Lite": "fal-ai/bytedance/seedream-3",
-  "Seedream 4.5":      "fal-ai/bytedance/seedream-3",
-  "GPT Image 1.5":     "fal-ai/gpt-image-1",
-  "Flux Kontext":      "fal-ai/flux-pro/kontext",
-  "Flux 2":            "fal-ai/flux-pro/v1.1",
-  "Wan 2.2 Image":     "fal-ai/wan-i2i",
-  "Skin Enhancer":     "fal-ai/aura-sr",
-  "Face Swap":         "fal-ai/face-swap",
-  "Relight":           "fal-ai/ic-light",
+// Per-model config: t2i endpoint, i2i endpoint, and how images are passed
+const IMAGE_MODEL_CONFIG = {
+  "Nano Banana Pro":   { t2i: "fal-ai/nano-banana-pro",          i2i: "fal-ai/nano-banana-pro",          imageParam: "reference_image_url",  multi: false, nativeSizing: true },
+  "Nano Banana 2":     { t2i: "fal-ai/nano-banana-2",            i2i: "fal-ai/nano-banana-2",            imageParam: "reference_image_url",  multi: false, nativeSizing: true },
+  "Soul 2.0":          { t2i: "fal-ai/flux/dev",                  i2i: "fal-ai/flux-pro/kontext",         imageParam: "image_url",             multi: false, nativeSizing: false },
+  "Seedream 5.0 Lite": { t2i: "fal-ai/bytedance/seedream-3",     i2i: "fal-ai/flux-pro/kontext",         imageParam: "image_url",             multi: false, nativeSizing: false },
+  "Seedream 4.5":      { t2i: "fal-ai/bytedance/seedream-3",     i2i: "fal-ai/flux-pro/kontext",         imageParam: "image_url",             multi: false, nativeSizing: false },
+  "GPT Image 1.5":     { t2i: "fal-ai/gpt-image-1",              i2i: "fal-ai/gpt-image-1",              imageParam: "image_url",             multi: false, nativeSizing: false },
+  "Flux Kontext":      { t2i: "fal-ai/flux-pro/kontext",          i2i: "fal-ai/flux-pro/kontext",         imageParam: "image_url",             multi: false, nativeSizing: false },
+  "Flux 2":            { t2i: "fal-ai/flux-pro/v1.1",             i2i: "fal-ai/flux-pro/kontext",         imageParam: "image_url",             multi: false, nativeSizing: false },
+  "Wan 2.2 Image":     { t2i: "fal-ai/wan-t2i",                  i2i: "fal-ai/wan-i2i",                  imageParam: "image_url",             multi: false, nativeSizing: false },
+  "Skin Enhancer":     { t2i: "fal-ai/aura-sr",                  i2i: "fal-ai/aura-sr",                  imageParam: "image_url",             multi: false, nativeSizing: false },
+  "Face Swap":         { t2i: "fal-ai/face-swap",                 i2i: "fal-ai/face-swap",                imageParam: "image_url",             multi: false, nativeSizing: false },
+  "Relight":           { t2i: "fal-ai/ic-light",                  i2i: "fal-ai/ic-light",                 imageParam: "image_url",             multi: false, nativeSizing: false },
 };
-
-// When user provides a reference image, map each model to its i2i endpoint
-// Nano Banana models support reference_image_url natively on their own endpoint
-// All other models fall back to Flux Kontext for editing
-const NATIVE_I2I_MODELS = new Set(["fal-ai/nano-banana-pro", "fal-ai/nano-banana-2"]);
 
 // Map quality label to base pixel dimension
 const QUALITY_DIM = { "Draft": 512, "1K": 1024, "2K": 1536, "4K": 2048 };
@@ -73,7 +69,10 @@ Deno.serve(async (req) => {
   }
 
   const body = await req.json();
-  let { model, prompt, type, duration, ratio, referenceImageUrl, negativePrompt } = body;
+  let { model, prompt, type, duration, ratio, imageUrls, negativePrompt } = body;
+  // Support legacy single referenceImageUrl
+  if (!imageUrls && body.referenceImageUrl) imageUrls = [body.referenceImageUrl];
+  if (!imageUrls) imageUrls = [];
 
   if (!model || typeof model !== "string" || model.length > 100) {
     return Response.json({ error: "Invalid model" }, { status: 400 });
@@ -106,37 +105,37 @@ Deno.serve(async (req) => {
   try {
     // ── IMAGE GENERATION ──
     if (type === "image") {
-      const modelId = IMAGE_MODELS[model];
-      if (!modelId) {
+      const cfg = IMAGE_MODEL_CONFIG[model];
+      if (!cfg) {
         return Response.json({ error: "Unknown image model: " + model }, { status: 400 });
       }
 
-      const { width, height } = getDimensions(ratio, body.quality);
-      const hasRef = !!referenceImageUrl;
+      const readyUrls = (imageUrls || []).filter(u => u && u.startsWith('http'));
+      const hasImages = readyUrls.length > 0;
 
-      // Route to correct i2i endpoint based on selected model
-      // Nano Banana models: use same endpoint with reference_image_url
-      // All other models: fall back to Flux Kontext which accepts image_url for editing
-      const isNanoBanana = NATIVE_I2I_MODELS.has(modelId);
-      let falModelId = modelId;
-      if (hasRef && !isNanoBanana) {
-        falModelId = "fal-ai/flux-pro/kontext";
-      }
-      const aspectRatioStr = (ratio || "16:9");
+      // Pick t2i or i2i endpoint
+      const falModelId = hasImages ? cfg.i2i : cfg.t2i;
+
+      // Build input
+      const aspectRatioStr = ratio || "16:9";
       const resolutionMap = { "Draft": "0.5K", "1K": "1K", "2K": "2K", "4K": "4K" };
-      const nanoBananaInput = {
+      const { width, height } = getDimensions(ratio, body.quality);
+
+      const input = {
         prompt,
-        aspect_ratio: aspectRatioStr,
-        resolution: resolutionMap[body.quality] || "1K",
-        ...(hasRef ? { reference_image_url: referenceImageUrl } : {}),
         ...(negativePrompt ? { negative_prompt: negativePrompt } : {}),
+        ...(cfg.nativeSizing
+          ? { aspect_ratio: aspectRatioStr, resolution: resolutionMap[body.quality] || "1K" }
+          : hasImages
+            ? {} // kontext doesn't need image_size when given image_url
+            : { image_size: { width, height } }
+        ),
       };
-      const standardInput = {
-        prompt,
-        ...(hasRef ? { image_url: referenceImageUrl } : { image_size: { width, height } }),
-        ...(negativePrompt ? { negative_prompt: negativePrompt } : {}),
-      };
-      const input = isNanoBanana ? nanoBananaInput : standardInput;
+
+      // Add image references
+      if (hasImages) {
+        input[cfg.imageParam] = readyUrls[0];
+      }
 
       const result = await fal.subscribe(falModelId, { input });
       const imageUrl = result.data?.images?.[0]?.url || result.data?.image?.url;
@@ -145,6 +144,7 @@ Deno.serve(async (req) => {
         success: true,
         type: "image",
         result_url: imageUrl,
+        mode: hasImages ? "image-to-image" : "text-to-image",
       });
     }
 

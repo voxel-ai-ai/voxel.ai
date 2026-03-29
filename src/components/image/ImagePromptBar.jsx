@@ -390,7 +390,7 @@ const chipBase = {
 export default function ImagePromptBar({
   prompt, onPromptChange, onGenerate, isGenerating,
   selectedModel, onModelChange, imageCount, onCountChange,
-  onAspectRatioChange, onStyleChange, onQualityChange, onReferenceImageChange,
+  onAspectRatioChange, onStyleChange, onQualityChange, onImagesChange,
 }) {
   const [model, setModel] = useState(IMAGE_MODELS[0]);
   const [aspectRatio, setAspectRatio] = useState('16:9');
@@ -402,25 +402,42 @@ export default function ImagePromptBar({
   const [showAspectDrop, setShowAspectDrop] = useState(false);
   const [showQualityDrop, setShowQualityDrop] = useState(false);
   const [showStylePop, setShowStylePop] = useState(false);
-  const [uploadedImage, setUploadedImage] = useState(null);
-  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [uploadedImages, setUploadedImages] = useState([]); // [{id, previewUrl, uploadedUrl, status}]
   const negRef = useRef(null);
-  const styleChipRef = useRef(null);
   const imgInputRef = useRef(null);
 
   const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
     e.target.value = '';
-    // Show local preview immediately
-    const localUrl = URL.createObjectURL(file);
-    setUploadedImage(localUrl);
-    setIsUploadingImage(true);
-    if (onReferenceImageChange) onReferenceImageChange(null); // clear old ref until upload done
-    // Upload to Base44 storage to get a real public URL
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
-    setIsUploadingImage(false);
-    if (onReferenceImageChange) onReferenceImageChange(file_url);
+
+    for (const file of files) {
+      if (uploadedImages.length >= 14) break;
+      const imageId = Date.now().toString() + Math.random();
+      const previewUrl = URL.createObjectURL(file);
+
+      // Add immediately with uploading status
+      setUploadedImages(prev => [...prev, { id: imageId, previewUrl, uploadedUrl: null, status: 'uploading' }]);
+
+      // Upload in background
+      base44.integrations.Core.UploadFile({ file }).then(({ file_url }) => {
+        setUploadedImages(prev => {
+          const updated = prev.map(img => img.id === imageId ? { ...img, uploadedUrl: file_url, status: 'ready' } : img);
+          if (onImagesChange) onImagesChange(updated.filter(i => i.status === 'ready').map(i => i.uploadedUrl));
+          return updated;
+        });
+      }).catch(() => {
+        setUploadedImages(prev => prev.filter(img => img.id !== imageId));
+      });
+    }
+  };
+
+  const removeImage = (imageId) => {
+    setUploadedImages(prev => {
+      const updated = prev.filter(img => img.id !== imageId);
+      if (onImagesChange) onImagesChange(updated.filter(i => i.status === 'ready').map(i => i.uploadedUrl));
+      return updated;
+    });
   };
 
   const handleSelectModel = (m) => {
@@ -449,13 +466,20 @@ export default function ImagePromptBar({
     if (negativeActive && negRef.current) negRef.current.focus();
   }, [negativeActive]);
 
-  const handleGenerate = () => { if (!isUploadingImage && onGenerate) onGenerate(); };
+  const handleGenerate = () => { if (onGenerate) onGenerate(); };
   const handleKey = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleGenerate(); } };
 
   // sync selectedModel from parent if provided
   useEffect(() => {
     if (selectedModel && selectedModel.id !== model.id) setModel(selectedModel);
   }, [selectedModel]);
+
+  // notify parent when images change
+  useEffect(() => {
+    if (onImagesChange) {
+      onImagesChange(uploadedImages.filter(i => i.status === 'ready').map(i => i.uploadedUrl));
+    }
+  }, []);
 
   return (
     <>
@@ -531,41 +555,54 @@ export default function ImagePromptBar({
             </button>
           </div>
 
-          {/* + Upload button / uploaded image preview */}
-          <input ref={imgInputRef} type="file" accept="image/*" style={{ display:'none' }} onChange={handleImageUpload} />
-          <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:10 }}>
-            {uploadedImage ? (
-              <div
-                style={{ position:'relative', width:40, height:40, borderRadius:8, overflow:'visible', flexShrink:0 }}
-                onMouseEnter={e => { const btn = e.currentTarget.querySelector('.img-x-btn'); if (btn) btn.style.opacity='1'; }}
-                onMouseLeave={e => { const btn = e.currentTarget.querySelector('.img-x-btn'); if (btn) btn.style.opacity='0'; }}
-              >
-                <img src={uploadedImage} alt="reference" style={{ width:40, height:40, objectFit:'cover', borderRadius:8, display:'block', border:'1px solid rgba(255,255,255,0.15)', opacity: isUploadingImage ? 0.4 : 1 }} />
-                {isUploadingImage && (
-                  <div style={{ position:'absolute', inset:0, borderRadius:8, display:'flex', alignItems:'center', justifyContent:'center', background:'rgba(0,0,0,0.5)' }}>
-                    <div style={{ width:14, height:14, border:'2px solid rgba(255,255,255,0.3)', borderTopColor:'#fff', borderRadius:'50%', animation:'imgSpin 0.7s linear infinite' }} />
-                  </div>
-                )}
+          {/* Multi-image upload row */}
+          <input ref={imgInputRef} type="file" accept="image/jpeg,image/png,image/webp" multiple style={{ display:'none' }} onChange={handleImageUpload} />
+          {uploadedImages.length > 0 && (
+            <div style={{ display:'flex', alignItems:'center', gap:6, marginBottom:10, overflowX:'auto', flexWrap:'nowrap' }} className="hide-scrollbar">
+              {uploadedImages.map(img => (
+                <div
+                  key={img.id}
+                  style={{ position:'relative', width:46, height:46, borderRadius:8, overflow:'hidden', flexShrink:0, border:'1px solid rgba(255,255,255,0.15)' }}
+                  className="group"
+                >
+                  <img src={img.previewUrl} alt="ref" style={{ width:'100%', height:'100%', objectFit:'cover', display:'block', opacity: img.status === 'uploading' ? 0.5 : 1 }} />
+                  {img.status === 'uploading' && (
+                    <div style={{ position:'absolute', inset:0, background:'rgba(0,0,0,0.55)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                      <div style={{ width:18, height:18, border:'2px solid rgba(255,255,255,0.2)', borderTopColor:'#fff', borderRadius:'50%', animation:'imgSpin 0.8s linear infinite' }} />
+                    </div>
+                  )}
+                  <button
+                    onClick={() => removeImage(img.id)}
+                    style={{ position:'absolute', top:2, right:2, width:15, height:15, background:'rgba(0,0,0,0.75)', borderRadius:'50%', display:'none', alignItems:'center', justifyContent:'center', fontSize:8, color:'#fff', border:'none', cursor:'pointer', zIndex:2 }}
+                    className="remove-img-btn"
+                  >✕</button>
+                </div>
+              ))}
+              {uploadedImages.length < 14 && (
                 <button
-                  className="img-x-btn"
-                  onClick={() => { setUploadedImage(null); if (onReferenceImageChange) onReferenceImageChange(null); }}
-                  style={{ position:'absolute', top:-6, right:-6, width:18, height:18, borderRadius:'50%', background:'rgba(30,30,30,0.85)', border:'1.5px solid rgba(255,255,255,0.25)', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', color:'#fff', fontSize:10, zIndex:10, opacity:0, transition:'opacity 0.18s, background 0.15s' }}
-                  onMouseEnter={e => e.currentTarget.style.background='rgba(180,0,0,0.9)'}
-                  onMouseLeave={e => e.currentTarget.style.background='rgba(30,30,30,0.85)'}
-                >✕</button>
-              </div>
-            ) : (
+                  onClick={() => imgInputRef.current && imgInputRef.current.click()}
+                  style={{ width:46, height:46, borderRadius:8, border:'1.5px dashed rgba(255,255,255,0.2)', background:'rgba(255,255,255,0.04)', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', color:'rgba(255,255,255,0.4)', fontSize:20, flexShrink:0, transition:'all 0.15s' }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor='rgba(224,30,30,0.4)'; e.currentTarget.style.background='rgba(224,30,30,0.06)'; e.currentTarget.style.color='rgba(255,255,255,0.7)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor='rgba(255,255,255,0.2)'; e.currentTarget.style.background='rgba(255,255,255,0.04)'; e.currentTarget.style.color='rgba(255,255,255,0.4)'; }}
+                  title="Add more images"
+                >+</button>
+              )}
+            </div>
+          )}
+          {uploadedImages.length === 0 && (
+            <div style={{ marginBottom:10 }}>
               <button
                 onClick={() => imgInputRef.current && imgInputRef.current.click()}
-                style={{ width: 32, height: 32, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'rgba(255,255,255,0.7)', transition: 'background 0.18s' }}
-                onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.13)'}
-                onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.07)'}
+                style={{ width:32, height:32, background:'rgba(255,255,255,0.07)', border:'1px solid rgba(255,255,255,0.1)', borderRadius:8, display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', color:'rgba(255,255,255,0.7)', transition:'background 0.18s' }}
+                onMouseEnter={e => e.currentTarget.style.background='rgba(255,255,255,0.13)'}
+                onMouseLeave={e => e.currentTarget.style.background='rgba(255,255,255,0.07)'}
                 title="Upload reference image"
               >
                 <Plus className="w-4 h-4" />
               </button>
-            )}
-          </div>
+            </div>
+          )}
+          <style>{`.remove-img-btn { display: none !important; } div:hover > .remove-img-btn { display: flex !important; }`}</style>
 
           {/* Main prompt textarea */}
           <div style={{ position: 'relative', paddingRight: 44 }}>
@@ -715,22 +752,22 @@ export default function ImagePromptBar({
           {/* Generate button — styled like video */}
           <button
             onClick={handleGenerate}
-            disabled={isGenerating || isUploadingImage}
+            disabled={isGenerating}
             style={{
               height: 42, padding: '0 20px',
-              background: (isGenerating || isUploadingImage) ? 'rgba(139,0,0,0.5)' : 'linear-gradient(90deg, #CC0000 0%, #FF2222 50%, #E01E1E 100%)',
+              background: isGenerating ? 'rgba(139,0,0,0.5)' : 'linear-gradient(90deg, #CC0000 0%, #FF2222 50%, #E01E1E 100%)',
               border: 'none', borderRadius: 14, color: '#fff', fontSize: 14, fontWeight: 700,
               fontFamily: '"DM Sans", sans-serif',
-              cursor: (isGenerating || isUploadingImage) ? 'not-allowed' : 'pointer',
+              cursor: isGenerating ? 'not-allowed' : 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
               flexShrink: 0,
-              boxShadow: (isGenerating || isUploadingImage) ? 'none' : '0 2px 20px rgba(224,30,30,0.35)',
+              boxShadow: isGenerating ? 'none' : '0 2px 20px rgba(224,30,30,0.35)',
               transition: 'all 0.2s',
             }}
-            onMouseEnter={e => { if (!isGenerating && !isUploadingImage) { e.currentTarget.style.background = 'linear-gradient(90deg, #DD0000 0%, #FF3333 50%, #FF2020 100%)'; e.currentTarget.style.boxShadow = '0 4px 28px rgba(224,30,30,0.55)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}}
-            onMouseLeave={e => { if (!isGenerating && !isUploadingImage) { e.currentTarget.style.background = 'linear-gradient(90deg, #CC0000 0%, #FF2222 50%, #E01E1E 100%)'; e.currentTarget.style.boxShadow = '0 2px 20px rgba(224,30,30,0.35)'; e.currentTarget.style.transform = 'none'; }}}
+            onMouseEnter={e => { if (!isGenerating) { e.currentTarget.style.background = 'linear-gradient(90deg, #DD0000 0%, #FF3333 50%, #FF2020 100%)'; e.currentTarget.style.boxShadow = '0 4px 28px rgba(224,30,30,0.55)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}}
+            onMouseLeave={e => { if (!isGenerating) { e.currentTarget.style.background = 'linear-gradient(90deg, #CC0000 0%, #FF2222 50%, #E01E1E 100%)'; e.currentTarget.style.boxShadow = '0 2px 20px rgba(224,30,30,0.35)'; e.currentTarget.style.transform = 'none'; }}}
           >
-            {isUploadingImage ? 'Uploading...' : isGenerating ? 'Generating...' : (
+            {isGenerating ? 'Generating...' : (
               <>
                 <span>Generate</span>
                 <Sparkles className="w-4 h-4" style={{ opacity: 0.9 }} />

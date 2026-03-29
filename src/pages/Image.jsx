@@ -161,7 +161,7 @@ export default function Image() {
   const [aspectRatio, setAspectRatio] = useState('16:9');
   const [style, setStyle] = useState(null);
   const [quality, setQuality] = useState('2K');
-  const [referenceImageUrl, setReferenceImageUrl] = useState(null);
+  const [imageUrls, setImageUrls] = useState([]);  // ready uploaded URLs
 
   // Pre-fill prompt from URL params (e.g. from Discover page)
   useEffect(() => {
@@ -201,7 +201,7 @@ export default function Image() {
         prompt: finalPrompt,
         ratio: aspectRatio,
         quality,
-        ...(referenceImageUrl ? { referenceImageUrl } : {}),
+        imageUrls,
       });
       const url = response.data?.result_url;
       const savedRecord = await History_.create({ type: 'image', model: selectedModel.name, prompt, result_url: url, status: 'completed', ratio: aspectRatio, style, quality });
@@ -330,7 +330,7 @@ export default function Image() {
         onAspectRatioChange={setAspectRatio}
         onStyleChange={setStyle}
         onQualityChange={setQuality}
-        onReferenceImageChange={setReferenceImageUrl} />
+        onImagesChange={setImageUrls} />
 
 
       {detailImage &&
