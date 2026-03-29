@@ -5,7 +5,7 @@ import { communityFeed } from '@/components/data/siteData';
 import { X, Copy, Wand2 } from 'lucide-react';
 import { toast } from 'sonner';
 
-function ImageModal({ item, onClose }) {
+function ImageModal({ item, onClose, onRecreate }) {
   const copyPrompt = () => {
     navigator.clipboard.writeText(item.prompt);
     toast.success('Prompt copied!');
@@ -64,7 +64,7 @@ function ImageModal({ item, onClose }) {
               style={{ background: '#E01E1E' }}
               onMouseEnter={e => e.currentTarget.style.background = '#ff2222'}
               onMouseLeave={e => e.currentTarget.style.background = '#E01E1E'}
-              onClick={() => { navigate('/Image?prompt=' + encodeURIComponent(selectedItem.prompt)); setSelectedItem(null); }}
+              onClick={() => onRecreate(selectedItem.prompt)}
             >
               <Wand2 className="w-4 h-4" /> Recreate Now →
             </button>
@@ -117,7 +117,11 @@ export default function DiscoverFeed() {
       </div>
 
       {selectedItem && (
-        <ImageModal item={selectedItem} onClose={() => setSelectedItem(null)} />
+        <ImageModal
+          item={selectedItem}
+          onClose={() => setSelectedItem(null)}
+          onRecreate={(prompt) => { navigate('/Image?prompt=' + encodeURIComponent(prompt)); setSelectedItem(null); }}
+        />
       )}
     </section>
   );
