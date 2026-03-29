@@ -117,11 +117,9 @@ Deno.serve(async (req) => {
       const { width, height } = getDimensions(ratio, body.quality);
       const hasRef = !!referenceImageUrl;
 
-      // For image-to-image, use the /edit endpoint for models that support it
-      let falModelId = modelId;
-      if (hasRef && EDIT_MODELS.has(modelId)) {
-        falModelId = modelId + "/edit";
-      }
+      // When a reference image is provided, use Flux Kontext — purpose-built for image editing
+      // For text-only generation, use the selected model
+      const falModelId = hasRef ? "fal-ai/flux-pro/kontext" : modelId;
 
       const input = {
         prompt,

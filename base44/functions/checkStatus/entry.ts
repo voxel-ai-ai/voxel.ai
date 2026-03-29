@@ -15,7 +15,7 @@ Deno.serve(async (req) => {
     return Response.json({ error: "Invalid model_id" }, { status: 400 });
   }
 
-  fal.config({ credentials: Deno.env.get("FAL_KEY") });
+  fal.config({ credentials: (Deno.env.get("FAL_KEY") || "").trim() });
 
   try {
     const status = await fal.queue.status(model_id, {
