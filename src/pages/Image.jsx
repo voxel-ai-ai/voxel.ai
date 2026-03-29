@@ -93,12 +93,23 @@ function ImageCard({ img, index, onExpand }) {
       onClick={() => onExpand(img)}>
       {img.url && <img src={img.url} alt={img.prompt} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />}
 
-      {/* Hover overlay — pointer-events none so clicks pass through to card */}
-      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 50%)', opacity: hovered ? 1 : 0, transition: 'opacity 0.2s', display: 'flex', alignItems: 'flex-end', padding: 10, gap: 6, pointerEvents: 'none' }}>
-        {[Heart, Download, RefreshCw, Maximize2].map((Icon, i) =>
-        <div key={i} style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+      {/* Hover overlay */}
+      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 50%)', opacity: hovered ? 1 : 0, transition: 'opacity 0.2s', display: 'flex', alignItems: 'flex-end', padding: 10, gap: 6 }}>
+        {[Heart, RefreshCw, Maximize2].map((Icon, i) =>
+          <div key={i} style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', pointerEvents: 'none' }}>
             <Icon style={{ width: 13, height: 13 }} />
           </div>
+        )}
+        {img.url && (
+          <a
+            href={img.url}
+            download
+            target="_blank"
+            rel="noreferrer"
+            onClick={e => e.stopPropagation()}
+            style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', textDecoration: 'none' }}>
+            <Download style={{ width: 13, height: 13 }} />
+          </a>
         )}
       </div>
     </div>);
@@ -115,6 +126,13 @@ export default function Image() {
   const [detailImage, setDetailImage] = useState(null);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [activeTab, setActiveTab] = useState('history');
+
+  // Pre-fill prompt from URL params (e.g. from Discover page)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const p = params.get('prompt');
+    if (p) setPrompt(p);
+  }, []);
 
   // Load history on mount
   useEffect(() => {

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import MediaCard from '@/components/common/MediaCard';
 import { communityFeed } from '@/components/data/siteData';
 import { X, Copy, Wand2 } from 'lucide-react';
@@ -63,6 +64,7 @@ function ImageModal({ item, onClose }) {
               style={{ background: '#E01E1E' }}
               onMouseEnter={e => e.currentTarget.style.background = '#ff2222'}
               onMouseLeave={e => e.currentTarget.style.background = '#E01E1E'}
+              onClick={() => { navigate('/Image?prompt=' + encodeURIComponent(selectedItem.prompt)); setSelectedItem(null); }}
             >
               <Wand2 className="w-4 h-4" /> Recreate Now →
             </button>
@@ -75,6 +77,7 @@ function ImageModal({ item, onClose }) {
 
 export default function DiscoverFeed() {
   const [selectedItem, setSelectedItem] = useState(null);
+  const navigate = useNavigate();
 
   return (
     <section className="py-16 px-4">
