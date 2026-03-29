@@ -19,13 +19,10 @@ const IMAGE_MODELS = {
   "Relight":           "fal-ai/ic-light",
 };
 
-// Models that use /edit endpoint for image-to-image
-const EDIT_MODELS = new Set(["fal-ai/nano-banana-pro", "fal-ai/nano-banana-2"]);
-// Models that use a separate img2img endpoint
-const IMG2IMG_MODELS = {
-  "fal-ai/flux-pro/kontext": "fal-ai/flux-pro/kontext", // kontext supports image_url natively
-  "fal-ai/flux-pro/v1.1":   "fal-ai/flux-pro/v1.1-ultra",
-};
+// When user provides a reference image, map each model to its i2i endpoint
+// Nano Banana models support reference_image_url natively on their own endpoint
+// All other models fall back to Flux Kontext for editing
+const NATIVE_I2I_MODELS = new Set(["fal-ai/nano-banana-pro", "fal-ai/nano-banana-2"]);
 
 // Map quality label to base pixel dimension
 const QUALITY_DIM = { "Draft": 512, "1K": 1024, "2K": 1536, "4K": 2048 };
@@ -117,16 +114,14 @@ Deno.serve(async (req) => {
       const { width, height } = getDimensions(ratio, body.quality);
       const hasRef = !!referenceImageUrl;
 
-      // When a reference image is provided:
-      // - Nano Banana models support editing natively via reference_image_url (same endpoint)
-      // - All other models fall back to Flux Kontext for image editing
+      // Route to correct i2i endpoint based on selected model
+      // Nano Banana models: use same endpoint with reference_image_url
+      // All other models: fall back to Flux Kontext which accepts image_url for editing
+      const isNanoBanana = NATIVE_I2I_MODELS.has(modelId);
       let falModelId = modelId;
-      if (hasRef && !EDIT_MODELS.has(modelId)) {
+      if (hasRef && !isNanoBanana) {
         falModelId = "fal-ai/flux-pro/kontext";
       }
-
-      // Nano Banana models use aspect_ratio (not image_size) and reference_image_url for editing
-      const isNanoBanana = EDIT_MODELS.has(modelId);
       const aspectRatioStr = (ratio || "16:9");
       const resolutionMap = { "Draft": "0.5K", "1K": "1K", "2K": "2K", "4K": "4K" };
       const nanoBananaInput = {
