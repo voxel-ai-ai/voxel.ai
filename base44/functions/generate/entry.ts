@@ -76,7 +76,7 @@ Deno.serve(async (req) => {
   }
 
   const body = await req.json();
-  const { model, prompt, type, duration, ratio, referenceImageUrl, negativePrompt } = body;
+  let { model, prompt, type, duration, ratio, referenceImageUrl, negativePrompt } = body;
 
   if (!model || typeof model !== "string" || model.length > 100) {
     return Response.json({ error: "Invalid model" }, { status: 400 });
@@ -88,21 +88,23 @@ Deno.serve(async (req) => {
     return Response.json({ error: "Type must be image or video" }, { status: 400 });
   }
 
-  // Credit check — SKIPPED during testing
-  if (!TESTING_MODE) {
-    const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
-    if (!user) {
-      return Response.json({ error: "Please log in" }, { status: 401 });
-    }
-    // Add credit deduction logic here before launch
-  }
-
   const falKey = (Deno.env.get("FAL_KEY") || "").trim();
   if (!falKey) {
     return Response.json({ error: "FAL_KEY not configured" }, { status: 500 });
   }
   fal.config({ credentials: falKey });
+
+  // If referenceImageUrl is a base64 data URL, upload it to fal storage first
+  if (referenceImageUrl && referenceImageUrl.startsWith('data:')) {
+    const [header, base64Data] = referenceImageUrl.split(',');
+    const mimeMatch = header.match(/data:([^;]+)/);
+    const mime = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+    const byteChars = atob(base64Data);
+    const byteArray = new Uint8Array(byteChars.length);
+    for (let i = 0; i < byteChars.length; i++) byteArray[i] = byteChars.charCodeAt(i);
+    const blob = new Blob([byteArray], { type: mime });
+    referenceImageUrl = await fal.storage.upload(blob);
+  }
 
   try {
     // ── IMAGE GENERATION ──

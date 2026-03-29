@@ -407,20 +407,18 @@ export default function ImagePromptBar({
   const styleChipRef = useRef(null);
   const imgInputRef = useRef(null);
 
-  const handleImageUpload = async (e) => {
+  const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
     // Show preview immediately
     const localUrl = URL.createObjectURL(file);
     setUploadedImage(localUrl);
-    try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      if (onReferenceImageChange) onReferenceImageChange(file_url);
-    } catch (err) {
-      // Keep preview but use local object URL as fallback
-      if (onReferenceImageChange) onReferenceImageChange(localUrl);
-    }
-    // Reset input so same file can be re-selected
+    // Read as base64 to send to backend
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      if (onReferenceImageChange) onReferenceImageChange(ev.target.result); // base64 data URL
+    };
+    reader.readAsDataURL(file);
     e.target.value = '';
   };
 
