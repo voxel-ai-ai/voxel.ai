@@ -403,23 +403,24 @@ export default function ImagePromptBar({
   const [showQualityDrop, setShowQualityDrop] = useState(false);
   const [showStylePop, setShowStylePop] = useState(false);
   const [uploadedImage, setUploadedImage] = useState(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
   const negRef = useRef(null);
   const styleChipRef = useRef(null);
   const imgInputRef = useRef(null);
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    // Show preview immediately
+    e.target.value = '';
+    // Show local preview immediately
     const localUrl = URL.createObjectURL(file);
     setUploadedImage(localUrl);
-    // Read as base64 to send to backend
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      if (onReferenceImageChange) onReferenceImageChange(ev.target.result); // base64 data URL
-    };
-    reader.readAsDataURL(file);
-    e.target.value = '';
+    setIsUploadingImage(true);
+    if (onReferenceImageChange) onReferenceImageChange(null); // clear old ref until upload done
+    // Upload to Base44 storage to get a real public URL
+    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    setIsUploadingImage(false);
+    if (onReferenceImageChange) onReferenceImageChange(file_url);
   };
 
   const handleSelectModel = (m) => {
@@ -448,7 +449,7 @@ export default function ImagePromptBar({
     if (negativeActive && negRef.current) negRef.current.focus();
   }, [negativeActive]);
 
-  const handleGenerate = () => { if (onGenerate) onGenerate(); };
+  const handleGenerate = () => { if (!isUploadingImage && onGenerate) onGenerate(); };
   const handleKey = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleGenerate(); } };
 
   // sync selectedModel from parent if provided
@@ -539,7 +540,12 @@ export default function ImagePromptBar({
                 onMouseEnter={e => { const btn = e.currentTarget.querySelector('.img-x-btn'); if (btn) btn.style.opacity='1'; }}
                 onMouseLeave={e => { const btn = e.currentTarget.querySelector('.img-x-btn'); if (btn) btn.style.opacity='0'; }}
               >
-                <img src={uploadedImage} alt="reference" style={{ width:40, height:40, objectFit:'cover', borderRadius:8, display:'block', border:'1px solid rgba(255,255,255,0.15)' }} />
+                <img src={uploadedImage} alt="reference" style={{ width:40, height:40, objectFit:'cover', borderRadius:8, display:'block', border:'1px solid rgba(255,255,255,0.15)', opacity: isUploadingImage ? 0.4 : 1 }} />
+                {isUploadingImage && (
+                  <div style={{ position:'absolute', inset:0, borderRadius:8, display:'flex', alignItems:'center', justifyContent:'center', background:'rgba(0,0,0,0.5)' }}>
+                    <div style={{ width:14, height:14, border:'2px solid rgba(255,255,255,0.3)', borderTopColor:'#fff', borderRadius:'50%', animation:'imgSpin 0.7s linear infinite' }} />
+                  </div>
+                )}
                 <button
                   className="img-x-btn"
                   onClick={() => { setUploadedImage(null); if (onReferenceImageChange) onReferenceImageChange(null); }}
@@ -709,22 +715,22 @@ export default function ImagePromptBar({
           {/* Generate button — styled like video */}
           <button
             onClick={handleGenerate}
-            disabled={isGenerating}
+            disabled={isGenerating || isUploadingImage}
             style={{
               height: 42, padding: '0 20px',
-              background: isGenerating ? 'rgba(139,0,0,0.5)' : 'linear-gradient(90deg, #CC0000 0%, #FF2222 50%, #E01E1E 100%)',
+              background: (isGenerating || isUploadingImage) ? 'rgba(139,0,0,0.5)' : 'linear-gradient(90deg, #CC0000 0%, #FF2222 50%, #E01E1E 100%)',
               border: 'none', borderRadius: 14, color: '#fff', fontSize: 14, fontWeight: 700,
               fontFamily: '"DM Sans", sans-serif',
-              cursor: isGenerating ? 'not-allowed' : 'pointer',
+              cursor: (isGenerating || isUploadingImage) ? 'not-allowed' : 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
               flexShrink: 0,
-              boxShadow: isGenerating ? 'none' : '0 2px 20px rgba(224,30,30,0.35)',
+              boxShadow: (isGenerating || isUploadingImage) ? 'none' : '0 2px 20px rgba(224,30,30,0.35)',
               transition: 'all 0.2s',
             }}
-            onMouseEnter={e => { if (!isGenerating) { e.currentTarget.style.background = 'linear-gradient(90deg, #DD0000 0%, #FF3333 50%, #FF2020 100%)'; e.currentTarget.style.boxShadow = '0 4px 28px rgba(224,30,30,0.55)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}}
-            onMouseLeave={e => { if (!isGenerating) { e.currentTarget.style.background = 'linear-gradient(90deg, #CC0000 0%, #FF2222 50%, #E01E1E 100%)'; e.currentTarget.style.boxShadow = '0 2px 20px rgba(224,30,30,0.35)'; e.currentTarget.style.transform = 'none'; }}}
+            onMouseEnter={e => { if (!isGenerating && !isUploadingImage) { e.currentTarget.style.background = 'linear-gradient(90deg, #DD0000 0%, #FF3333 50%, #FF2020 100%)'; e.currentTarget.style.boxShadow = '0 4px 28px rgba(224,30,30,0.55)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}}
+            onMouseLeave={e => { if (!isGenerating && !isUploadingImage) { e.currentTarget.style.background = 'linear-gradient(90deg, #CC0000 0%, #FF2222 50%, #E01E1E 100%)'; e.currentTarget.style.boxShadow = '0 2px 20px rgba(224,30,30,0.35)'; e.currentTarget.style.transform = 'none'; }}}
           >
-            {isGenerating ? 'Generating...' : (
+            {isUploadingImage ? 'Uploading...' : isGenerating ? 'Generating...' : (
               <>
                 <span>Generate</span>
                 <Sparkles className="w-4 h-4" style={{ opacity: 0.9 }} />
