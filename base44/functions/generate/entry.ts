@@ -117,23 +117,15 @@ Deno.serve(async (req) => {
       const { width, height } = getDimensions(ratio, body.quality);
       const hasRef = !!referenceImageUrl;
 
-      // Choose the correct endpoint
-      let falModelId = modelId;
-      if (hasRef && EDIT_MODELS.has(modelId)) {
-        falModelId = modelId + "/edit"; // e.g. fal-ai/nano-banana-pro/edit
-      }
+      // When a reference image is provided, always use Flux Kontext which is
+      // purpose-built for image editing (edit existing image with a prompt)
+      let falModelId = hasRef ? "fal-ai/flux-pro/kontext" : modelId;
 
       const input = {
         prompt,
-        image_size: { width, height },
-        ...(hasRef ? { image_url: referenceImageUrl } : {}),
+        ...(hasRef ? { image_url: referenceImageUrl } : { image_size: { width, height } }),
         ...(negativePrompt ? { negative_prompt: negativePrompt } : {}),
       };
-
-      // Edit endpoints don't accept image_size — remove it
-      if (hasRef && EDIT_MODELS.has(modelId)) {
-        delete input.image_size;
-      }
 
       const result = await fal.subscribe(falModelId, { input });
       const imageUrl = result.data?.images?.[0]?.url;
