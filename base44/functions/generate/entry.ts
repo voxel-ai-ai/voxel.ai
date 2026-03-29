@@ -5,11 +5,12 @@ import { createClientFromRequest } from "npm:@base44/sdk@0.8.23";
 const TESTING_MODE = true;
 
 const IMAGE_MODELS = {
-  "Nano Banana 2":     "fal-ai/nano-banana-2",
   "Nano Banana Pro":   "fal-ai/nano-banana-pro",
+  "Nano Banana 2":     "fal-ai/nano-banana-2",
   "Soul 2.0":          "fal-ai/flux/dev",
   "Seedream 5.0 Lite": "fal-ai/bytedance/seedream-3",
   "Seedream 4.5":      "fal-ai/bytedance/seedream-3",
+  "GPT Image 1.5":     "fal-ai/gpt-image-1",
   "Flux Kontext":      "fal-ai/flux-pro/kontext",
   "Flux 2":            "fal-ai/flux-pro/v1.1",
   "Wan 2.2 Image":     "fal-ai/wan-i2i",
@@ -17,6 +18,29 @@ const IMAGE_MODELS = {
   "Face Swap":         "fal-ai/face-swap",
   "Relight":           "fal-ai/ic-light",
 };
+
+// Models that support /edit endpoint for image-to-image
+const EDIT_SUPPORTED = new Set(["fal-ai/nano-banana-pro", "fal-ai/nano-banana-2"]);
+
+// Map quality label to base pixel dimension
+const QUALITY_DIM = { "Draft": 512, "1K": 1024, "2K": 1536, "4K": 2048 };
+
+// Compute width/height from aspect ratio string and base dimension
+function getDimensions(ratio, quality) {
+  const base = QUALITY_DIM[quality] || 1024;
+  const parts = (ratio || "16:9").split(":").map(Number);
+  const [w, h] = parts.length === 2 ? parts : [16, 9];
+  const landscape = w >= h;
+  if (landscape) {
+    const width = base;
+    const height = Math.round(base * h / w / 8) * 8;
+    return { width, height };
+  } else {
+    const height = base;
+    const width = Math.round(base * w / h / 8) * 8;
+    return { width, height };
+  }
+}
 
 const VIDEO_MODELS = {
   "Kling 3.0 Omni":        "fal-ai/kling-video/v2.1/pro/text-to-video",
@@ -83,17 +107,18 @@ Deno.serve(async (req) => {
         return Response.json({ error: "Unknown image model: " + model }, { status: 400 });
       }
 
-      const aspectRatio =
-        ratio === "9:16" ? "9:16" :
-        ratio === "1:1"  ? "1:1"  :
-        ratio === "4:3"  ? "4:3"  : "16:9";
+      // Determine if we use edit endpoint (only for supported models with a reference image)
+      const useEdit = referenceImageUrl && EDIT_SUPPORTED.has(modelId);
+      const falModelId = useEdit ? modelId + "/edit" : modelId;
 
-      const falModelId = referenceImageUrl ? modelId + "/edit" : modelId;
+      // Compute resolution from quality + aspect ratio
+      const { width, height } = getDimensions(ratio, body.quality);
 
       const input = {
         prompt,
-        aspect_ratio: aspectRatio,
-        ...(referenceImageUrl ? { image_urls: [referenceImageUrl] } : {}),
+        image_size: { width, height },
+        ...(referenceImageUrl && useEdit ? { image_url: referenceImageUrl } : {}),
+        ...(referenceImageUrl && !useEdit ? { image_url: referenceImageUrl } : {}),
         ...(negativePrompt ? { negative_prompt: negativePrompt } : {}),
       };
 

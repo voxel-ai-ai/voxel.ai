@@ -389,7 +389,7 @@ const chipBase = {
 export default function ImagePromptBar({
   prompt, onPromptChange, onGenerate, isGenerating,
   selectedModel, onModelChange, imageCount, onCountChange,
-  onAspectRatioChange, onStyleChange,
+  onAspectRatioChange, onStyleChange, onQualityChange, onReferenceImageChange,
 }) {
   const [model, setModel] = useState(IMAGE_MODELS[0]);
   const [aspectRatio, setAspectRatio] = useState('16:9');
@@ -406,10 +406,15 @@ export default function ImagePromptBar({
   const styleChipRef = useRef(null);
   const imgInputRef = useRef(null);
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    setUploadedImage(URL.createObjectURL(file));
+    const localUrl = URL.createObjectURL(file);
+    setUploadedImage(localUrl);
+    // Upload to get a real URL for the API
+    const { base44: sdk } = await import('@/api/base44Client');
+    const { file_url } = await sdk.integrations.Core.UploadFile({ file });
+    if (onReferenceImageChange) onReferenceImageChange(file_url);
   };
 
   const handleSelectModel = (m) => {
@@ -425,6 +430,11 @@ export default function ImagePromptBar({
   const handleStyleChange = (val) => {
     setStyle(val);
     if (onStyleChange) onStyleChange(val);
+  };
+
+  const handleQualityChange = (val) => {
+    setQuality(val);
+    if (onQualityChange) onQualityChange(val);
   };
 
   const closeAll = () => { setShowModelModal(false); setShowAspectDrop(false); setShowQualityDrop(false); setShowStylePop(false); };
@@ -453,7 +463,7 @@ export default function ImagePromptBar({
         <AspectDropdown selected={aspectRatio} onSelect={handleAspectRatioChange} onClose={() => setShowAspectDrop(false)} />
       )}
       {showQualityDrop && (
-        <SimpleDropdown options={QUALITIES} selected={quality} onSelect={setQuality} onClose={() => setShowQualityDrop(false)} label="Quality" />
+        <SimpleDropdown options={QUALITIES} selected={quality} onSelect={handleQualityChange} onClose={() => setShowQualityDrop(false)} label="Quality" />
       )}
 
       <style>{`
@@ -527,7 +537,7 @@ export default function ImagePromptBar({
                 <img src={uploadedImage} alt="reference" style={{ width:40, height:40, objectFit:'cover', borderRadius:8, display:'block', border:'1px solid rgba(255,255,255,0.15)' }} />
                 <button
                   className="img-x-btn"
-                  onClick={() => setUploadedImage(null)}
+                  onClick={() => { setUploadedImage(null); if (onReferenceImageChange) onReferenceImageChange(null); }}
                   style={{ position:'absolute', top:-6, right:-6, width:18, height:18, borderRadius:'50%', background:'rgba(30,30,30,0.85)', border:'1.5px solid rgba(255,255,255,0.25)', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', color:'#fff', fontSize:10, zIndex:10, opacity:0, transition:'opacity 0.18s, background 0.15s' }}
                   onMouseEnter={e => e.currentTarget.style.background='rgba(180,0,0,0.9)'}
                   onMouseLeave={e => e.currentTarget.style.background='rgba(30,30,30,0.85)'}
