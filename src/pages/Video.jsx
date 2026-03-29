@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { base44 } from '@/api/base44Client';
 import VideoLeftPanel from '@/components/video/VideoLeftPanel';
+const History_ = base44.entities.GenerationHistory;
 import VideoRightArea from '@/components/video/VideoRightArea';
 import VideoModelModal from '@/components/video/VideoModelModal';
 import VideoDetailModal from '@/components/video/VideoDetailModal';
@@ -22,18 +24,78 @@ export default function Video() {
   const [aspectRatio, setAspectRatio] = useState('Auto');
   const [showModelModal, setShowModelModal] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
+  const pollingRef = useRef({});
 
-  const handleGenerate = () => {
-    if (!prompt.trim()) {
-      toast.error('Please enter a prompt');
-      return;
-    }
+  // Load history on mount
+  useEffect(() => {
+    History_.filter({ type: 'video' }, '-created_date', 50).then(records => {
+      const loaded = records.map(r => ({
+        id: r.id,
+        prompt: r.prompt,
+        model: r.model,
+        duration: r.duration,
+        aspectRatio: r.ratio,
+        result_url: r.result_url,
+        status: r.status,
+        job_id: r.job_id,
+        model_id: r.model_id,
+      }));
+      setVideos(loaded);
+      // Resume polling for any pending videos
+      loaded.filter(v => v.status === 'pending').forEach(v => pollVideo(v.id, v.job_id, v.model_id));
+    }).catch(() => {});
+  }, []);
+
+  const pollVideo = (recordId, jobId, modelId) => {
+    const interval = setInterval(async () => {
+      try {
+        const res = await base44.functions.invoke('checkStatus', { job_id: jobId, model_id: modelId });
+        const d = res.data;
+        if (d.status === 'completed' && d.result_url) {
+          clearInterval(interval);
+          delete pollingRef.current[recordId];
+          await History_.update(recordId, { status: 'completed', result_url: d.result_url });
+          setVideos(prev => prev.map(v => v.id === recordId ? { ...v, status: 'completed', result_url: d.result_url } : v));
+          toast.success('Video ready!');
+        } else if (d.status === 'failed') {
+          clearInterval(interval);
+          delete pollingRef.current[recordId];
+          await History_.update(recordId, { status: 'failed' });
+          setVideos(prev => prev.map(v => v.id === recordId ? { ...v, status: 'failed' } : v));
+          toast.error('Video generation failed');
+        }
+      } catch {}
+    }, 5000);
+    pollingRef.current[recordId] = interval;
+  };
+
+  const handleGenerate = async () => {
+    if (!prompt.trim()) { toast.error('Please enter a prompt'); return; }
     setIsGenerating(true);
-    setTimeout(() => {
+    try {
+      const res = await base44.functions.invoke('generate', {
+        type: 'video',
+        model: model.name,
+        prompt,
+        duration: parseInt(duration) || 5,
+        ratio: aspectRatio === 'Auto' ? '16:9' : aspectRatio,
+      });
+      const { job_id, model_id } = res.data;
+      const saved = await History_.create({
+        type: 'video', model: model.name, prompt,
+        job_id, model_id, status: 'pending',
+        duration: parseInt(duration) || 5,
+        ratio: aspectRatio,
+      });
+      const newVid = { id: saved.id, prompt, model: model.name, duration, aspectRatio, status: 'pending', job_id, model_id };
+      setVideos(prev => [newVid, ...prev]);
+      pollVideo(saved.id, job_id, model_id);
+      toast.success('Video queued — we\'ll notify you when ready!');
+    } catch (err) {
+      toast.error(err.message || 'Generation failed');
+    } finally {
       setIsGenerating(false);
-      setVideos(prev => [...prev, { id: Date.now(), prompt, model: model.name, duration, resolution, aspectRatio }]);
-      toast.success('Video generated!');
-    }, 3000);
+    }
   };
 
   return (

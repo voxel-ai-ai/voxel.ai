@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+const History_ = base44.entities.GenerationHistory;
 import ImagePromptBar from '@/components/image/ImagePromptBar';
 import TemplateModal from '@/components/common/TemplateModal';
 import ImageDetailModal from '@/components/image/ImageDetailModal';
@@ -115,6 +116,19 @@ export default function Image() {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [activeTab, setActiveTab] = useState('history');
 
+  // Load history on mount
+  useEffect(() => {
+    History_.filter({ type: 'image' }, '-created_date', 50).then(records => {
+      const loaded = records.map(r => ({
+        id: r.id,
+        url: r.result_url,
+        prompt: r.prompt,
+        gradient: RESULT_GRADIENTS[0],
+      }));
+      setImages(loaded);
+    }).catch(() => {});
+  }, []);
+
   const handleGenerate = async () => {
     if (!prompt.trim()) { toast.error('Please enter a prompt'); return; }
     setIsGenerating(true);
@@ -127,8 +141,10 @@ export default function Image() {
         ratio: '1:1',
       });
       const url = response.data?.result_url;
+      // Save to history
+      const saved = await History_.create({ type: 'image', model: selectedModel.name, prompt, result_url: url, status: 'completed' });
       const newImg = {
-        id: Date.now(),
+        id: saved.id,
         gradient: RESULT_GRADIENTS[images.length % RESULT_GRADIENTS.length],
         prompt,
         url,
