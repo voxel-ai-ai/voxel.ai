@@ -117,18 +117,34 @@ Deno.serve(async (req) => {
       const { width, height } = getDimensions(ratio, body.quality);
       const hasRef = !!referenceImageUrl;
 
-      // When a reference image is provided, use Flux Kontext — purpose-built for image editing
-      // For text-only generation, use the selected model
-      const falModelId = hasRef ? "fal-ai/flux-pro/kontext" : modelId;
+      // When a reference image is provided:
+      // - Nano Banana models support editing natively via reference_image_url (same endpoint)
+      // - All other models fall back to Flux Kontext for image editing
+      let falModelId = modelId;
+      if (hasRef && !EDIT_MODELS.has(modelId)) {
+        falModelId = "fal-ai/flux-pro/kontext";
+      }
 
-      const input = {
+      // Nano Banana models use aspect_ratio (not image_size) and reference_image_url for editing
+      const isNanoBanana = EDIT_MODELS.has(modelId);
+      const aspectRatioStr = (ratio || "16:9");
+      const resolutionMap = { "Draft": "0.5K", "1K": "1K", "2K": "2K", "4K": "4K" };
+      const nanoBananaInput = {
+        prompt,
+        aspect_ratio: aspectRatioStr,
+        resolution: resolutionMap[body.quality] || "1K",
+        ...(hasRef ? { reference_image_url: referenceImageUrl } : {}),
+        ...(negativePrompt ? { negative_prompt: negativePrompt } : {}),
+      };
+      const standardInput = {
         prompt,
         ...(hasRef ? { image_url: referenceImageUrl } : { image_size: { width, height } }),
         ...(negativePrompt ? { negative_prompt: negativePrompt } : {}),
       };
+      const input = isNanoBanana ? nanoBananaInput : standardInput;
 
       const result = await fal.subscribe(falModelId, { input });
-      const imageUrl = result.data?.images?.[0]?.url;
+      const imageUrl = result.data?.images?.[0]?.url || result.data?.image?.url;
 
       return Response.json({
         success: true,
