@@ -19,8 +19,13 @@ const IMAGE_MODELS = {
   "Relight":           "fal-ai/ic-light",
 };
 
-// Models that support /edit endpoint for image-to-image
-const EDIT_SUPPORTED = new Set(["fal-ai/nano-banana-pro", "fal-ai/nano-banana-2"]);
+// Models that use /edit endpoint for image-to-image
+const EDIT_MODELS = new Set(["fal-ai/nano-banana-pro", "fal-ai/nano-banana-2"]);
+// Models that use a separate img2img endpoint
+const IMG2IMG_MODELS = {
+  "fal-ai/flux-pro/kontext": "fal-ai/flux-pro/kontext", // kontext supports image_url natively
+  "fal-ai/flux-pro/v1.1":   "fal-ai/flux-pro/v1.1-ultra",
+};
 
 // Map quality label to base pixel dimension
 const QUALITY_DIM = { "Draft": 512, "1K": 1024, "2K": 1536, "4K": 2048 };
@@ -107,20 +112,26 @@ Deno.serve(async (req) => {
         return Response.json({ error: "Unknown image model: " + model }, { status: 400 });
       }
 
-      // Determine if we use edit endpoint (only for supported models with a reference image)
-      const useEdit = referenceImageUrl && EDIT_SUPPORTED.has(modelId);
-      const falModelId = useEdit ? modelId + "/edit" : modelId;
-
-      // Compute resolution from quality + aspect ratio
       const { width, height } = getDimensions(ratio, body.quality);
+      const hasRef = !!referenceImageUrl;
+
+      // Choose the correct endpoint
+      let falModelId = modelId;
+      if (hasRef && EDIT_MODELS.has(modelId)) {
+        falModelId = modelId + "/edit"; // e.g. fal-ai/nano-banana-pro/edit
+      }
 
       const input = {
         prompt,
         image_size: { width, height },
-        ...(referenceImageUrl && useEdit ? { image_url: referenceImageUrl } : {}),
-        ...(referenceImageUrl && !useEdit ? { image_url: referenceImageUrl } : {}),
+        ...(hasRef ? { image_url: referenceImageUrl } : {}),
         ...(negativePrompt ? { negative_prompt: negativePrompt } : {}),
       };
+
+      // Edit endpoints don't accept image_size — remove it
+      if (hasRef && EDIT_MODELS.has(modelId)) {
+        delete input.image_size;
+      }
 
       const result = await fal.subscribe(falModelId, { input });
       const imageUrl = result.data?.images?.[0]?.url;
