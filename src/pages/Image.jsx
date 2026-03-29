@@ -82,25 +82,46 @@ function LoadingCard({ index = 0 }) {
 }
 
 // Single image card
-function ImageCard({ img, index, onExpand }) {
+function ImageCard({ img, index, onExpand, onLoaded }) {
   const [hovered, setHovered] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
   const h = HEIGHTS[index % HEIGHTS.length];
+  const showShimmer = img.url && !imgLoaded;
+
   return (
     <div
       style={{ borderRadius: 14, overflow: 'hidden', background: img.gradient, cursor: 'pointer', position: 'relative', height: h, transform: hovered ? 'translateY(-2px)' : 'none', transition: 'transform 0.2s' }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onClick={() => onExpand(img)}>
-      {img.url && <img src={img.url} alt={img.prompt} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />}
+      onClick={() => imgLoaded && onExpand(img)}>
+
+      {img.url && (
+        <img
+          src={img.url}
+          alt={img.prompt}
+          onLoad={() => { setImgLoaded(true); onLoaded && onLoaded(img.id); }}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: imgLoaded ? 1 : 0, transition: 'opacity 0.3s' }}
+        />
+      )}
+
+      {/* Shimmer while loading */}
+      {showShimmer && (
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #1a0000 0%, #2a0a0a 50%, #1a1a1a 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(90deg, transparent 0%, rgba(224,30,30,0.08) 50%, transparent 100%)', backgroundSize: '200% 100%', animation: 'imgShimmer 1.6s linear infinite' }} />
+          <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'rgba(224,30,30,0.12)', border: '1px solid rgba(224,30,30,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'imgSpin 1.8s linear infinite' }}>
+            <Sparkles style={{ width: 18, height: 18, color: '#FF4444' }} />
+          </div>
+        </div>
+      )}
 
       {/* Hover overlay */}
-      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 50%)', opacity: hovered ? 1 : 0, transition: 'opacity 0.2s', display: 'flex', alignItems: 'flex-end', padding: 10, gap: 6 }}>
-        {[Heart, RefreshCw, Maximize2].map((Icon, i) =>
-          <div key={i} style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', pointerEvents: 'none' }}>
-            <Icon style={{ width: 13, height: 13 }} />
-          </div>
-        )}
-        {img.url && (
+      {imgLoaded && (
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 50%)', opacity: hovered ? 1 : 0, transition: 'opacity 0.2s', display: 'flex', alignItems: 'flex-end', padding: 10, gap: 6 }}>
+          {[Heart, RefreshCw, Maximize2].map((Icon, i) =>
+            <div key={i} style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', pointerEvents: 'none' }}>
+              <Icon style={{ width: 13, height: 13 }} />
+            </div>
+          )}
           <a
             href={img.url}
             download
@@ -110,8 +131,8 @@ function ImageCard({ img, index, onExpand }) {
             style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', textDecoration: 'none' }}>
             <Download style={{ width: 13, height: 13 }} />
           </a>
-        )}
-      </div>
+        </div>
+      )}
     </div>);
 
 }
@@ -255,7 +276,7 @@ export default function Image() {
             {/* Generated images */}
             {images.map((img, i) =>
           <div key={img.id} style={{ breakInside: 'avoid', marginBottom: 10, animation: 'imgFadeIn 0.4s ease forwards' }}>
-                <ImageCard img={img} index={i} onExpand={setDetailImage} />
+                <ImageCard img={img} index={i} onExpand={setDetailImage} onLoaded={() => {}} />
               </div>
           )}
           </div>
