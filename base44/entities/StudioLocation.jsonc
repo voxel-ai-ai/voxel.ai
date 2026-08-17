@@ -1,0 +1,56 @@
+{
+  "name": "StudioLocation",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "interior_exterior": {
+      "type": "string",
+      "enum": [
+        "Interior",
+        "Exterior"
+      ]
+    },
+    "time_of_day": {
+      "type": "string",
+      "enum": [
+        "Dawn",
+        "Day",
+        "Golden Hour",
+        "Night"
+      ]
+    },
+    "weather": {
+      "type": "string",
+      "enum": [
+        "Clear",
+        "Cloudy",
+        "Rain",
+        "Snow",
+        "Fog"
+      ]
+    },
+    "style": {
+      "type": "string",
+      "enum": [
+        "Photorealistic",
+        "Cinematic",
+        "Stylized",
+        "Anime"
+      ]
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "tags_json": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

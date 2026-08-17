@@ -1,0 +1,17 @@
+{
+  "name": "StudioProject",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "default": "Untitled Project"
+    },
+    "settings_json": {
+      "type": "string",
+      "description": "JSON string of project settings"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

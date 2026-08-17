@@ -1,0 +1,78 @@
+{
+  "name": "StudioScene",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string"
+    },
+    "sequence_order": {
+      "type": "number",
+      "default": 0
+    },
+    "character_id": {
+      "type": "string"
+    },
+    "location_id": {
+      "type": "string"
+    },
+    "camera_angle": {
+      "type": "string",
+      "enum": [
+        "Wide",
+        "Medium",
+        "Close-Up",
+        "Extreme Close-Up",
+        "Bird's Eye",
+        "Low Angle",
+        "Dutch Angle"
+      ]
+    },
+    "lighting": {
+      "type": "string",
+      "enum": [
+        "Natural",
+        "Cinematic",
+        "Golden Hour",
+        "Night",
+        "Studio",
+        "Dramatic",
+        "Neon"
+      ]
+    },
+    "motion": {
+      "type": "string",
+      "enum": [
+        "Static",
+        "Pan Left",
+        "Pan Right",
+        "Zoom In",
+        "Zoom Out",
+        "Dolly",
+        "Handheld"
+      ]
+    },
+    "scene_action": {
+      "type": "string"
+    },
+    "generated_output_url": {
+      "type": "string"
+    },
+    "output_type": {
+      "type": "string",
+      "enum": [
+        "image",
+        "video"
+      ]
+    },
+    "duration_seconds": {
+      "type": "number",
+      "default": 5
+    },
+    "prompt_used": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "project_id"
+  ]
+}

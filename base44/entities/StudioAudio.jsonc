@@ -1,0 +1,37 @@
+{
+  "name": "StudioAudio",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "music",
+        "voiceover",
+        "sfx"
+      ]
+    },
+    "name": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "duration": {
+      "type": "number"
+    },
+    "track_position": {
+      "type": "number",
+      "default": 0
+    },
+    "prompt_used": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "project_id",
+    "type"
+  ]
+}

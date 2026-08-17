@@ -1,0 +1,32 @@
+{
+  "name": "StudioCharacter",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "style": {
+      "type": "string",
+      "enum": [
+        "Photorealistic",
+        "Cinematic",
+        "Anime",
+        "Comic",
+        "3D"
+      ]
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "variations": {
+      "type": "string",
+      "description": "JSON array of variation image URLs"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}
